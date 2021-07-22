@@ -1,0 +1,88 @@
+<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}"
+  <header class="card-header flexrow">
+    <h3 class="item-name">{{power.name}}{{#if attacks}} Attack Rolls{{/if}}</h3>
+  </header>
+
+  {{#if targets}}
+  {{#if power.data.hit.text}}
+  <div class="card-content">
+    <span><span class="boldface">Hit: </span>{{power.data.hit.text}}</span>
+  </div>
+  {{/if}}
+  {{#if power.data.miss.text}}
+  <div class="card-content">
+    <span><span class="boldface">Miss: </span>{{power.data.miss.text}}</span>
+  </div>
+  {{/if}}
+  {{/if}}
+  {{#if targets}}
+  <div class="card-content flexrow underline">
+    <span class="flex4 boldface">{{#if offtargets}}Main-hand {{/if}}Attack Results</span>
+    <span class="radiocol">H</span>
+    <span class="radiocol">M</span>
+    <span class="radiocol">|</span>
+    <span class="radiocol">N</span>
+    <span class="radiocol">F</span>
+    <span class="radiocol">C</span>
+    <span class="radiocol">D</span>
+  </div>
+  {{/if}}
+  {{#each targets as |target id|}}
+  <div class="card-content target-line flexrow">
+    <span class="flex4">{{target.name}}: {{target.rolltotal}} vs. {{target.vs}}</span>
+    {{#if target.crithit}}
+      <span class="flex1 crit-message">Critical Hit!</span>
+      <span class="flex0 crit-message"></span>
+    {{/if}}
+    {{#if target.critmiss}}
+      <span class="flex1">Critical Miss...</span>
+      <span class="flex0"></span>
+    {{/if}}
+    {{#unless target.crithit}}{{#unless target.critmiss}}
+      <span class="radiocol"><input type="radio" id="h" name="hitmiss-{{target.id}}" value="h" title="This attack hits" checked="true"></span>
+      <span class="radiocol"><input type="radio" id="m" name="hitmiss-{{target.id}}" value="m" title="This attack misses"></span>
+    {{/unless}}{{/unless}}
+    <span class="radiocol">|</span>
+    <span class="radiocol"><input type="radio" id="n" name="damage-{{target.id}}" value="n" title="Roll Normally" checked="true"></span>
+    <span class="radiocol"><input type="radio" id="f" name="damage-{{target.id}}" value="f" title="Roll with Favor"></span>
+    <span class="radiocol"><input type="radio" id="c" name="damage-{{target.id}}" value="c" title="Roll with Conflict"></span>
+    <span class="radiocol"><input type="radio" id="d" name="damage-{{target.id}}" value="d" title="Roll with Disfavor"></span>
+  </div>
+  {{/each}}
+  {{#if offtargets}}
+  <div class="card-content flexrow underline overline">
+    <span class="flex4 boldface">Off-Hand Attack Results</span>
+    <span class="radiocol">H</span>
+    <span class="radiocol">M</span>
+    <span class="radiocol">|</span>
+    <span class="radiocol">N</span>
+    <span class="radiocol">F</span>
+    <span class="radiocol">C</span>
+    <span class="radiocol">D</span>
+  </div>
+  {{/if}}
+  {{#each offtargets as |target id|}}
+  <div class="card-content target-line off-hand flexrow">
+    <span class="flex4">{{target.name}}: {{target.rolltotal}} vs. {{target.vs}}</span>
+    {{#if target.crithit}}
+      <span class="flex1 crit-message">Critical Hit!</span>
+      <span class="flex0 crit-message"></span>
+    {{/if}}
+    {{#if target.critmiss}}
+      <span class="flex1">Critical Miss...</span>
+      <span class="flex0"></span>
+    {{/if}}
+    {{#unless target.crithit}}{{#unless target.critmiss}}
+      <span class="radiocol"><input type="radio" id="h" name="hitmiss-off-{{target.id}}" value="h" title="This attack hits" checked="true"></span>
+      <span class="radiocol"><input type="radio" id="m" name="hitmiss-off-{{target.id}}" value="m" title="This attack misses"></span>
+    {{/unless}}{{/unless}}
+    <span class="radiocol">|</span>
+    <span class="radiocol favor"><input class="{{targets}}" type="radio" id="n" name="damage-off-{{target.id}}" value="n" title="Roll Normally" checked="true"></span>
+    <span class="radiocol favor"><input class="{{targets}}" type="radio" id="f" name="damage-off-{{target.id}}" value="f" title="Roll with Favor"></span>
+    <span class="radiocol favor"><input class="{{targets}}" type="radio" id="c" name="damage-off-{{target.id}}" value="c" title="Roll with Conflict"></span>
+    <span class="radiocol favor"><input class="{{targets}}" type="radio" id="d" name="damage-off-{{target.id}}" value="d" title="Roll with Disfavor"></span>
+  </div>
+  {{/each}}
+
+
+</div>

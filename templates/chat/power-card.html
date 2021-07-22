@@ -1,0 +1,68 @@
+<div class="aetrimonde chat-card power-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}"
+  <header class="card-header">
+    <div class="card-content flexrow flex-between">
+      <span class="card-header">{{power.name}}</span>
+      <span class="card-header">{{power.data.powertype}}</span>
+    </div>
+  </header>
+
+  <div class="card-content italic underline">
+    <span>{{power.data.flavortext}}</span>
+  </div>
+  <div class="card-content flexrow">
+    <span class="boldface">{{power.data.powergroup}}</span>
+    <span class="boldface">{{power.data.keywords}}</span>
+  </div>
+  <div class="card-content flexrow">
+    <span class="boldface">{{power.data.action}}</span>
+    <span class="boldface">{{power.data.range}}</span>
+  </div>
+  {{#if power.data.targets}}
+  <div class="card-content">
+    <span><span class="boldface">Targets: </span>{{power.data.targets}}</span>
+  </div>
+  {{/if}}
+  <div class="underline">
+
+  </div>
+  {{#if power.data.provoked.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Provoked: </span>{{power.data.provoked.text}}</span>
+  </div>
+  {{/if}}
+  {{#if power.data.requirement.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Requirement: </span>{{power.data.requirement.text}}</span>
+  </div>
+  {{/if}}
+  {{#if power.data.effect.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Effect: </span>{{power.data.effect.text}}</span>
+  </div>
+  {{/if}}
+  {{#if power.data.attack.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Attack: </span>{{power.data.attack.abil}} ({{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}}{{#if power.data.attack.off}}/{{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasoffthreat}}T{{/if}}{{/if}}) vs. {{power.data.attack.vslabel}}</span>
+  </div>
+  <div class="card-content">
+    <span><span class="boldface">Hit: </span>{{power.data.hit.text}}</span>
+  </div>
+  {{#if power.data.miss.text}}
+  <div class="card-content">
+    <span><span class="boldface">Miss: </span>{{power.data.miss.text}}</span>
+  </div>
+  {{/if}}
+  {{/if}}
+  {{#if power.data.maintain.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Maintain: </span>{{power.data.maintain.text}}</span>
+  </div>
+  {{/if}}
+  {{#if power.data.special.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Special: </span>{{power.data.special.text}}</span>
+  </div>
+  {{/if}}
+
+
+</div>

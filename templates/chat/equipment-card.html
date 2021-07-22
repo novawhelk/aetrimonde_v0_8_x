@@ -1,0 +1,173 @@
+<div class="aetrimonde chat-card equipment-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}"
+  <header class="card-header">
+    <div class="card-content flexrow flex-between">
+      <span class="card-header">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+    </div>
+    {{#if item.data.eachvalue}}
+    <div class="flexcol card-content">
+      <span><span class="boldface">Value: </span>{{item.data.eachvalue}}{{#if item.data.multiple}} each, {{item.data.totalvalue}} total{{/if}}</span>
+      <span><span class="boldface">Weight: </span>{{item.data.eachweight}}{{#if item.data.multiple}} each, {{item.data.totalweight}} total{{/if}}</span>
+    </div>
+    {{/if}}
+  </header>
+
+  {{#if item.data.isarmor}}
+    <div class="card-content overline underline">
+      <span class="card-header">{{#if item.data.armor.isheavy}}Heavy {{/if}}{{#unless item.data.armor.isheavy}}Light {{/unless}}Armor</span>
+    </div>
+    <div class="card-content flexrow">
+      <span><span class="boldface">AC Bonus: </span>{{numberFormat item.data.armor.acbonus decimals=0 sign=true}}</span>
+    </div>
+    {{#if item.data.armor.resist}}
+    <div class="card-content flexrow">
+      <span><span class="boldface">Armor Resistance: </span>{{item.data.armor.resist}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.armor.encumbrance}}
+    <div class="card-content">
+      <span><span class="boldface">Encumbrance Penalty: </span>{{numberFormat item.data.armor.encumbrance decimals=0 sign=true}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.armor.speed}}
+    <div class="card-content">
+      <span><span class="boldface">Speed Penalty: </span>{{item.data.armor.speed}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.armor.value}}
+    <div class="card-content">
+      <span><span class="boldface">Value: </span>{{item.data.armor.value}} gp</span>
+    </div>
+    {{/if}}
+    {{#if item.data.armor.weight}}
+    <div class="card-content">
+      <span><span class="boldface">Weight: </span>{{item.data.armor.weight}} lbs.</span>
+    </div>
+    {{/if}}
+    {{#if item.data.armor.grouplabel}}
+    <div class="card-content">
+      <span><span class="boldface">Group: </span>{{item.data.armor.grouplabel}}</span>
+    </div>
+    {{/if}}
+  {{/if}}
+
+
+  {{#if item.data.isshield}}
+    <div class="card-content overline underline">
+      <span class="card-header">Shield</span>
+    </div>
+    <div class="card-content flexrow">
+      <span><span class="boldface">Defense Bonus: </span>{{numberFormat item.data.shield.defbonus decimals=0 sign=true}}</span>
+    </div>
+    {{#if item.data.shield.encumbrance}}
+    <div class="card-content">
+      <span><span class="boldface">Encumbrance Penalty: </span>{{numberFormat item.data.shield.encumbrance decimals=0 sign=true}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.shield.speed}}
+    <div class="card-content">
+      <span><span class="boldface">Speed Penalty: </span>{{item.data.shield.speed}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.shield.grouplabel}}
+    <div class="card-content">
+      <span><span class="boldface">Group: </span>{{item.data.shield.grouplabel}}</span>
+    </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if item.data.isweapon}}
+    <div class="card-content overline">
+      <span class="card-header">Weapon</span>
+    </div>
+    <div class="card-content italic underline">
+      <span>{{item.data.weapon.complexity.value}} {{item.data.weapon.hands.value}} {{item.data.weapon.mvsr.value}}</span>
+    </div>
+    <div class="card-content flexrow">
+      <span><span class="boldface">Precision: </span>{{numberFormat item.data.weapon.prof decimals=0 sign=true}}</span>
+    </div>
+    <div class="card-content flexrow">
+      <span><span class="boldface">Damage Dice: </span>{{item.data.weapon.dice}}</span>
+    </div>
+    {{#if item.data.weapon.range}}
+    <div class="card-content">
+      <span><span class="boldface">Range: </span>{{item.data.weapon.range}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.weapon.groups}}
+    <div class="card-content">
+      <span><span class="boldface">Groups: </span>{{item.data.weapon.groups}}</span>
+    </div>
+    {{/if}}
+    {{#if item.data.weapon.quals}}
+    <div class="card-content">
+      <span><span class="boldface">Qualities: </span>{{item.data.weapon.quals}}</span>
+    </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if item.data.relatedprops}}
+  <div class="card-content overline underline">
+    <span class="card-header">Properties</span>
+  </div>
+  <div class="card-content">
+    {{{item.data.props}}}
+  </div>
+  {{/if}}
+
+  {{#if item.data.relatedpower}}
+  <div class="card-content flexrow overline underline">
+    <span class="card-header">Power</span>
+  </div>
+  <div class="card-content flexrow">
+    <span class="boldface">{{item.data.power.frequency}}</span>
+    <span class="boldface">{{item.data.power.keywords}}</span>
+  </div>
+  <div class="card-content flexrow">
+    <span class="boldface">{{item.data.power.action}}</span>
+    <span class="boldface">{{item.data.power.range}}</span>
+  </div>
+  {{#if item.data.power.targets}}
+  <div class="card-content">
+    <span><span class="boldface">Targets: </span>{{item.data.power.targets}}</span>
+  </div>
+  {{/if}}
+  {{#if item.data.power.provoked.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Provoked: </span>{{item.data.power.provoked.text}}</span>
+  </div>
+  {{/if}}
+  {{#if item.data.power.requirement.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Requirement: </span>{{item.data.power.requirement.text}}</span>
+  </div>
+  {{/if}}
+  {{#if item.data.power.effect.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Effect: </span>{{item.data.power.effect.text}}</span>
+  </div>
+  {{/if}}
+  {{#if item.data.power.attack.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Attack: </span>{{item.data.power.attack.abil}} vs. {{item.data.power.attack.vslabel}}</span>
+  </div>
+  <div class="card-content">
+    <span><span class="boldface">Hit: </span>{{item.data.power.hit.text}}</span>
+  </div>
+  {{#if item.data.power.miss.text}}
+  <div class="card-content">
+    <span><span class="boldface">Miss: </span>{{item.data.power.miss.text}}</span>
+  </div>
+  {{/if}}
+  {{/if}}
+  {{#if item.data.power.maintain.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Maintain: </span>{{item.data.power.maintain.text}}</span>
+  </div>
+  {{/if}}
+  {{#if item.data.power.special.exists}}
+  <div class="card-content">
+    <span><span class="boldface">Special: </span>{{item.data.power.special.text}}</span>
+  </div>
+  {{/if}}
+  {{/if}}
+</div>

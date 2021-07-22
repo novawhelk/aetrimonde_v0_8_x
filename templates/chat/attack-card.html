@@ -1,0 +1,35 @@
+<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}">
+  {{#if showeffect}}{{#if power.data.effect.exists}}
+  <header class="card-header flexrow underline">
+    <span class="card-header">{{power.name}} Effect</span>
+  </header>
+  <div class="card-content underline">
+    <span class="boldface">Effect:</span> {{power.data.effect.text}}
+  </div>
+  {{/if}}{{/if}}
+  <header class="card-header flexrow">
+    <span class="card-header">{{power.name}} Attack Rolls</span>
+  </header>
+  {{#if targets}}
+  <div class="card-content underline">
+    <span class="boldface">{{#if offtargets}}Main-hand {{/if}}Attack:</span> {{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}} vs. {{power.data.attack.vslabel}}
+  </div>
+  {{/if}}
+  {{#each targets as |attack id|}}
+  <div class="card-content target-line">
+    {{attack.name}}: <a class="inline-roll inline-result" title="{{attack.roll.formula}}" data-roll="{{attack.rolljson}}"><i class="fas fa-dice-d20"></i>{{attack.rolltotal}}</a> vs. {{attack.vs}}{{#if attack.crithit}}: Critical Hit!{{/if}}{{#if attack.critmiss}}: Critical Miss...{{/if}}
+  </div>
+  {{/each}}
+  {{#if offtargets}}
+  <div class="card-content underline overline">
+    <span class="boldface">Off-hand Attack:</span> {{numberFormat power.data.attack.offbonus decimals=0 sign=true}}{{#if power.data.attack.hasoffthreat}}T{{/if}} vs. {{power.data.attack.vslabel}}
+  </div>
+  {{/if}}
+  {{#each offtargets as |attack id|}}
+  <div class="card-content target-line">
+    {{attack.name}}: <a class="inline-roll inline-result" title="{{attack.roll.formula}}" data-roll="{{attack.rolljson}}"><i class="fas fa-dice-d20"></i>{{attack.rolltotal}}</a> vs. {{attack.vs}}{{#if attack.crithit}}: Critical Hit!{{/if}}{{#if attack.critmiss}}: Critical Miss...{{/if}}
+  </div>
+  {{/each}}
+
+
+</div>

@@ -379,6 +379,9 @@ export class AetrimondeActorSheet extends ActorSheet {
       item.sheet.render(true);
     });
 
+    // Share owned Item in Chat
+    html.find('.item-post').click(this._onItemPost.bind(this));
+
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
@@ -448,6 +451,76 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});
+  }
+
+  async _onItemPost(event) {
+    const poweritem = JSON.parse(JSON.stringify(this.actor.items.get(event.currentTarget.dataset.power)));
+    let power = [];
+    let template = "";
+    let templateData = [];
+    if (poweritem.type === "power") {
+      power = poweritem;
+      power.data.powergroup = power.data.powergroup ? power.data.powertypes[`${power.data.powergroup}`].label : "";
+      const abilities = {
+        "str": "Strength",
+        "con": "Constitution",
+        "dex": "Dexterity",
+        "int": "Intelligence",
+        "wis": "Wisdom",
+        "cha": "Charisma"
+      };
+      power.data.attack.abil = power.data.attack.abil ? abilities[`${power.data.attack.abil}`] : "";
+      power.data.effect.text = power.data.effect.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.hit.text = power.data.hit.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.crit.text = power.data.crit.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.miss.text = power.data.miss.text.replaceAll("[[", "").replaceAll("]]", "");
+      template = `systems/aetrimonde/templates/chat/power-card.html`;
+      templateData = {
+        "power": power
+      }
+    }
+    else if (poweritem.type === "feature") {
+      const feature = poweritem;
+      feature.data.source = feature.data.source ? feature.data.sources[`${feature.data.source}`].label : "";
+      template = `systems/aetrimonde/templates/chat/feature-card.html`;
+      templateData = {
+        "feature": feature
+      }
+    }
+    else if (["equipment"].includes(poweritem.type)) {
+      const item = poweritem;
+
+      if (poweritem.data.isweapon) {
+        item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
+        item.data.weapon.hands.value = item.data.weapon.hands.handses[`${item.data.weapon.hands.value}`];
+        item.data.weapon.mvsr.value = item.data.weapon.mvsr.mvsrs[`${item.data.weapon.mvsr.value}`];
+      }
+      item.data.power.effect.text = item.data.power.effect.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
+      template = `systems/aetrimonde/templates/chat/` + poweritem.type + `-card.html`;
+      templateData = {
+        "item": item
+      };
+    }
+
+    const chatHtml = await renderTemplate(template, templateData);
+
+    const chatData = {
+      user: game.user._id,
+      content: chatHtml,
+      speaker: {
+        actor: this.actor._id,
+        token: this.actor.token,
+        alias: this.actor.name
+      }
+    };
+    const rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "blindroll") chatData.blind = true;
+    await ChatMessage.create(chatData);
   }
 
   /**

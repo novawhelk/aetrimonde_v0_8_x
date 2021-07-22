@@ -1,0 +1,27 @@
+<div class="aetrimonde chat-card power-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}"
+  <header class="card-header">
+    <div class="card-content flexrow flex-between">
+      <span class="card-header">{{feature.name}}</span>
+      <span class="card-header">{{feature.data.source}}</span>
+    </div>
+  </header>
+
+  {{#if feature.data.category}}
+  <div class="card-content italic">
+    <span><span class="boldface"></span>{{feature.data.category}}</span>
+  </div>
+  {{/if}}
+  {{#if feature.data.req}}
+  <div class="card-content">
+    <span><span class="boldface">Requirement: </span>{{feature.data.req}}</span>
+  </div>
+  {{/if}}
+  <div class="card-content overline">
+    <span><span class="boldface">Benefit: </span>{{feature.data.benefit}}</span>
+  </div>
+  {{#if feature.data.notes}}
+  <div class="card-content">
+    <span><span class="boldface">Notes: </span>{{feature.data.notes}}</span>
+  </div>
+  {{/if}}
+</div>
