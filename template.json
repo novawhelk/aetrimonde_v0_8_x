@@ -293,7 +293,8 @@
        "special": {
          "exists": false,
          "text": ""
-       }
+       },
+       "expended": false
      },
      "isarmor": false,
      "armor": {
@@ -522,8 +523,7 @@
        "special": {
          "exists": false,
          "text": ""
-       },
-       "expended": false
+       }
      },
      "isarmor": false,
      "armor": {

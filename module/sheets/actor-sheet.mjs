@@ -11,8 +11,8 @@ export class AetrimondeActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["aetrimonde", "sheet", "actor"],
       template: "systems/aetrimonde_v0_8_x/templates/actor/actor-sheet.html",
-      width: 600,
-      height: 600,
+      width: 800,
+      height: 800,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
