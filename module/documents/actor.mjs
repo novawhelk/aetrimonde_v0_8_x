@@ -33,6 +33,8 @@ export class AetrimondeActor extends Actor {
     const data = actorData.data;
     const flags = actorData.flags.aetrimonde || {};
 
+    data.gpower.max = 3 + (data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(data.class) ? 1 : 0);
+
     //Prepare data common to all Actors
     for (let [key, ability] of Object.entries(data.abilities)) {
      // Calculate the modifier using d20 rules.
@@ -40,61 +42,70 @@ export class AetrimondeActor extends Actor {
       this.update({[`data.abilities.${key}.mod`]: ability.mod});
     }
 
-    this.data.data.carrycap = data.abilities.str.value * 10;
-    this.data.data.heavycap = data.abilities.str.value * 20;
-    this.data.data.dragcap = data.abilities.str.value * 30;
-    this.data.data.gpower.max = 3 + (this.data.data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(this.data.data.class) ? 1 : 0);
+    data.carrycap = data.abilities.str.value * 10;
+    data.heavycap = data.abilities.str.value * 20;
+    data.dragcap = data.abilities.str.value * 30;
 
-    this.data.data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
+    data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
 
-    const cash = this.data.data.cash;
+    const equipment = this.items.filter(entry => entry.type === "equipment")
+    let carryweight = 0;
+    let gearvalue = 0;
+    let encumbrance = 0;
+    for (let i of equipment) {
+      carryweight = carryweight + i.data.data.totalweight;
+      gearvalue = gearvalue + i.data.data.totalvalue;
+      encumbrance = ((i.data.data.isarmor || i.data.data.isshield) && i.data.data.equippedanywhere) ? Math.min(encumbrance, i.data.data.shield.encumbrance, i.data.data.armor.encumbrance) : encumbrance;
+    }
+
+    const cash = data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {
       const gp = Math.floor(cash);
       const sp = Math.floor(cash * 10 % 10);
       const cp = Math.floor(cash * 100 % 10);
-      this.data.data.cash = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
+      data.cash = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
-    const credit = this.data.data.credit;
+    const credit = data.credit;
     if (!isNaN(credit) && !isNaN(parseFloat(credit))) {
       const gp = Math.floor(credit);
       const sp = Math.floor(credit * 10 % 10);
       const cp = Math.floor(credit * 100 % 10);
-      this.data.data.credit = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
+      data.credit = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
-    const valuables = this.data.data.valuables;
+    const valuables = data.valuables;
     if (!isNaN(valuables) && !isNaN(parseFloat(valuables))) {
       const gp = Math.floor(valuables);
       const sp = Math.floor(valuables * 10 % 10);
       const cp = Math.floor(valuables * 100 % 10);
-      this.data.data.valuables = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
+      data.valuables = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
-    this.data.data.defenses.ac.abil = data.defenses.ac.heavy ? 0 : Math.max(data.abilities.dex.mod, data.abilities.int.mod);
-    this.data.data.defenses.fort.abil = Math.max(data.abilities.str.mod, data.abilities.con.mod);
-    this.data.data.defenses.ref.abil = Math.max(data.abilities.dex.mod, data.abilities.int.mod);
-    this.data.data.defenses.will.abil = Math.max(data.abilities.wis.mod, data.abilities.cha.mod);
+    data.defenses.ac.abil = data.defenses.ac.heavy ? 0 : Math.max(data.abilities.dex.mod, data.abilities.int.mod);
+    data.defenses.fort.abil = Math.max(data.abilities.str.mod, data.abilities.con.mod);
+    data.defenses.ref.abil = Math.max(data.abilities.dex.mod, data.abilities.int.mod);
+    data.defenses.will.abil = Math.max(data.abilities.wis.mod, data.abilities.cha.mod);
 
-    this.data.data.defenses.ref.shield = this.data.data.shield ? this.items.filter(entry => (entry._id === this.data.data.shield))[0].data.data.acbonus : 0;
+    data.defenses.ref.shield = data.shield ? this.items.filter(entry => (entry._id === data.shield))[0].data.data.acbonus : 0;
 
-    this.data.data.defenses.ac.total= 10 + data.defenses.ac.abil + data.defenses.ac.armor + data.defenses.ac.feat + data.defenses.ac.item + data.defenses.ac.misc;
-    this.data.data.defenses.fort.total = 10 + data.defenses.fort.abil + data.defenses.fort.class + data.defenses.fort.feat + data.defenses.fort.item + data.defenses.fort.misc;
-    this.data.data.defenses.ref.total = 10 + data.defenses.ref.abil + data.defenses.ref.class + data.defenses.ref.feat + data.defenses.ref.item + data.defenses.ref.misc + data.defenses.ref.shield;
-    this.data.data.defenses.will.total = 10 + data.defenses.will.abil + data.defenses.will.class + data.defenses.will.feat + data.defenses.will.item + data.defenses.will.misc;
+    data.defenses.ac.total= 10 + data.defenses.ac.abil + data.defenses.ac.armor + data.defenses.ac.feat + data.defenses.ac.item + data.defenses.ac.misc;
+    data.defenses.fort.total = 10 + data.defenses.fort.abil + data.defenses.fort.class + data.defenses.fort.feat + data.defenses.fort.item + data.defenses.fort.misc;
+    data.defenses.ref.total = 10 + data.defenses.ref.abil + data.defenses.ref.class + data.defenses.ref.feat + data.defenses.ref.item + data.defenses.ref.misc + data.defenses.ref.shield;
+    data.defenses.will.total = 10 + data.defenses.will.abil + data.defenses.will.class + data.defenses.will.feat + data.defenses.will.item + data.defenses.will.misc;
 
-    this.data.data.hp.abil = data.abilities.con.value;
-    this.data.data.hp.max = data.hp.class + data.abilities.con.value + data.hp.feat + data.hp.item + data.hp.misc;
-    this.data.data.resurgs.max = data.resurgs.class + Math.max(data.abilities.con.mod, 0) + data.resurgs.feat + data.resurgs.item + data.resurgs.misc;
-    this.data.data.hp.bloodied.value = Math.floor(data.hp.max / 2) + data.hp.bloodied.feat + data.hp.bloodied.item  + data.hp.bloodied.misc;
-    this.data.data.resurgs.size.value = Math.floor(data.hp.max / 4) + data.resurgs.size.feat + data.resurgs.size.item  + data.resurgs.size.misc;
+    data.hp.abil = data.abilities.con.value;
+    data.hp.max = data.hp.class + data.abilities.con.value + data.hp.feat + data.hp.item + data.hp.misc;
+    data.resurgs.max = data.resurgs.class + Math.max(data.abilities.con.mod, 0) + data.resurgs.feat + data.resurgs.item + data.resurgs.misc;
+    data.hp.bloodied.value = Math.floor(data.hp.max / 2) + data.hp.bloodied.feat + data.hp.bloodied.item  + data.hp.bloodied.misc;
+    data.resurgs.size.value = Math.floor(data.hp.max / 4) + data.resurgs.size.feat + data.resurgs.size.item  + data.resurgs.size.misc;
 
-    this.data.data.initiative.total = data.abilities.dex.mod + data.initiative.feat + data.initiative.item + data.initiative.misc;
-    this.data.data.speed.total = data.speed.base + data.speed.armor + data.speed.feat + data.speed.item + data.speed.misc;
-    this.data.data.encumbrance.total = data.encumbrance.armor + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
+    data.initiative.total = data.abilities.dex.mod + data.initiative.feat + data.initiative.item + data.initiative.misc;
+    data.speed.total = data.speed.base + data.speed.armor + data.speed.feat + data.speed.item + data.speed.misc;
+    data.encumbrance.total = data.encumbrance.armor + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
 
-    // this.data.data.perceptionpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Perception"))[0].data.data.total;
-    // this.data.data.insightpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Insight"))[0].data.data.total;
+    // data.perceptionpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Perception"))[0].data.data.total;
+    // data.insightpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Insight"))[0].data.data.total;
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     this._prepareCharacterData(actorData);
