@@ -29,49 +29,17 @@ export class AetrimondeActor extends Actor {
     }
 
     const equipment = this.items.filter(entry => entry.type === "equipment")
-    let carryweight = 0;
-    let gearvalue = 0;
     let encumbrance = 0;
-
-    let armorbonus = 0;
-    let armorresist = 0;
-    let armorheavy = false;
-    let shieldbonus = 0;
-    let armorspeed = 0;
 
     for (let i of equipment) {
       const itemData = i.data.data;
-      carryweight = carryweight + itemData.totalweight;
-      gearvalue = gearvalue + itemData.totalvalue;
 
       const armorencumbrance = itemData.isarmor ? itemData.armor.encumbrance : 0;
       const shieldencumbrance = itemData.isshield ? itemData.shield.encumbrance : 0;
       encumbrance = itemData.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
-
-      if (itemData.isarmor) {
-        armorbonus = itemData.equippedanywhere ? armorbonus + itemData.armor.acbonus : armorbonus;
-        armorresist = itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist;
-        armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
-        armorspeed = itemData.equippedanywhere ? speed + itemData.armor.speed : speed;
-      }
-      if (i.data.isshield) {
-        shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
-        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? speed + itemData.shield.speed : speed;
-      }
     }
-    data.carryweight = carryweight;
-    data.gearvalue = {
-      "gp" : Math.floor(gearvalue),
-      "sp" : Math.floor(gearvalue * 10 % 10),
-      "cp" : Math.floor(gearvalue * 100 % 10)
-    };
-    data.defenses.ac.armor = armorbonus + shieldbonus;
-    data.defenses.ac.heavy = armorheavy;
-    data.defenses.ref.shield = shieldbonus;
-    data.speed.armor = armorspeed;
     data.encumbrance.armor = encumbrance;
     data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
-    data.armorresist = armorresist;
   }
 
   /**
@@ -119,6 +87,47 @@ export class AetrimondeActor extends Actor {
       const cp = Math.floor(valuables * 100 % 10);
       data.valuables = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
+
+    const equipment = this.items.filter(entry => entry.type === "equipment")
+    let carryweight = 0;
+    let gearvalue = 0;
+
+    let armorbonus = 0;
+    let armorresist = 0;
+    let armorheavy = false;
+    let shieldbonus = 0;
+    let armorspeed = 0;
+
+    for (let i of equipment) {
+      const itemData = i.data.data;
+      carryweight = carryweight + itemData.totalweight;
+      gearvalue = gearvalue + itemData.totalvalue;
+
+      const armorencumbrance = itemData.isarmor ? itemData.armor.encumbrance : 0;
+      const shieldencumbrance = itemData.isshield ? itemData.shield.encumbrance : 0;
+
+      if (itemData.isarmor) {
+        armorbonus = itemData.equippedanywhere ? armorbonus + itemData.armor.acbonus : armorbonus;
+        armorresist = itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist;
+        armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
+        armorspeed = itemData.equippedanywhere ? speed + itemData.armor.speed : speed;
+      }
+      if (i.data.isshield) {
+        shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
+        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? speed + itemData.shield.speed : speed;
+      }
+    }
+    data.carryweight = carryweight;
+    data.gearvalue = {
+      "gp" : Math.floor(gearvalue),
+      "sp" : Math.floor(gearvalue * 10 % 10),
+      "cp" : Math.floor(gearvalue * 100 % 10)
+    };
+    data.defenses.ac.armor = armorbonus + shieldbonus;
+    data.defenses.ac.heavy = armorheavy;
+    data.defenses.ref.shield = shieldbonus;
+    data.speed.armor = armorspeed;
+    data.armorresist = armorresist;
 
     data.defenses.ac.abil = data.defenses.ac.heavy ? 0 : Math.max(data.abilities.dex.mod, data.abilities.int.mod);
     data.defenses.fort.abil = Math.max(data.abilities.str.mod, data.abilities.con.mod);
