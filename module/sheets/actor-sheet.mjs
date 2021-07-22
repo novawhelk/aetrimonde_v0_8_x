@@ -10,7 +10,7 @@ export class AetrimondeActorSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["aetrimonde", "sheet", "actor"],
-      template: "systems/aetrimonde/templates/actor/actor-sheet.html",
+      template: "systems/aetrimonde_v0_8_x/templates/actor/actor-sheet.html",
       width: 600,
       height: 600,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
@@ -19,7 +19,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/aetrimonde/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+    return `systems/aetrimonde_v0_8_x/templates/actor/actor-${this.actor.data.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
