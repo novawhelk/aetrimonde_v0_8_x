@@ -52,7 +52,7 @@ export class AetrimondeActor extends Actor {
       const gp = Math.floor(cash);
       const sp = Math.floor(cash * 10 % 10);
       const cp = Math.floor(cash * 100 % 10);
-      this.data.data.cash = cash > 0 ? ((gp > 0 ? " " + gp + "gp") + (sp > 0 ? " " + sp + "sp") + (cp > 0 ? " " + cp + "cp")) : "0gp";
+      this.data.data.cash = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
     const credit = this.data.data.credit;
@@ -139,7 +139,7 @@ export class AetrimondeActor extends Actor {
   _getCharacterRollData(data) {
     if (this.data.type !== 'character') return;
 
-    
+
   }
 
   /**
