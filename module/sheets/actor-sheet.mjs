@@ -247,7 +247,19 @@ export class AetrimondeActorSheet extends ActorSheet {
         if (!(i.data.isarmor || i.data.isshield || i.data.isweapon || i.data.isimplement || i.data.isconsumable)) {
           gear.push(i);
         }
-
+      }
+      // Append to powers.
+      else if (i.type === 'power') {
+        i.json = JSON.stringify(i);
+        if (i.data.favorite) {
+          powers.favorites.entries.push(i);
+        }
+        if (i.data.powertype != undefined && i.data.powertype != "" && i.data.powertype != "Power Type") {
+          powers[i.data.powertype].entries.push(i);
+        }
+        else {
+          powers.other.entries.push(i);
+        }
       }
     }
 

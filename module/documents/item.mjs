@@ -130,11 +130,162 @@ export class AetrimondeItem extends Item {
     }
   }
 
+  _preparePowerData(itemData) {
+    const data = itemData.data;
+    const actor = this.actor;
+
+    if (this.actor) {
+      data.autoprof = false;
+      const actorData = actor.data.data;
+      const defaultweapon = {
+        "weapon": {
+          "prof": 0,
+          "attack": {
+            "feat": 0,
+            "itemb": 0,
+            "misc": 0
+          },
+          "weaponthreat": false,
+          "mvsr": "",
+          "quals": ""
+        },
+        "shield": {
+          "attack": {
+            "feat": 0,
+            "itemb": 0,
+            "misc": 0
+          }
+        },
+        "equippedanywhere": true
+      };
+
+      const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.mainhand)).data : "";
+      const offhanditem = actor.data.data.equipped.offhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.offhand)).data : "";
+
+      const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
+      data.attack.mod = mod;
+      data.attack.powermisc = data.attack.powermisc ? data.attack.powermisc : 0;
+      const attbonus = this._powerAttackBonus(this.data);
+
+      data.relevantitemtype = "Item";
+      data.relevantoffitemtype = "Off-Weapon";
+
+      data.useditems = [];
+
+      if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powergroup)) {
+        data.requiresitem = true;
+        data.relevantitemtype = data.attack.off ? "Main-Weapon" : "Weapon";
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon));
+        const defaultmainweapon = mainhanditem.isweapon ? mainhanditem : (offhanditem.isweapon ? offhanditem : defaultweapon);
+        const defaultoffweapon = mainhanditem.isweapon ? (offhanditem.isweapon ? offhanditem : defaultweapon) : defaultweapon;
+        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultmainweapon;
+        const offweapon = data.offitem ? actor.data.items.filter(entry => entry._id === data.offitem)[0].data : defaultoffweapon;
+        data.useditems = data.useditems.concat(mainweapon);
+        if (mainweapon != offweapon)
+        data.useditems = data.useditems.concat(offweapon);
+        const missingmelee = (data.range.includes("Melee") && ((mainweapon.weapon.mvsr.value != "melee" && offweapon.weapon.mvsr.value != "melee") || (data.attack.off && (mainweapon.weapon.mvsr.value != "melee" || offweapon.weapon.mvsr.value != "melee" || actorData.equipped.mainhand === actorData.equipped.offhand))));
+        const missingranged = (data.range.includes("Ranged") && ((mainweapon.weapon.mvsr.value != "ranged" && offweapon.weapon.mvsr.value != "ranged" && !mainweapon.weapon.quals.includes("Thrown") && !offweapon.weapon.quals.includes("Thrown")) || (data.attack.off && ((mainweapon.weapon.mvsr.value != "ranged" && !mainweapon.weapon.quals.includes("Thrown")) || (offweapon.weapon.mvsr.value != "ranged" && !offweapon.weapon.quals.includes("Thrown")) || actorData.equipped.mainhand === actorData.equipped.offhand))));
+        data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.equippedmh && (mainweapon.slot != "held" && !mainweapon.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.equippedoh && (offweapon.slot != "held" && !offweapon.equippedanywhere)));
+        data.warningmessage = "You might not have the right item(s) equipped.";
+        data.attack.prof = mainweapon.weapon.prof;
+        data.attack.feat = Math.max(attbonus.feat, mainweapon.weapon.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, mainweapon.weapon.attack.itemb);
+        data.attack.misc = attbonus.misc + mainweapon.weapon.attack.misc;
+        data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.attack.hasthreat = mainweapon.weapon.weaponthreat ? true : data.attack.hasthreat;
+        data.attack.offprof = offweapon.weapon.prof;
+        data.attack.offfeat = Math.max(attbonus.feat, offweapon.weapon.attack.feat);
+        data.attack.offitemb = Math.max(attbonus.itemb, offweapon.weapon.attack.itemb);
+        data.attack.offmisc = attbonus.misc + offweapon.weapon.attack.misc;
+        data.attack.offbonus = mod + data.attack.offprof + data.attack.offfeat + data.attack.offitemb + data.attack.offmisc + data.attack.powermisc;
+        data.attack.hasoffthreat = offweapon.weapon.weaponthreat ? true : data.attack.hasoffthreat;
+        data.damagebonus = this._powerDamageBonus(this.data)
+        data.autoprof = true;
+        data.autoweapon = true;
+      }
+      else if (  data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+        data.requiresitem = true;
+        data.relevantitemtype = "Unarmed Attack";
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon && entry.data.weapon.unarmed && entry.data.equippedanywhere));
+        const unarmedattack = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data.weapon : defaultweapon.weapon;
+        data.useditems = data.useditems.concat(unarmedattack);
+        data.warning = data.relevantitems && !data.mainitem;
+        data.warningmessage = "You have alternate unarmed attacks; you might need to select one."
+        data.attack.prof = unarmedattack.prof;
+        data.attack.feat = Math.max(attbonus.feat, unarmedattack.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, unarmedattack.attack.itemb);
+        data.attack.misc = attbonus.misc + unarmedattack.attack.misc;
+        data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.attack.hasthreat = unarmedattack.weaponthreat ? true : data.attack.hasthreat;
+        data.damagebonus = this._powerDamageBonus(this.data)
+        data.autoprof = true;
+        data.unarmed = true;
+        data.autoweapon = true;
+      }
+      else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+        data.requiresitem = true;
+        data.relevantitemtype = "Shield";
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isshield));
+        const defaultshield = offhanditem.isshield ? offhanditem : (mainhanditem.isshield ? mainhanditem : defaultweapon);
+        const shield = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultshield;
+        data.useditems = data.useditems.concat(shield);
+        data.warning = !data.mainitem && !shield.shield.dice || !shield.equippedanywhere;
+        data.warningmessage = "You might not have the right item(s) equipped.";
+        data.attack.feat = Math.max(attbonus.feat, shield.shield.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, shield.shield.attack.itemb);
+        data.attack.misc = attbonus.misc + shield.shield.attack.misc;
+        data.attack.prof = 0;
+        data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.damagebonus = this._powerDamageBonus(this.data)
+        data.autoprof = true;
+        data.autoweapon = true;
+      }
+      else if (data.keywords.includes("Implement") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+        data.attack.prof = 0;
+        data.attack.feat = attbonus.feat;
+        data.attack.itemb = attbonus.itemb;
+        data.attack.misc = attbonus.misc;
+        data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.damagebonus = this._powerDamageBonus(this.data)
+        data.autoprof = true;
+        const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement && this._isEquipped(entry));
+        if (imps.length) {
+          for (const imp of imps) {
+            // if (this._isEquipped(imp))
+            data.useditems = data.useditems.concat(imp.data);
+          }
+        }
+      }
+      else if (["normal", "lesser", "greater", "feature"].includes(data.powergroup) && !this.actor.data.data.isnpc){
+        data.attack.prof = 0;
+        data.attack.bonus = mod + attbonus.feat + attbonus.itemb + attbonus.misc + data.attack.powermisc;
+        data.damagebonus = this._powerDamageBonus(this.data)
+      }
+      else {
+        data.attack.feat = Math.max(data.attack.feat, attbonus.feat);
+        data.attack.itemb = Math.max(data.attack.itemb, attbonus.itemb);
+        data.attack.misc = data.attack.misc + attbonus.misc;
+        data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.attack.offbonus = mod + data.attack.offprof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
+        data.isnpc = this.actor ? (this.actor.data.type === "npc") : false;
+      }
+
+      data.attack.vslabel = (data.attack.vsdefense != "") ? data.defenses[`${data.attack.vsdefense}`].slabel : "";
+
+      if (data.powergroup === "normal" || data.powergroup === "lesser" || data.powergroup === "greater") {
+        data.hasfrequency = false;
+      }
+      else {
+        data.hasfrequency = true;
+      }
+    };
+  }
+
   /**
-   * Prepare a data object which is passed to any Roll formulas which are created related to this Item
-   * @private
-   */
-   getRollData() {
+  * Prepare a data object which is passed to any Roll formulas which are created related to this Item
+  * @private
+  */
+  getRollData() {
     // If present, return the actor's roll data.
     if ( !this.actor ) return null;
     const rollData = this.actor.getRollData();
@@ -144,10 +295,10 @@ export class AetrimondeItem extends Item {
   }
 
   /**
-   * Handle clickable rolls.
-   * @param {Event} event   The originating click event
-   * @private
-   */
+  * Handle clickable rolls.
+  * @param {Event} event   The originating click event
+  * @private
+  */
   async roll() {
     const item = this.data;
 
