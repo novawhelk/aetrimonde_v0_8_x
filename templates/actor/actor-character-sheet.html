@@ -186,7 +186,7 @@
                   <span class="centered">
                     {{#if data.isnpc}}{{data.defenses.ac.feat}}{{/if}}
                     {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.feat" value="{{data.defenses.ac.feat}}" data-dtype="Number"/>{{/unless}}
-                  </span>
+                  </span>equippedanywhere}
                   <span class="centered">
                     {{#if data.isnpc}}{{data.defenses.ac.item}}{{/if}}
                     {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.item" value="{{data.defenses.ac.item}}" data-dtype="Number"/>{{/unless}}
@@ -780,7 +780,7 @@
                     <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
                     {{/unless}}
                   </span>
                   {{/if}}
@@ -813,7 +813,7 @@
                     <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
                     {{/unless}}
                     {{/if}}
                   </span>
@@ -872,7 +872,7 @@
                     <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-fist-raised"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-fist-raised"></i></a>
                     {{/unless}}
                     {{/if}}
                   </span>
@@ -918,7 +918,7 @@
                           <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                           {{/if}}
                           {{#unless item.data.isheld}}
-                          <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-magic"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-magic"></i></a>
                           {{/unless}}
                           {{/if}}
                         </span>
