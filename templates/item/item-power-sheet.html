@@ -4,15 +4,15 @@
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="flexrow">
-              <select name="data.powergroup" data-type="String">
-                  {{#select data.powergroup}}
+              <select name="data.powertype" data-type="String">
+                  {{#select data.powertype}}
                   <option value="Power Type"></option>
                   {{#each data.powertypes as |ptype p|}}
                   <option value="{{p}}">{{ptype.label}}</option>
                   {{/each}}
                   {{/select}}
               </select>
-              <input name="data.powertype" type="text" value="{{data.powertype}}" placeholder="Source"/>
+              <input name="data.origin" type="text" value="{{data.origin}}" placeholder="Source"/>
               <input class="star" name="data.favorite" type="checkbox" {{checked data.favorite}}/>
             </div>
         </div>

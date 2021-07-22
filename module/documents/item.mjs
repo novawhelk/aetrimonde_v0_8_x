@@ -20,7 +20,7 @@ export class AetrimondeItem extends Item {
     // things organized.
     if (itemData.type === 'skill') this._prepareSkillData(itemData);
     if (itemData.type === 'perk') this._preparePerkData(itemData);
-    // if (itemData.type === 'power') this._preparePowerData(itemData);
+    if (itemData.type === 'power') this._preparePowerData(itemData);
     if (itemData.type === 'equipment') this._prepareEquipmentData(itemData);
     if (itemData.type === 'ritual') this._prepareRitualData(itemData);
   }
@@ -172,7 +172,7 @@ export class AetrimondeItem extends Item {
 
       data.useditems = [];
 
-      if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powergroup)) {
+      if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = data.attack.off ? "Main-Weapon" : "Weapon";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon));
@@ -203,7 +203,7 @@ export class AetrimondeItem extends Item {
         data.autoprof = true;
         data.autoweapon = true;
       }
-      else if (  data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+      else if (  data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Unarmed Attack";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon && entry.data.weapon.unarmed && entry.data.equippedanywhere));
@@ -222,7 +222,7 @@ export class AetrimondeItem extends Item {
         data.unarmed = true;
         data.autoweapon = true;
       }
-      else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+      else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Shield";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isshield));
@@ -240,7 +240,7 @@ export class AetrimondeItem extends Item {
         data.autoprof = true;
         data.autoweapon = true;
       }
-      else if (data.keywords.includes("Implement") && ["normal", "lesser", "greater", "feature"].includes(data.powergroup)) {
+      else if (data.keywords.includes("Implement") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.attack.prof = 0;
         data.attack.feat = attbonus.feat;
         data.attack.itemb = attbonus.itemb;
@@ -256,7 +256,7 @@ export class AetrimondeItem extends Item {
           }
         }
       }
-      else if (["normal", "lesser", "greater", "feature"].includes(data.powergroup) && !this.actor.data.data.isnpc){
+      else if (["normal", "lesser", "greater", "feature"].includes(data.powertype) && !this.actor.data.data.isnpc){
         data.attack.prof = 0;
         data.attack.bonus = mod + attbonus.feat + attbonus.itemb + attbonus.misc + data.attack.powermisc;
         data.damagebonus = this._powerDamageBonus(this.data)
@@ -272,7 +272,7 @@ export class AetrimondeItem extends Item {
 
       data.attack.vslabel = (data.attack.vsdefense != "") ? data.defenses[`${data.attack.vsdefense}`].slabel : "";
 
-      if (data.powergroup === "normal" || data.powergroup === "lesser" || data.powergroup === "greater") {
+      if (data.powertype === "normal" || data.powertype === "lesser" || data.powertype === "greater") {
         data.hasfrequency = false;
       }
       else {
