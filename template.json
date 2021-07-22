@@ -1,73 +1,1044 @@
 {
-  "Actor": {
-    "types": ["character", "npc"],
-    "templates": {
-      "base": {
-        "health": {
-          "value": 10,
-          "min": 0,
-          "max": 10
-        },
-        "power": {
-          "value": 5,
-          "min": 0,
-          "max": 5
-        },
-        "biography": ""
-      }
-    },
-    "character": {
-      "templates": ["base"],
-      "attributes": {
-        "level": {
-          "value": 1
-        }
-      },
-      "abilities": {
-        "str": {
-          "value": 10
-        },
-        "dex": {
-          "value": 10
-        },
-        "con": {
-          "value": 10
-        },
-        "int": {
-          "value": 10
-        },
-        "wis": {
-          "value": 10
-        },
-        "cha": {
-          "value": 10
-        }
-      }
-    },
-    "npc": {
-      "templates": ["base"],
-      "cr": 0
-    }
-  },
-  "Item": {
-    "types": ["item", "feature", "spell"],
-    "templates": {
-      "base": {
-        "description": ""
-      }
-    },
-    "item": {
-      "templates": ["base"],
-      "quantity": 1,
-      "weight": 0,
-      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
-    },
-    "feature": {
-      "templates": ["base"]
-    },
-    "spell": {
-      "templates": ["base"],
-      "spellLevel": 1
-    }
-  }
+ "Actor": {
+   "types": ["character", "npc"],
+   "templates": {
+     "base": {
+       "hp": {
+         "value": 10,
+         "class": 14,
+         "feat": 0,
+         "item": 0,
+         "misc": 0,
+         "bloodied": {
+           "feat": 0,
+           "item": 0,
+           "misc": 0
+         }
+       },
+       "resurgs": {
+         "value": 10,
+         "min": 0,
+         "class": 1,
+         "feat": 0,
+         "item": 0,
+         "misc": 0,
+         "size": {A
+           "feat": 0,
+           "item": 0,
+           "misc": 0
+         }
+       },
+       "gpower": {
+         "value": 3,
+         "min": 0,
+         "max": 3
+       },
+       "abilities": {
+         "str": {
+           "value": 10,
+           "mod": 0,
+           "label": "Strength",
+           "slabel": "STR"
+         },
+         "dex": {
+           "value": 10,
+           "mod": 0,
+           "label": "Dexterity",
+           "slabel": "DEX"
+         },
+         "wis": {
+           "value": 10,
+           "mod": 0,
+           "label": "Wisdom",
+           "slabel": "WIS"
+         },
+         "con": {
+           "value": 10,
+           "mod": 0,
+           "label": "Constitution",
+           "slabel": "CON"
+         },
+         "int": {
+           "value": 10,
+           "mod": 0,
+           "label": "Intelligence",
+           "slabel": "INT"
+         },
+         "cha": {
+           "value": 10,
+           "mod": 0,
+           "label": "Charisma",
+           "slabel": "CHA"
+         }
+       },
+       "defenses": {
+         "ac": {
+           "armor": 0,
+           "abil": 0,
+           "feat": 0,
+           "item": 0,
+           "misc": 0,
+           "heavy": false
+         },
+         "fort": {
+           "class": 0,
+           "abil": 0,
+           "feat": 0,
+           "item": 0,
+           "misc": 0
+         },
+         "ref": {
+           "class": 0,
+           "abil": 0,
+           "feat": 0,
+           "item": 0,
+           "misc": 0,
+           "shield": 0
+         },
+         "will": {
+           "class": 0,
+           "abil": 0,
+           "feat": 0,
+           "item": 0,
+           "misc": 0
+         }
+       },
+       "initiative": {
+         "feat": 0,
+         "item": 0,
+         "misc": 0
+       },
+       "speed": {
+         "base": 6,
+         "armor": 0,
+         "feat": 0,
+         "item": 0,
+         "misc": 0,
+         "modes": ""
+       },
+       "encumbrance": {
+         "armor": 0,
+         "feat": 0,
+         "item": 0,
+         "misc": 0
+       },
+       "cash": "100g",
+       "credit": "",
+       "valuables": "",
+       "assets": "",
+       "equipped": {
+         "mainhand": "",
+         "offhand": "",
+         "body": "",
+         "head": "",
+         "neck": "",
+         "cloak": "",
+         "gloves": "",
+         "belt": "",
+         "feet": "",
+         "ring1": "",
+         "ring2": ""
+       }
+     }
+   },
+   "character": {
+     "templates": ["base"],
+     "shortname": "",
+     "race": "",
+     "class": "",
+     "level": "",
+     "gender": "",
+     "bground": "",
+     "faith": "",
+     "age": "",
+     "biography": "",
+     "attributes": {
+       "level": {
+         "value": 1
+       }
+     }
+   },
+   "npc": {
+     "templates": ["base"],
+     "tier": "",
+     "isnpc": true,
+     "tier": 0,
+     "rank": "normal",
+     "creaturetype": "",
+     "epbonus": 0,
+     "size": "medium",
+     "ranks": {
+       "normal": {
+         "label": "Normal"
+       },
+       "elite": {
+         "label": "Elite"
+       },
+       "champion": {
+         "label": "Champion"
+       },
+       "minion": {
+         "label": "Minion"
+       }
+     },
+     "sizes": {
+       "tiny": {
+         "label": "Tiny",
+         "sizebase": -2,
+         "tokensize": 0.33
+       },
+       "small": {
+         "label": "Small",
+         "sizebase": -1,
+         "tokensize": 0.5
+       },
+       "medium": {
+         "label": "Medium",
+         "sizebase": 0,
+         "tokensize": 1
+       },
+       "large": {
+         "label": "Large",
+         "sizebase": 1,
+         "tokensize": 2
+       },
+       "huge": {
+         "label": "Huge",
+         "sizebase": 2,
+         "tokensize": 3
+       },
+       "gargantuan": {
+         "label": "Gargantuan",
+         "sizebase": 4,
+         "tokensize": 4
+       }
+     },
+     "attributes": {
+       "level": {
+         "value": 1
+       }
+     }
+   }
+ },
+ "Item": {
+   "types": ["equipment", "enchantment", "discipline", "resistance", "ritual", "skill", "perk", "language", "feature", "power", "logentry", "association", "class", "race"],
+   "templates": {
+     "base": {
+       "description": ""
+     }
+   },
+   "equipment": {
+     "templates": ["base"],
+     "quantity": 1,
+     "eachweight": "",
+     "eachvalue": "",
+     "slot": {
+       "value": "",
+       "slots": {
+         "held": "Held",
+         "body": "Body",
+         "head": "Head",
+         "neck": "Neck",
+         "cloak": "Cloak",
+         "gloves": "Gloves",
+         "belt": "Belt",
+         "feet": "Feet",
+         "ring": "Ring",
+         "noslot": "None"
+       }
+     },
+     "magical": false,
+     "relatedprops": false,
+     "props": "",
+     "critprops": "",
+     "relatedpower": false,
+     "power": {
+       "exists": false,
+       "keywords": "",
+       "action": "",
+       "frequency": "",
+       "range": "",
+       "targets": "",
+       "provoked": {
+         "exists": false,
+         "text": ""
+       },
+       "requirement": {
+         "exists": false,
+         "text": ""
+       },
+       "effect": {
+         "exists": false,
+         "text": ""
+       },
+       "attack": {
+         "exists": false,
+         "bonus": 0,
+         "vsdefense": "",
+         "hasthreat": false
+       },
+       "hit": {
+         "text": ""
+       },
+       "crit": {
+         "text": ""
+       },
+       "miss": {
+         "text": ""
+       },
+       "maintain": {
+         "exists": false,
+         "text": ""
+       },
+       "special": {
+         "exists": false,
+         "text": ""
+       }
+     },
+     "isarmor": false,
+     "armor": {
+       "acbonus": "",
+       "resist": "",
+       "encumbrance": "",
+       "speed": "",
+       "isheavy": false,
+       "group": {
+         "value": "",
+         "groups": {
+           "cloth": "Cloth",
+           "leather": "Leather",
+           "chain": "Chain",
+           "scale": "Scale",
+           "plate": "Plate"
+         }
+       }
+     },
+     "isshield": false,
+     "shield": {
+       "defbonus": "",
+       "encumbrance": "",
+       "speed": "",
+       "dice": "",
+       "attack" : {
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0
+       },
+       "damage" : {
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0
+       },
+       "group": {
+         "value": "",
+         "groups": {
+           "lshield": "Light Shield",
+           "hshield": "Heavy Shield"
+         }
+       }
+     },
+     "isweapon": false,
+     "weapon": {
+       "mvsr": {
+         "value": "",
+         "mvsrs": {
+           "melee": "Melee",
+           "ranged": "Ranged"
+         }
+       },
+       "complexity": {
+         "value": "",
+         "complexities": {
+           "improvised": "Improvised",
+           "simple": "Simple",
+           "military": "Military"
+         }
+       },
+       "hands": {
+         "value": "",
+         "handses": {
+           "lt": "Light",
+           "1h": "One-handed",
+           "2h": "Two-handed"
+         }
+       },
+       "quantity": 1,
+       "weight": "",
+       "prof": "",
+       "dice": "",
+       "range": "",
+       "groups": "",
+       "value": "",
+       "quals": "",
+       "attack": {
+         "abil": "",
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0,
+         "vsdefense": "ac"
+       },
+       "damage": {
+         "abil": "",
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0,
+         "type": ""
+       }
+     },
+     "isimplement": false,
+     "implement": {
+       "type": {
+         "value": "none",
+         "types": {
+           "none": "",
+           "arcane": "Arcane",
+           "divine": "Divine"
+         }
+       },
+       "attack" : {
+         "itemb": 0,
+         "misc": 0
+       },
+       "damage" : {
+         "itemb": 0,
+         "misc": 0
+       }
+     },
+     "isconsumable": false,
+     "defenses": {
+       "ac": {
+         "label": "AC",
+         "slabel": "AC"
+       },
+       "fort": {
+         "label": "Fortitude",
+         "slabel": "Fort"
+       },
+       "ref": {
+         "label": "Reflex",
+         "slabel": "Ref"
+       },
+       "will": {
+         "label": "Will",
+         "slabel": "Will"
+       }
+     },
+     "abilities": {
+       "str": {
+         "label": "Strength",
+         "slabel": "STR",
+         "value": "str"
+       },
+       "con": {
+         "label": "Constitution",
+         "slabel": "CON",
+         "value": "con"
+       },
+       "dex": {
+         "label": "Dexterity",
+         "slabel": "DEX",
+         "value": "Dex"
+       },
+       "int": {
+         "label": "Intelligence",
+         "slabel": "INT",
+         "value": "int"
+       },
+       "wis": {
+         "label": "Wisdom",
+         "slabel": "WIS",
+         "value": "wis"
+       },
+       "cha": {
+         "label": "Charisma",
+         "slabel": "CHA",
+         "value": "cha"
+       }
+     }
+   },
+   "enchantment": {
+     "templates": ["base"],
+     "quantity": 1,
+     "eachweight": "",
+     "eachvalue": "",
+     "slot": {
+       "value": "",
+       "slots": {
+         "held": "Held",
+         "body": "Body",
+         "head": "Head",
+         "neck": "Neck",
+         "cloak": "Cloak",
+         "gloves": "Gloves",
+         "belt": "Belt",
+         "feet": "Feet",
+         "ring": "Ring",
+         "noslot": "None"
+       }
+     },
+     "magical": false,
+     "relatedprops": false,
+     "props": "",
+     "critprops": "",
+     "relatedpower": false,
+     "power": {
+       "exists": false,
+       "keywords": "",
+       "action": "",
+       "frequency": "",
+       "range": "",
+       "targets": "",
+       "provoked": {
+         "exists": false,
+         "text": ""
+       },
+       "requirement": {
+         "exists": false,
+         "text": ""
+       },
+       "effect": {
+         "exists": false,
+         "text": ""
+       },
+       "attack": {
+         "exists": false,
+         "bonus": 0,
+         "vsdefense": "",
+         "hasthreat": false
+       },
+       "hit": {
+         "text": ""
+       },
+       "crit": {
+         "text": ""
+       },
+       "miss": {
+         "text": ""
+       },
+       "maintain": {
+         "exists": false,
+         "text": ""
+       },
+       "special": {
+         "exists": false,
+         "text": ""
+       },
+       "expended": false
+     },
+     "isarmor": false,
+     "armor": {
+       "acbonus": "",
+       "resist": "",
+       "encumbrance": "",
+       "speed": "",
+       "isheavy": false,
+       "group": {
+         "value": "",
+         "groups": {
+           "cloth": "Cloth",
+           "leather": "Leather",
+           "chain": "Chain",
+           "scale": "Scale",
+           "plate": "Plate"
+         }
+       }
+     },
+     "isshield": false,
+     "shield": {
+       "defbonus": "",
+       "encumbrance": "",
+       "speed": "",
+       "dice": "",
+       "attack" : {
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0
+       },
+       "damage" : {
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0
+       },
+       "group": {
+         "value": "",
+         "groups": {
+           "lshield": "Light Shield",
+           "hshield": "Heavy Shield"
+         }
+       }
+     },
+     "isweapon": false,
+     "weapon": {
+       "mvsr": {
+         "value": "",
+         "mvsrs": {
+           "melee": "Melee",
+           "ranged": "Ranged"
+         }
+       },
+       "complexity": {
+         "value": "",
+         "complexities": {
+           "improvised": "Improvised",
+           "simple": "Simple",
+           "military": "Military"
+         }
+       },
+       "hands": {
+         "value": "",
+         "handses": {
+           "lt": "Light",
+           "1h": "One-handed",
+           "2h": "Two-handed"
+         }
+       },
+       "quantity": 1,
+       "weight": "",
+       "prof": "",
+       "dice": "",
+       "range": "",
+       "groups": "",
+       "value": "",
+       "quals": "",
+       "ammunition": {
+         "value": 0,
+         "max": 0,
+         "min": 0
+       },
+       "attack": {
+         "abil": "",
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0,
+         "vsdefense": "ac"
+       },
+       "damage": {
+         "abil": "",
+         "feat": 0,
+         "itemb": 0,
+         "misc": 0,
+         "type": ""
+       }
+     },
+     "isimplement": false,
+     "implement": {
+       "type": {
+         "value": "none",
+         "types": {
+           "none": "",
+           "arcane": "Arcane",
+           "divine": "Divine"
+         }
+       },
+       "attack" : {
+         "itemb": 0,
+         "misc": 0
+       },
+       "damage" : {
+         "itemb": 0,
+         "misc": 0
+       }
+     },
+     "isconsumable": false,
+     "defenses": {
+       "ac": {
+         "label": "AC",
+         "slabel": "AC"
+       },
+       "fort": {
+         "label": "Fortitude",
+         "slabel": "Fort"
+       },
+       "ref": {
+         "label": "Reflex",
+         "slabel": "Ref"
+       },
+       "will": {
+         "label": "Will",
+         "slabel": "Will"
+       }
+     },
+     "abilities": {
+       "str": {
+         "label": "Strength",
+         "slabel": "STR",
+         "value": "str"
+       },
+       "con": {
+         "label": "Constitution",
+         "slabel": "CON",
+         "value": "con"
+       },
+       "dex": {
+         "label": "Dexterity",
+         "slabel": "DEX",
+         "value": "Dex"
+       },
+       "int": {
+         "label": "Intelligence",
+         "slabel": "INT",
+         "value": "int"
+       },
+       "wis": {
+         "label": "Wisdom",
+         "slabel": "WIS",
+         "value": "wis"
+       },
+       "cha": {
+         "label": "Charisma",
+         "slabel": "CHA",
+         "value": "cha"
+       }
+     }
+   },
+   "discipline": {
+     "templates": ["base"],
+     "keyword": "",
+     "powertype": "",
+     "attack" : {
+       "feat": 0,
+       "itemb": 0,
+       "misc": 0
+     },
+     "damage" : {
+       "feat": 0,
+       "itemb": 0,
+       "misc": 0
+     }
+   },
+   "resistance": {
+     "templates": ["base"],
+     "amount": 0
+   },
+   "ritual": {
+     "templates": ["base"],
+     "keyskill": "",
+     "category": "",
+     "duration": "",
+     "known": false,
+     "ccost": "",
+     "ctime": "",
+     "scrollquantity": 0,
+     "scost": "",
+     "stime": "",
+     "skills": {
+       "acrobatics": {
+         "label": "Acrobatics"
+       },
+       "arcana": {
+         "label": "Arcana"
+       },
+       "athletics": {
+         "label": "Athletics"
+       },
+       "deception": {
+         "label": "Deception"
+       },
+       "endurance": {
+         "label": "Endurance"
+       },
+       "engineering": {
+         "label": "Engineering"
+       },
+       "history": {
+         "label": "History"
+       },
+       "insight": {
+         "label": "Insight"
+       },
+       "intimidate": {
+         "label": "Intimidate"
+       },
+       "medicine": {
+         "label": "Medicine"
+       },
+       "nature": {
+         "label": "Nature"
+       },
+       "perception": {
+         "label": "Perception"
+       },
+       "persuasion": {
+         "label": "Persuasion"
+       },
+       "religion": {
+         "label": "Religion"
+       },
+       "society": {
+         "label": "Society"
+       },
+       "stealth": {
+         "label": "Stealth"
+       },
+       "subterfuge": {
+         "label": "Subterfuge"
+       },
+       "warfare": {
+         "label": "Warfare"
+       }
+     }
+   },
+   "skill": {
+     "name": "",
+     "abil": "",
+     "trained": false,
+     "encumbered": false,
+     "feat": 0,
+     "itemb": 0,
+     "misc": 0,
+     "abilities": {
+       "str": {
+         "label": "STR",
+         "value": "str"
+       },
+       "con": {
+         "label": "CON",
+         "value": "con"
+       },
+       "dex": {
+         "label": "DEX",
+         "value": "dex"
+       },
+       "int": {
+         "label": "INT",
+         "value": "int"
+       },
+       "wis": {
+         "label": "WIS",
+         "value": "wis"
+       },
+       "cha": {
+         "label": "CHA",
+         "value": "cha"
+       }
+     }
+   },
+   "perk": {
+     "templates": ["base"],
+     "name": "",
+     "total": 0,
+     "abil": "",
+     "mod": 0,
+     "encumbered": false,
+     "feat": 0,
+     "itemb": 0,
+     "misc": 0,
+     "abilities": {
+       "str": {
+         "label": "STR",
+         "value": "str"
+       },
+       "con": {
+         "label": "CON",
+         "value": "con"
+       },
+       "dex": {
+         "label": "DEX",
+         "value": "dex"
+       },
+       "int": {
+         "label": "INT",
+         "value": "int"
+       },
+       "wis": {
+         "label": "WIS",
+         "value": "wis"
+       },
+       "cha": {
+         "label": "CHA",
+         "value": "cha"
+       }
+     }
+   },
+   "language": {
+     "templates": ["base"],
+     "name": ""
+   },
+   "feature": {
+     "templates": ["base"],
+     "req": "",
+     "source": "",
+     "category": "",
+     "benefit": "",
+     "notes": "",
+     "sources": {
+       "rfeature": {
+         "label": "Racial Feature",
+         "value": "rfeature"
+       },
+       "cfeature": {
+         "label": "Class Feature",
+         "value": "cfeature"
+       },
+       "ifeature": {
+         "label": "Item Property",
+         "value": "ifeature"
+       },
+       "feat": {
+         "label": "Feat",
+         "value": "feat"
+       },
+       "prof": {
+         "label": "Proficiency",
+         "value": "prof"
+       },
+       "other": {
+         "label": "Other",
+         "value": "other"
+       }
+     }
+   },
+   "power": {
+     "templates": ["base"],
+     "origin": "",
+     "powertype": "",
+     "uses": {
+       "value": 0,
+       "max": 0,
+       "min": 0
+     },
+     "favorite": false,
+     "flavortext": "",
+     "keywords": "",
+     "action": "",
+     "frequency": "",
+     "hasfrequency": true,
+     "range": "",
+     "targets": "",
+     "mainitem": "",
+     "offitem": "",
+     "provoked": {
+       "exists": false,
+       "text": ""
+     },
+     "requirement": {
+       "exists": false,
+       "text": ""
+     },
+     "effect": {
+       "exists": false,
+       "text": ""
+     },
+     "attack": {
+       "exists": false,
+       "abil": "",
+       "prof": 0,
+       "feat": 0,
+       "itemb": 0,
+       "misc": 0,
+       "powermisc": 0,
+       "vsdefense": "",
+       "hasthreat": false
+     },
+     "hit": {
+       "text": ""
+     },
+     "crit": {
+       "text": ""
+     },
+     "miss": {
+       "text": ""
+     },
+     "maintain": {
+       "exists": false,
+       "text": ""
+     },
+     "special": {
+       "exists": false,
+       "text": ""
+     },
+     "powertypes": {
+       "normal": {
+         "label": "Normal Attack",
+         "value": "normal"
+       },
+       "lesser": {
+         "label": "Lesser Power",
+         "value": "lesser"
+       },
+       "greater": {
+         "label": "Greater Power",
+         "value": "greater"
+       },
+       "feature": {
+         "label": "Feature Power",
+         "value": "feature"
+       },
+       "item": {
+         "label": "Item Power",
+         "value": "item"
+       },
+       "other": {
+         "label": "Other",
+         "value": "other"
+       }
+     },
+     "abilities": {
+       "str": {
+         "label": "STR",
+         "value": "str"
+       },
+       "con": {
+         "label": "CON",
+         "value": "con"
+       },
+       "dex": {
+         "label": "DEX",
+         "value": "dex"
+       },
+       "int": {
+         "label": "INT",
+         "value": "int"
+       },
+       "wis": {
+         "label": "WIS",
+         "value": "wis"
+       },
+       "cha": {
+         "label": "CHA",
+         "value": "cha"
+       }
+     },
+     "defenses": {
+       "ac": {
+         "label": "AC",
+         "slabel": "AC",
+         "value": "ac"
+       },
+       "fort": {
+         "label": "Fortitude",
+         "slabel": "Fort",
+         "value": "fort"
+       },
+       "ref": {
+         "label": "Reflex",
+         "slabel": "Ref",
+         "value": "ref"
+       },
+       "will": {
+         "label": "Will",
+         "slabel": "Will",
+         "value": "will"
+       }
+     }
+   },
+   "logentry": {
+     "templates": ["base"],
+     "title": ""
+   },
+   "class": {
+     "templates": ["base"],
+     "associates": "",
+     "classfort": "",
+     "classref": "",
+     "classwill": "",
+     "classhp": "",
+     "classresurgs": ""
+   },
+   "race": {
+     "associates": "",
+     "skillbonuses": [],
+     "speed": 6
+   }
+ }
 }
