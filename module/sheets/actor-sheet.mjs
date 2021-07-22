@@ -311,8 +311,8 @@ export class AetrimondeActorSheet extends ActorSheet {
         },
         "attack": {
           "exists": true,
-          "abil": actorData.data.abilities[`${abil}`].mod,
-          "bonus": actorData.data.abilities[`${abil}`].mod + weapon.data.weapon.prof + weapon.data.weapon.attack.feat + weapon.data.weapon.attack.itemb + weapon.data.weapon.attack.misc,
+          "abil": actorData.data.abilities[`${safeabil}`].mod,
+          "bonus": actorData.data.abilities[`${safeabil}`].mod + weapon.data.weapon.prof + weapon.data.weapon.attack.feat + weapon.data.weapon.attack.itemb + weapon.data.weapon.attack.misc,
           "prof": weapon.data.weapon.prof,
           "feat": weapon.data.weapon.attack.feat,
           "itemb": weapon.data.weapon.attack.itemb,
