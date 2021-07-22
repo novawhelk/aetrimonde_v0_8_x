@@ -40,22 +40,23 @@ export class AetrimondeActor extends Actor {
     let armorspeed = 0;
 
     for (let i of equipment) {
-      carryweight = carryweight + i.data.data.totalweight;
-      gearvalue = gearvalue + i.data.data.totalvalue;
+      const itemData = i.data.data;
+      carryweight = carryweight + itemData.totalweight;
+      gearvalue = gearvalue + itemData.totalvalue;
 
-      const armorencumbrance = i.data.isarmor ? i.data.armor.encumbrance : 0;
-      const shieldencumbrance = i.data.isshield ? i.data.shield.encumbrance : 0;
-      encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
+      const armorencumbrance = itemData.isarmor ? itemData.armor.encumbrance : 0;
+      const shieldencumbrance = itemData.isshield ? itemData.shield.encumbrance : 0;
+      encumbrance = itemData.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
 
-      if (i.data.isarmor) {
-        armorbonus = i.data.equippedanywhere ? armorbonus + i.data.armor.acbonus : armorbonus;
-        armorresist = i.data.armor.resist > armorresist ? i.data.armor.resist : armorresist;
-        armorheavy = armorheavy || (i.data.equippedanywhere ? i.data.armor.isheavy : false);
-        armorspeed = i.data.equippedanywhere ? speed + i.data.armor.speed : speed;
+      if (itemData.isarmor) {
+        armorbonus = itemData.equippedanywhere ? armorbonus + itemData.armor.acbonus : armorbonus;
+        armorresist = itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist;
+        armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
+        armorspeed = itemData.equippedanywhere ? speed + itemData.armor.speed : speed;
       }
       if (i.data.isshield) {
-        shieldbonus = i.data.equippedanywhere ? shieldbonus + i.data.shield.defbonus : shieldbonus;
-        armorspeed = (i.data.equippedanywhere && !i.data.isarmor) ? speed + i.data.shield.speed : speed;
+        shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
+        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? speed + itemData.shield.speed : speed;
       }
     }
     data.carryweight = carryweight;
