@@ -41,7 +41,7 @@ export class AetrimondeActor extends Actor {
       encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
     }
     data.encumbrance.armor = encumbrance;
-    data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.itemb + data.encumbrance.misc;
+    data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
   }
 
   /**

@@ -267,9 +267,16 @@ export class AetrimondeActorSheet extends ActorSheet {
     context.disciplines = disciplines;
     context.rituals = rituals;
     context.resists = resists;
+    context.powers = powers;
+    context.armor = armor;
+    context.weapons = weapons;
+    context.imps = imps;
+    context.consumables = consumables;
+    context.gear = gear;
   }
 
   weaponAttack(weapon, abil, ranged) {
+    const actorData = this.actor.data;
     const weaponattack = {
       "name": weapon.name,
       "_id": weapon._id,
@@ -310,7 +317,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         "attack": {
           "exists": true,
           "abil": actorData.data.abilities[`${abil}`].mod,
-          "bonus": actorData.data.abilities[`${abil}`].mod + i.data.weapon.prof + i.data.weapon.attack.feat + i.data.weapon.attack.itemb + i.data.weapon.attack.misc,
+          "bonus": actorData.data.abilities[`${abil}`].mod + weapon.data.weapon.prof + weapon.data.weapon.attack.feat + weapon.data.weapon.attack.itemb + weapon.data.weapon.attack.misc,
           "prof": weapon.data.weapon.prof,
           "feat": weapon.data.weapon.attack.feat,
           "itemb": weapon.data.weapon.attack.itemb,

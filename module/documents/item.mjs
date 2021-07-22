@@ -21,7 +21,7 @@ export class AetrimondeItem extends Item {
     if (itemData.type === 'skill') this._prepareSkillData(itemData);
     if (itemData.type === 'perk') this._preparePerkData(itemData);
     // if (itemData.type === 'power') this._preparePowerData(itemData);
-    // if (itemData.type === 'equipment') this._prepareEquipmentData(itemData);
+    if (itemData.type === 'equipment') this._prepareEquipmentData(itemData);
     if (itemData.type === 'ritual') this._prepareRitualData(itemData);
   }
 
