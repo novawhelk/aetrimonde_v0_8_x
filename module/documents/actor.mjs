@@ -45,7 +45,7 @@ export class AetrimondeActor extends Actor {
     this.data.data.dragcap = data.abilities.str.value * 30;
     this.data.data.gpower.max = 3 + (this.data.data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(this.data.data.class) ? 1 : 0);
 
-    // this.data.data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
+    this.data.data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
 
     const cash = this.data.data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {

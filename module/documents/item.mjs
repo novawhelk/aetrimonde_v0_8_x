@@ -10,6 +10,61 @@ export class AetrimondeItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+
+    // Get the Item's data
+    const itemData = this.data;
+    const actorData = this.actor ? this.actor.data : this.data;
+    const data = itemData.data;
+
+    // Make separate methods for each Actor type (character, npc, etc.) to keep
+    // things organized.
+    if (itemData.type === 'skill') this._prepareSkillData(itemData);
+    if (itemData.type === 'perk') this._preparePerkData(itemData);
+    // if (itemData.type === 'power') this._preparePowerData(itemData);
+    // if (itemData.type === 'equipment') this._prepareEquipmentData(itemData);
+    if (itemData.type === 'ritual') this._prepareRitualData(itemData);
+  }
+
+  _prepareSkillData(itemData) {
+    const data = itemData.data;
+
+    if (this.actor) {
+      const actorData = this.actor.data.data;
+      const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
+      // const training = data.trained ? (actorData.isnpc ? 5 + Math.floor(actorData.tier / 2 + 0.5) * 2 : 5) : 0;
+      const training = data.trained ? 5 : 0;
+      const encumbrance = data.encumbered ? actorData.encumbrance.total : 0;
+
+      data.mod = mod;
+      data.total = mod + training + encumbrance + data.feat + data.itemb + data.misc;
+    }
+    else {
+      data.mod = 0;
+      data.total = 0;
+    };
+  }
+
+  _preparePerkData(itemData) {
+    const data = itemData.data;
+
+    if (this.actor) {
+      const actorData = this.actor.data.data;
+      const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
+      const encumbrance = data.encumbered ? actorData.encumbrance.total : 0;
+
+      data.mod = mod;
+      data.total = mod + 5 + encumbrance + data.feat + data.itemb + data.misc;
+    };
+    else {
+      data.mod = 0;
+      data.total = 0;
+    }
+  }
+
+  _prepareRitualData(itemData) {
+    const data = itemData.data;
+
+    data.skilllabel = data.keyskill ? data.skills[`${data.keyskill}`].label : "";
   }
 
   /**
