@@ -109,7 +109,7 @@ export class AetrimondeActor extends Actor {
         armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
         armorspeed = itemData.equippedanywhere ? armorspeed + itemData.armor.speed : armorspeed;
       }
-      if (i.data.isshield) {
+      if (itemData.isshield) {
         shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
         armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? armorspeed + itemData.shield.speed : armorspeed;
       }
