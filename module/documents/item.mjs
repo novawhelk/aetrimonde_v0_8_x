@@ -281,6 +281,74 @@ export class AetrimondeItem extends Item {
     };
   }
 
+  _isEquipped(item) {
+    const data = item.data;
+    const actorData = this.actor ? this.actor.data.data : false;
+
+    if (!actorData)
+      return false;
+
+    const equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === item._id || actorData.equipped.ring2 === item._id)) || item._id === actorData.equipped[`${data.slot.value}`]) : false;
+    const equippedmh = (item._id === actorData.equipped.mainhand);
+    const equippedoh = (item._id === actorData.equipped.offhand);
+    return equipped || equippedmh || equippedoh;
+  }
+
+  _powerAttackBonus(power) {
+    const keywords = power.data.keywords;
+
+    let feat = 0;
+    let itemb = 0;
+    let misc = 0;
+
+    if (keywords.includes("Implement")) {
+      const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement && entry.data.equippedanywhere);
+      for (let i of imps) {
+        itemb = Math.max(itemb, i.data.implement.attack.itemb);
+        misc = Math.max(misc, i.data.implement.attack.misc);
+      }
+    }
+
+    const disciplines = this.actor.data.items.filter(entry => entry.type === "discipline")
+    for (let d of disciplines) {
+      if (power.data.powertype.includes(d.data.powertype) && power.data.keywords.includes(d.data.keyword)) {
+        feat = Math.max(feat, d.data.attack.feat);
+        itemb = Math.max(itemb, d.data.attack.itemb);
+        misc = Math.max(misc, d.data.attack.misc);
+      }
+    }
+
+    feat = this.actor.data.data.isnpc ? Math.floor(this.actor.data.data.tier / 2 + 0.5) : feat;
+    itemb = this.actor.data.data.isnpc ? (this.actor.data.data.rank === "champion" ? 1 : 0) : itemb;
+    return {"feat": feat,"itemb": itemb,"misc": misc};
+  }
+
+  _powerDamageBonus(power) {
+    const keywords = power.data.keywords;
+
+    let feat = 0;
+    let itemb = 0;
+    let misc = 0;
+
+    if (keywords.includes("Implement") && this.actor.data.data.implement) {
+      const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.equippedanywhere && entry.data.isimplement);
+      for (let i of imps) {
+        itemb = Math.max(itemb, i.data.implement.damage.itemb);
+        misc = Math.max(misc, i.data.implement.damage.misc);
+      }
+    }
+
+    const disciplines = this.actor.data.items.filter(entry => entry.type === "discipline")
+    for (let d of disciplines) {
+      if (power.data.powertype.includes(d.data.powertype) && power.data.keywords.includes(d.data.keyword)) {
+        feat = Math.max(feat, d.data.damage.feat);
+        itemb = Math.max(itemb, d.data.damage.itemb);
+        misc = Math.max(misc, d.data.damage.misc);
+      }
+    }
+    return {"feat": feat,"itemb": itemb, "misc": misc};
+  }
+
   /**
   * Prepare a data object which is passed to any Roll formulas which are created related to this Item
   * @private
