@@ -1,0 +1,28 @@
+{
+  "name": "aetrimonde_v0_8_x",
+  "title": "Aetrimonde v0.8.x Beta",
+  "description": "A 0.8.x compatible version of the Aetrimonde system.",
+  "version": "1.1.0",
+  "minimumCoreVersion": "0.8.3",
+  "compatibleCoreVersion": "0.8.6",
+  "author": "Novawhelk",
+  "esmodules": ["module/aetrimonde.mjs"],
+  "styles": ["css/aetrimonde.css"],
+  "scripts": [],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "gridDistance": 5,
+  "gridUnits": "ft",
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "power",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE.txt"
+}

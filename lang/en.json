@@ -1,0 +1,22 @@
+{
+  "AETRIMONDE.AbilityStr": "Strength",
+  "AETRIMONDE.AbilityCon": "Constitution",
+  "AETRIMONDE.AbilityDex": "Dexterity",
+  "AETRIMONDE.AbilityInt": "Intelligence",
+  "AETRIMONDE.AbilityWis": "Wisdom",
+  "AETRIMONDE.AbilityCha": "Charisma",
+
+  "AETRIMONDE.AbilityStrAbbr": "str",
+  "AETRIMONDE.AbilityConAbbr": "con",
+  "AETRIMONDE.AbilityDexAbbr": "dex",
+  "AETRIMONDE.AbilityIntAbbr": "int",
+  "AETRIMONDE.AbilityWisAbbr": "wis",
+  "AETRIMONDE.AbilityChaAbbr": "cha",
+
+  "AETRIMONDE.EffectCreate": "Create Effect",
+  "AETRIMONDE.EffectToggle": "Toggle Effect",
+  "AETRIMONDE.EffectEdit": "Edit Effect",
+  "AETRIMONDE.EffectDelete": "Delete Effect",
+
+  "AETRIMONDE.Add": "Add"
+}
