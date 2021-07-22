@@ -434,6 +434,9 @@ export class AetrimondeActorSheet extends ActorSheet {
     html.find('.resurgence-clickable').click(this._useResurgence.bind(this));
     html.find('.recovery-roll-clickable').click(this._RollToRecover.bind(this))
 
+    // Detail view handlers
+    html.find('.expander').click(this._expandEntry.bind(this));
+
     // Equipment management
     html.find('.equipment-toggle').click(this._equipmentToggle.bind(this));
   }
@@ -676,6 +679,14 @@ export class AetrimondeActorSheet extends ActorSheet {
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       flavor: label
     });
+  }
+
+  _expandEntry(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id);
+    if (!event.currentTarget.parentElement.parentElement.className.includes("favorite")){
+      thisitem.update({"data.expanded": !thisitem.data.data.expanded});
+    }
   }
 
   _equipmentToggle(event) {
