@@ -103,18 +103,15 @@ export class AetrimondeActor extends Actor {
       carryweight = carryweight + itemData.totalweight;
       gearvalue = gearvalue + itemData.totalvalue;
 
-      const armorencumbrance = itemData.isarmor ? itemData.armor.encumbrance : 0;
-      const shieldencumbrance = itemData.isshield ? itemData.shield.encumbrance : 0;
-
       if (itemData.isarmor) {
         armorbonus = itemData.equippedanywhere ? armorbonus + itemData.armor.acbonus : armorbonus;
         armorresist = itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist;
         armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
-        armorspeed = itemData.equippedanywhere ? speed + itemData.armor.speed : speed;
+        armorspeed = itemData.equippedanywhere ? armorspeed + itemData.armor.speed : armorspeed;
       }
       if (i.data.isshield) {
         shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
-        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? speed + itemData.shield.speed : speed;
+        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? armorspeed + itemData.shield.speed : armorspeed;
       }
     }
     data.carryweight = carryweight;
