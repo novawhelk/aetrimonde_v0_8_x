@@ -32,6 +32,13 @@ export class AetrimondeActor extends Actor {
     let carryweight = 0;
     let gearvalue = 0;
     let encumbrance = 0;
+
+    let armorbonus = 0;
+    let armorresist = 0;
+    let armorheavy = false;
+    let shieldbonus = 0;
+    let armorspeed = 0;
+
     for (let i of equipment) {
       carryweight = carryweight + i.data.data.totalweight;
       gearvalue = gearvalue + i.data.data.totalvalue;
@@ -39,9 +46,31 @@ export class AetrimondeActor extends Actor {
       const armorencumbrance = i.data.isarmor ? i.data.armor.encumbrance : 0;
       const shieldencumbrance = i.data.isshield ? i.data.shield.encumbrance : 0;
       encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
+
+      if (i.data.isarmor) {
+        armorbonus = i.data.equippedanywhere ? armorbonus + i.data.armor.acbonus : armorbonus;
+        armorresist = i.data.armor.resist > armorresist ? i.data.armor.resist : armorresist;
+        armorheavy = armorheavy || (i.data.equippedanywhere ? i.data.armor.isheavy : false);
+        armorspeed = i.data.equippedanywhere ? speed + i.data.armor.speed : speed;
+      }
+      if (i.data.isshield) {
+        shieldbonus = i.data.equippedanywhere ? shieldbonus + i.data.shield.defbonus : shieldbonus;
+        armorspeed = (i.data.equippedanywhere && !i.data.isarmor) ? speed + i.data.shield.speed : speed;
+      }
     }
+    data.carryweight = carryweight;
+    data.gearvalue = {
+      "gp" : Math.floor(gearvalue),
+      "sp" : Math.floor(gearvalue * 10 % 10),
+      "cp" : Math.floor(gearvalue * 100 % 10)
+    };
+    data.defenses.ac.armor = armorbonus + shieldbonus;
+    data.defenses.ac.heavy = armorheavy;
+    data.defenses.ref.shield = shieldbonus;
+    data.speed.armor = armorspeed;
     data.encumbrance.armor = encumbrance;
     data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
+    data.armorresist = armorresist;
   }
 
   /**
@@ -95,8 +124,6 @@ export class AetrimondeActor extends Actor {
     data.defenses.ref.abil = Math.max(data.abilities.dex.mod, data.abilities.int.mod);
     data.defenses.will.abil = Math.max(data.abilities.wis.mod, data.abilities.cha.mod);
 
-    data.defenses.ref.shield = data.shield ? this.items.filter(entry => (entry._id === data.shield))[0].data.data.acbonus : 0;
-
     data.defenses.ac.total= 10 + data.defenses.ac.abil + data.defenses.ac.armor + data.defenses.ac.feat + data.defenses.ac.item + data.defenses.ac.misc;
     data.defenses.fort.total = 10 + data.defenses.fort.abil + data.defenses.fort.class + data.defenses.fort.feat + data.defenses.fort.item + data.defenses.fort.misc;
     data.defenses.ref.total = 10 + data.defenses.ref.abil + data.defenses.ref.class + data.defenses.ref.feat + data.defenses.ref.item + data.defenses.ref.misc + data.defenses.ref.shield;
@@ -110,7 +137,6 @@ export class AetrimondeActor extends Actor {
 
     data.initiative.total = data.abilities.dex.mod + data.initiative.feat + data.initiative.item + data.initiative.misc;
     data.speed.total = data.speed.base + data.speed.armor + data.speed.feat + data.speed.item + data.speed.misc;
-    data.encumbrance.total = data.encumbrance.armor + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;
 
     // data.perceptionpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Perception"))[0].data.data.total;
     // data.insightpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Insight"))[0].data.data.total;

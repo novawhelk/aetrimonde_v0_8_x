@@ -200,6 +200,7 @@ export class AetrimondeActorSheet extends ActorSheet {
           if (i.data.weapon.mvsr.value === "melee" && i.data.weapon.range) {
             const throwabil = i.data.weapon.quals? (i.data.weapon.quals.includes("Heavy Thrown") ? "str" : "dex") : "dex";
             const thrownattack = this.weaponAttack(i, throwabil, true);
+            thrownattack.name = "Thrown " + i.name;
             powers.normal.entries.push(thrownattack);
           }
         }
@@ -207,19 +208,11 @@ export class AetrimondeActorSheet extends ActorSheet {
           const j = JSON.parse(JSON.stringify(i));
           j.data.isshield = false;
           armor.push(j);
-          armorbonus = i.data.equippedanywhere ? armorbonus + i.data.armor.acbonus : armorbonus;
-          armorresist = i.data.armor.resist > armorresist ? i.data.armor.resist : armorresist;
-          armorheavy = armorheavy || (i.data.equippedanywhere ? i.data.armor.isheavy : false);
-          encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, i.data.armor.encumbrance) : encumbrance;
-          speed = i.data.equippedanywhere ? speed + i.data.armor.speed : speed;
         }
         if (i.data.isshield) {
           const j = JSON.parse(JSON.stringify(i));
           j.data.isarmor = false;
           armor.push(j);
-          shieldbonus = i.data.equippedanywhere ? shieldbonus + i.data.shield.defbonus : shieldbonus;
-          encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, i.data.shield.encumbrance) : encumbrance;
-          speed = (i.data.equippedanywhere && !i.data.isarmor) ? speed + i.data.shield.speed : speed;
         }
         if (i.data.isimplement) {
           imps.push(i);
