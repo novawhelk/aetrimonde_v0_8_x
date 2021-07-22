@@ -202,7 +202,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     context.logentries = logentries;
     context.disciplines = disciplines;
     context.rituals = rituals;
-    context.resistances = resistances;
+    context.resists = resists;
   }
 
   /* -------------------------------------------- */
