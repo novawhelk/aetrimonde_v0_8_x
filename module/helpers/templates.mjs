@@ -7,9 +7,9 @@
   return loadTemplates([
 
     // Actor partials.
-    "systems/AETRIMONDE/templates/actor/parts/actor-features.html",
-    "systems/AETRIMONDE/templates/actor/parts/actor-items.html",
-    "systems/AETRIMONDE/templates/actor/parts/actor-spells.html",
-    "systems/AETRIMONDE/templates/actor/parts/actor-effects.html",
+    "systems/aetrimonde/templates/actor/parts/actor-features.html",
+    "systems/aetrimonde/templates/actor/parts/actor-items.html",
+    "systems/aetrimonde/templates/actor/parts/actor-spells.html",
+    "systems/aetrimonde/templates/actor/parts/actor-effects.html",
   ]);
 };
