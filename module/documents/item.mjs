@@ -54,11 +54,11 @@ export class AetrimondeItem extends Item {
 
       data.mod = mod;
       data.total = mod + 5 + encumbrance + data.feat + data.itemb + data.misc;
-    };
+    }
     else {
       data.mod = 0;
       data.total = 0;
-    }
+    };
   }
 
   _prepareRitualData(itemData) {

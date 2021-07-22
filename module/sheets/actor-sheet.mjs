@@ -82,45 +82,128 @@ export class AetrimondeActorSheet extends ActorSheet {
    */
   _prepareItems(context) {
     // Initialize containers.
-    const gear = [];
-    const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
+    const features = {
+      "feat": {
+        "label": "Feats",
+        "entries": []
+      },
+      "rfeature": {
+        "label": "Race Features",
+        "entries": []
+      },
+      "cfeature": {
+        "label": "Class Features",
+        "entries": []
+      },
+      "ifeature": {
+        "label": "Item Properties",
+        "entries": []
+      },
+      "prof": {
+        "label": "Proficiencies",
+        "entries": []
+      },
+      "other": {
+        "label": "Other",
+        "entries": []
+      }
     };
+    const skills = [];
+    const perks = [];
+    const languages = [];
+    const logentries = [];
+    const powers = {
+      "favorites": {
+        "label": "Favorites",
+        "entries": []
+      },
+      "normal": {
+        "label": "Normal Attacks",
+        "entries": []
+      },
+      "lesser": {
+        "label": "Lesser Powers",
+        "entries": []
+      },
+      "greater": {
+        "label": "Greater Powers",
+        "entries": []
+      },
+      "feature": {
+        "label": "Feature Powers",
+        "entries": []
+      },
+      "item": {
+        "label": "Item Powers",
+        "entries": []
+      },
+      "other": {
+        "label": "Other Powers (and Things Like Powers)",
+        "entries": []
+      }
+    };
+    const gear = [];
+    const weapons = [];
+    const imps = [];
+    const disciplines = [];
+    const armor = [];
+    const consumables = [];
+    const rituals = [];
+    const resists = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
+
       // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
-      }
-      // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
-      }
-      // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.data.spellLevel != undefined) {
-          spells[i.data.spellLevel].push(i);
+      if (i.type === 'feature') {
+        if (i.data.source != undefined && i.data.source != "") {
+          features[i.data.source].entries.push(i);
         }
+        else {
+          features.other.entries.push(i);
+        }
+      }
+      // Append to skills.
+      else if (i.type === 'skill') {
+        skills.push(i);
+      }
+      // Append to perks.
+      else if (i.type === 'perk') {
+        perks.push(i);
+      }
+      // Append to languages.
+      else if (i.type === 'language') {
+        languages.push(i);
+      }
+      // Append to journal.
+      else if (i.type === 'logentry') {
+        logentries.push(i);
+      }
+      // Append to disciplines
+      else if (i.type === 'discipline') {
+        disciplines.push(i);
+      }
+      // Append to rituals
+      else if (i.type === 'ritual') {
+        rituals.push(i);
+      }
+      // Append to resistances
+      else if (i.type === 'resistance') {
+        resists.push(i);
       }
     }
 
-    // Assign and return
-    context.gear = gear;
+    // Assign and return;
     context.features = features;
-    context.spells = spells;
-   }
+    context.skills = skills;
+    context.perks = perks;
+    context.languages = languages;
+    context.logentries = logentries;
+    context.disciplines = disciplines;
+    context.rituals = rituals;
+    context.resistances = resistances;
+  }
 
   /* -------------------------------------------- */
 
