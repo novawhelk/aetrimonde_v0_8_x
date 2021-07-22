@@ -270,6 +270,8 @@ export class AetrimondeActorSheet extends ActorSheet {
 
   weaponAttack(weapon, abil, ranged) {
     const actorData = this.actor.data;
+
+    const safeabil = abil === "" ? (ranged ? "dex" : "str") : abil;
     const weaponattack = {
       "name": weapon.name,
       "_id": weapon._id,
@@ -589,7 +591,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
     else if (equipSlot != "noslot") {
-      newEquipment[`${equipSlot}`] = itemId === actorData.equipped[`${equipSlot}`] ? "" : thisItem._id;
+      newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : thisItem._id;
     }
     actor.update({"data.equipped": newEquipment});
   }
