@@ -6,8 +6,8 @@
   "minimumCoreVersion": "0.8.3",
   "compatibleCoreVersion": "0.8.6",
   "author": "Novawhelk",
-  "esmodules": ["module/aetrimonde.mjs"],
-  "styles": ["css/aetrimonde.css"],
+  "esmodules": ["module/aetrimonde_v0_8_x.mjs"],
+  "styles": ["css/aetrimonde_v0_8_x.css"],
   "scripts": [],
   "packs": [],
   "languages": [
