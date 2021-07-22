@@ -60,7 +60,7 @@ export class AetrimondeActor extends Actor {
       const gp = Math.floor(credit);
       const sp = Math.floor(credit * 10 % 10);
       const cp = Math.floor(credit * 100 % 10);
-      this.data.data.credit = cash > 0 ? ((gp > 0 ? " " + gp + "gp") + (sp > 0 ? " " + sp + "sp") + (cp > 0 ? " " + cp + "cp")) : "0gp";;
+      this.data.data.credit = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
     const valuables = this.data.data.valuables;
@@ -68,7 +68,7 @@ export class AetrimondeActor extends Actor {
       const gp = Math.floor(valuables);
       const sp = Math.floor(valuables * 10 % 10);
       const cp = Math.floor(valuables * 100 % 10);
-      this.data.data.valuables = cash > 0 ? ((gp > 0 ? " " + gp + "gp") + (sp > 0 ? " " + sp + "sp") + (cp > 0 ? " " + cp + "cp")) : "0gp";;
+      this.data.data.valuables = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
     this.data.data.defenses.ac.abil = data.defenses.ac.heavy ? 0 : Math.max(data.abilities.dex.mod, data.abilities.int.mod);
