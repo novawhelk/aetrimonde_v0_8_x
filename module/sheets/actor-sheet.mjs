@@ -410,12 +410,16 @@ export class AetrimondeActorSheet extends ActorSheet {
       });
     }
 
+    // Rest and recovery handlers
+    html.find('.dayrest-clickable').click(this._dayRest.bind(this));
+    html.find('.longrest-clickable').click(this._longRest.bind(this));
+    html.find('.shortrest-clickable').click(this._shortRest.bind(this));
+    html.find('.triumph-clickable').click(this._triumph.bind(this));
+    html.find('.respite-clickable').click(this._respite.bind(this));
+    html.find('.resurgence-clickable').click(this._useResurgence.bind(this));
+    html.find('.recovery-roll-clickable').click(this._RollToRecover.bind(this))
+
     // Equipment management
-    html.find('.armor-toggle').click(this._armorToggle.bind(this));
-    html.find('.weap-toggle').click(this._weapToggle.bind(this));
-    html.find('.weapoh-toggle').click(this._weapToggleOH.bind(this));
-    html.find('.unarmed-toggle').click(this._unarmedToggle.bind(this));
-    html.find('.implement-toggle').click(this._implementToggle.bind(this));
     html.find('.equipment-toggle').click(this._equipmentToggle.bind(this));
   }
 
@@ -477,6 +481,118 @@ export class AetrimondeActorSheet extends ActorSheet {
       return roll;
     }
   }
+
+  _dayRest(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.hp.value" : actorData.hp.max,
+      "data.resurgs.value" : actorData.resurgs.max,
+      "data.gpower.value" : actorData.gpower.max,
+      "data.hp.temp" : "",
+      "data.hassecondwind" : true
+    }
+    this.actor.update(updates);
+  }
+
+  _longRest(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.resurgs.value" : actorData.resurgs.max,
+      "data.gpower.value" : actorData.gpower.max,
+      "data.hp.temp" : "",
+      "data.hassecondwind" : true
+    }
+    this.actor.update(updates);
+  }
+
+  _shortRest(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.gpower.value" : actorData.gpower.max,
+      "data.hp.temp" : "",
+      "data.hassecondwind" : true
+    }
+    this.actor.update(updates);
+  }
+
+  _triumph(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.resurgs.value" : Math.min(actorData.resurgs.value + 1, actorData.resurgs.max)
+    }
+    this.actor.update(updates);
+  }
+
+  _respite(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.gpower.value" : Math.min(actorData.gpower.value + 1, actorData.gpower.max),
+      "data.hassecondwind" : true
+    }
+    this.actor.update(updates);
+  }
+
+  _useResurgence(event) {
+    event.preventDefault();
+
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const actorData = this.actor.data.data;
+
+    const updates = {
+      "data.resurgs.value" : Math.max(actorData.resurgs.value - 1, 0),
+      "data.hp.value": (actorData.resurgs.value > 0) ? ((actorData.hp.value > 0) ? Math.min(actorData.hp.max, actorData.hp.value + actorData.resurgs.size.value) : actorData.resurgs.size.value) : actorData.hp.value
+    }
+    this.actor.update(updates);
+  }
+
+  _RollToRecover(event) {
+    event.preventDefault();
+
+    const bonus = event.currentTarget.nextElementSibling.value;
+    event.currentTarget.nextElementSibling.value = "";
+
+    let roll = new Roll("2d10 + " + bonus);
+    let label = "Rolling to Recover";
+
+
+    roll.roll().toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: label
+    });
+  }
+
   _equipmentToggle(event) {
     event.preventDefault();
     const itemid = event.currentTarget.dataset.id;
