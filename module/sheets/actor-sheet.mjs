@@ -192,6 +192,70 @@ export class AetrimondeActorSheet extends ActorSheet {
       else if (i.type === 'resistance') {
         resists.push(i);
       }
+      else if (i.type === 'equipment') {
+        if (i.data.isweapon) {
+          weapons.push(i);
+          const weaponattack = this.weaponAttack(i, i.data.weapon.attack.abil, i.data.weapon.mvsr.value === "ranged")
+          powers.normal.entries.push(weaponattack);
+          if (i.data.weapon.mvsr.value === "melee" && i.data.weapon.range) {
+            const throwabil = i.data.weapon.quals? (i.data.weapon.quals.includes("Heavy Thrown") ? "str" : "dex") : "dex";
+            const thrownattack = this.weaponAttack(i, throwabil, true);
+            powers.normal.entries.push(thrownattack);
+          }
+        }
+        if (i.data.isarmor) {
+          const j = JSON.parse(JSON.stringify(i));
+          j.data.isshield = false;
+          armor.push(j);
+          armorbonus = i.data.equippedanywhere ? armorbonus + i.data.armor.acbonus : armorbonus;
+          armorresist = i.data.armor.resist > armorresist ? i.data.armor.resist : armorresist;
+          armorheavy = armorheavy || (i.data.equippedanywhere ? i.data.armor.isheavy : false);
+          encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, i.data.armor.encumbrance) : encumbrance;
+          speed = i.data.equippedanywhere ? speed + i.data.armor.speed : speed;
+        }
+        if (i.data.isshield) {
+          const j = JSON.parse(JSON.stringify(i));
+          j.data.isarmor = false;
+          armor.push(j);
+          shieldbonus = i.data.equippedanywhere ? shieldbonus + i.data.shield.defbonus : shieldbonus;
+          encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, i.data.shield.encumbrance) : encumbrance;
+          speed = (i.data.equippedanywhere && !i.data.isarmor) ? speed + i.data.shield.speed : speed;
+        }
+        if (i.data.isimplement) {
+          imps.push(i);
+        }
+        if (i.data.isconsumable) {
+          consumables.push(i);
+        }
+        if (i.data.relatedprops) {
+          const itemprops = {
+            "name": i.name,
+            "_id": i._id,
+            "img": i.img,
+            "dependent": true,
+            "data": {
+              "source": "ifeature",
+              "benefit": i.data.props
+            }
+          }
+          features.ifeature.entries.push(itemprops)
+        }
+        if (i.data.relatedpower) {
+          const itempower = {
+            "name": i.name,
+            "_id": i._id,
+            "img": i.img,
+            "dependent": true,
+            "data": i.data.power
+          };
+          itempower.json = JSON.stringify(itempower);
+          powers.item.entries.push(itempower)
+        }
+        if (!(i.data.isarmor || i.data.isshield || i.data.isweapon || i.data.isimplement || i.data.isconsumable)) {
+          gear.push(i);
+        }
+
+      }
     }
 
     // Assign and return;
@@ -203,6 +267,101 @@ export class AetrimondeActorSheet extends ActorSheet {
     context.disciplines = disciplines;
     context.rituals = rituals;
     context.resists = resists;
+  }
+
+  weaponAttack(weapon, abil, ranged) {
+    const weaponattack = {
+      "name": weapon.name,
+      "_id": weapon._id,
+      "img": weapon.img,
+      "dependent": true,
+      "isweapon": true,
+      "isheld": weapon.data.isheld,
+      "slot": {
+        "value": weapon.data.slot.value
+      },
+      "equipped": weapon.data.equipped,
+      "equippedmh": weapon.data.equippedmh,
+      "equippedoh": weapon.data.equippedoh,
+      "data": {
+        "powergroup": "normal",
+        "powertype": "",
+        "flavortext": "",
+        "keywords": "Weapon",
+        "action": "Main",
+        "frequency": "",
+        "hasfrequency": false,
+        "range": weapon.data.weapon.mvsr.value === "ranged" ? "Ranged " + weapon.data.weapon.range : (weapon.data.weapon.quals ? (weapon.data.weapon.quals.match(/Reach/g) ? (weapon.data.weapon.quals.match(/Reach \d+/g) ? "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g) : "Melee 2") : "Melee 1") : "Melee 1"),
+        "targets": "One creature",
+        "warning": weapon.data.warning,
+        "warningmessage": weapon.data.warningmessage,
+        "provoked": {
+          "exists": false,
+          "text": ""
+        },
+        "requirement": {
+          "exists": false,
+          "text": ""
+        },
+        "effect": {
+          "exists": false,
+          "text": ""
+        },
+        "attack": {
+          "exists": true,
+          "abil": actorData.data.abilities[`${abil}`].mod,
+          "bonus": actorData.data.abilities[`${abil}`].mod + i.data.weapon.prof + i.data.weapon.attack.feat + i.data.weapon.attack.itemb + i.data.weapon.attack.misc,
+          "prof": weapon.data.weapon.prof,
+          "feat": weapon.data.weapon.attack.feat,
+          "itemb": weapon.data.weapon.attack.itemb,
+          "misc": weapon.data.weapon.attack.misc,
+          "vslabel": weapon.data.weapon.attack.vslabel,
+          "hasthreat": weapon.data.weapon.attack.hasthreat,
+          "off": false
+        },
+        "hit": {
+          "text": "[[" + weapon.data.weapon.damage.total + "]]" + (weapon.data.weapon.damage.type ? weapon.data.weapon.damage.type: " ") + "damage."
+        },
+        "crit": {
+          "text": ""
+        },
+        "miss": {
+          "text": ""
+        },
+        "maintain": {
+          "exists": false,
+          "text": ""
+        },
+        "special": {
+          "exists": false,
+          "text": ""
+        },
+        "abilities": weapon.data.abilities,
+        "defenses": weapon.data.defenses,
+        "useditems": [weapon.data]
+      }
+    }
+    if (ranged) {
+      weaponattack.data.range = "Ranged " + weapon.data.weapon.range;
+    }
+    else {
+      if (weapon.data.weapon.quals) {
+        if (weapon.data.weapon.quals.match(/Reach \d+/g)) {
+          weaponattack.data.range = "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g);
+        }
+        else if (weapon.data.weapon.quals.match(/Reach/g)) {
+          weaponattack.data.range = "Melee 2";
+        }
+        else {
+          weaponattack.data.range = "Melee 1";
+        }
+      }
+      else {
+        weaponattack.data.range = "Melee 1";
+      }
+    }
+    weaponattack.json = JSON.stringify(weaponattack);
+    return weaponattack
   }
 
   /* -------------------------------------------- */

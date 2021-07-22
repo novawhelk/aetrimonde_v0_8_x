@@ -67,6 +67,76 @@ export class AetrimondeItem extends Item {
     data.skilllabel = data.keyskill ? data.skills[`${data.keyskill}`].label : "";
   }
 
+  _prepareEquipmentData(itemData) {
+    const data = itemData.data;
+    const actorData = this.actor ? this.actor.data.data : "";
+
+    data.totalweight = data.eachweight * data.quantity;
+    data.totalvalue = data.eachvalue * data.quantity;
+    data.totalgp = Math.floor(data.totalvalue);
+    data.totalsp = Math.floor(data.totalvalue * 10 % 10);
+    data.totalcp = Math.floor(data.totalvalue * 100 % 10);
+
+    data.multitype = (data.isarmor + data.isshield + data.isweapon + data.isimplement + data.isconsumable) > 1;
+    data.multiple = data.quantity > 1;
+    data.slotlabel = data.slot.slots[`${data.slot.value}`];
+    data.isheld = data.slot.value === "held";
+    // if (actorData) {
+    //   // if (this.data.data.slot.value === "held" && this.data.data.isweapon && this.data.data.hands.value === "2h") {
+    //   //   if ((actorData.equipped.mainhand === this._id && actorData.equipped.offhand != this._id))
+    //   // }
+    //   const newEquipment = actorData.equipped;
+    //   for (let slot in newEquipment) {
+    //     newEquipment[`${slot}`] = (newEquipment[`${slot}`] != this._id || (slot.includes(data.slot.value) || (data.slot.value === "held" && ["mainhand", "offhand"].includes(slot)))) ? newEquipment[`${slot}`] : "";
+    //   }
+    //   this.actor.update({"data.equipped": newEquipment});
+    //
+    //   data.equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === this._id || actorData.equipped.ring2 === this._id)) || this._id === actorData.equipped[`${data.slot.value}`]) : false;
+    //   data.equippedmh = (this._id === actorData.equipped.mainhand);
+    //   data.equippedoh = (this._id === actorData.equipped.offhand);
+    //   data.equippedanywhere = data.equipped || data.equippedmh || data.equippedoh;
+    //   if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
+    //     data.warning = true;
+    //     data.warningmessage = "This weapon requires two hands to wield properly."
+    //   }
+    //   data.npcowner = this.actor.data.type === "npc";
+    // }
+
+    if (data.isarmor) {
+      data.armor.grouplabel = (data.armor.group.value != "") ? data.armor.group.groups[`${data.armor.group.value}`] : "";
+    }
+    if (data.isshield) {
+      data.shield.grouplabel = (data.shield.group.value != "") ? data.shield.group.groups[`${data.shield.group.value}`] : "";
+    }
+    if (data.isweapon) {
+      data.weapon.attack.vslabel = (data.weapon.attack.vsdefense != "") ? data.defenses[`${data.weapon.attack.vsdefense}`].slabel : "";
+      if (this.actor) {
+        if (this.actor.data.data.isnpc) {
+          data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
+          data.weapon.attack.itemb = actorData.rank === "champion" ? 1 : 0;
+          data.weapon.damage.feat = Math.floor(actorData.tier / 2) * 2;
+        }
+        data.weapon.attack.mod = (data.weapon.attack.abil === "") ? 0 : actorData.abilities[`${data.weapon.attack.abil}`].mod;
+        data.weapon.attack.bonus = data.weapon.attack.mod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
+        data.weapon.damage.mod = (data.weapon.damage.abil === "") ? 0 : actorData.abilities[`${data.weapon.damage.abil}`].mod;
+        const dbonus = (data.weapon.damage.mod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc)
+        data.weapon.damage.total = data.weapon.dice + " + " + dbonus;
+      }
+      data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
+      data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
+      data.weapon.attack.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
+    }
+    if (data.isimplement) {
+
+    }
+    if (data.isconsumable) {
+
+    }
+    if (data.relatedpower) {
+      data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
+    }
+  }
+
   /**
    * Prepare a data object which is passed to any Roll formulas which are created related to this Item
    * @private

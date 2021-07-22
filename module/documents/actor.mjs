@@ -17,6 +17,31 @@ export class AetrimondeActor extends Actor {
   prepareBaseData() {
     // Data modifications in this step occur before processing embedded
     // documents or derived data.
+    const actorData = this.data;
+    const data = actorData.data;
+    const flags = actorData.flags.aetrimonde || {};
+
+    //Prepare data common to all Actors
+    for (let [key, ability] of Object.entries(data.abilities)) {
+     // Calculate the modifier using d20 rules.
+      ability.mod = Math.floor((ability.value - 10) / 2);
+      this.update({[`data.abilities.${key}.mod`]: ability.mod});
+    }
+
+    const equipment = this.items.filter(entry => entry.type === "equipment")
+    let carryweight = 0;
+    let gearvalue = 0;
+    let encumbrance = 0;
+    for (let i of equipment) {
+      carryweight = carryweight + i.data.data.totalweight;
+      gearvalue = gearvalue + i.data.data.totalvalue;
+
+      const armorencumbrance = i.data.isarmor ? i.data.armor.encumbrance : 0;
+      const shieldencumbrance = i.data.isshield ? i.data.shield.encumbrance : 0;
+      encumbrance = i.data.equippedanywhere ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
+    }
+    data.encumbrance.armor = encumbrance;
+    data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.itemb + data.encumbrance.misc;
   }
 
   /**
@@ -35,28 +60,11 @@ export class AetrimondeActor extends Actor {
 
     data.gpower.max = 3 + (data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(data.class) ? 1 : 0);
 
-    //Prepare data common to all Actors
-    for (let [key, ability] of Object.entries(data.abilities)) {
-     // Calculate the modifier using d20 rules.
-      ability.mod = Math.floor((ability.value - 10) / 2);
-      this.update({[`data.abilities.${key}.mod`]: ability.mod});
-    }
-
     data.carrycap = data.abilities.str.value * 10;
     data.heavycap = data.abilities.str.value * 20;
     data.dragcap = data.abilities.str.value * 30;
 
     data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
-
-    const equipment = this.items.filter(entry => entry.type === "equipment")
-    let carryweight = 0;
-    let gearvalue = 0;
-    let encumbrance = 0;
-    for (let i of equipment) {
-      carryweight = carryweight + i.data.data.totalweight;
-      gearvalue = gearvalue + i.data.data.totalvalue;
-      encumbrance = ((i.data.data.isarmor || i.data.data.isshield) && i.data.data.equippedanywhere) ? Math.min(encumbrance, i.data.data.shield.encumbrance, i.data.data.armor.encumbrance) : encumbrance;
-    }
 
     const cash = data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {
