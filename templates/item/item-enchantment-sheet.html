@@ -1,0 +1,147 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+      <div class="header-fields">
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      </div>
+  </header>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    <div class="flexcol">
+      <div class="flexrow">
+        <input type="number" class="centered" name="data.eachvalue" value="{{data.eachvalue}}" data-dtype="string"/>
+        <input type="number" class="centered" name="data.eachweight" value="{{data.eachweight}}" data-dtype="string"/>
+        <input type="number" class="centered" name="data.quantity" value="{{data.quantity}}" data-dtype="string"/>
+        <select class="centered" name="data.slot.value" data-type="String">
+            {{#select data.slot.value}}
+            <option value=""></option>
+            {{#each data.slot.slots as |type t|}}
+            <option value="{{t}}">{{type}}</option>
+            {{/each}}
+            {{/select}}
+        </select>
+      </div>
+      <div class="flexrow underline">
+        <span class="caption">Value (gp ea.)</span>
+        <span class="caption">Weight (lbs. ea.)</span>
+        <span class="caption">Quantity</span>
+        <span class="caption">Slot</span>
+      </div>
+      <div class="flexrow spread">
+        <input type="checkbox" name="data.isarmor" {{checked data.isarmor}}/>
+        <input type="checkbox" name="data.isshield" {{checked data.isshield}}/>
+        <input type="checkbox" name="data.isweapon" {{checked data.isweapon}}/>
+        <input type="checkbox" name="data.isimplement" {{checked data.isimplement}}/>
+        <input type="checkbox" name="data.isconsumable" {{checked data.isconsumable}}/>
+      </div>
+      <div class="flexrow underline">
+        <span class="caption">Armor</span>
+        <span class="caption">Shield</span>
+        <span class="caption">Weapon</span>
+        <span class="caption">Implement</span>
+        <span class="caption">Consumable</span>
+      </div>
+      <div class="flexrow spread">
+        <input type="checkbox" name="data.magical" {{checked data.magical}}/>
+        <input type="checkbox" name="data.relatedprops" {{checked data.relatedprops}}/>
+        <input type="checkbox" name="data.relatedpower" {{checked data.relatedpower}}/>
+      </div>
+      <div class="flexrow">
+        <span class="caption">Is Magical</span>
+        <span class="caption">Has Related Properties</span>
+        <span class="caption">Has Related Power</span>
+      </div>
+    </div>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs item-tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+        {{#if data.relatedprops}}<a class="item" data-tab="props">Properties</a>{{/if}}
+        {{#if data.relatedpower}}<a class="item" data-tab="power">Power</a>{{/if}}
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab" data-group="primary" data-tab="description">
+          {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+      </div>
+
+      {{!-- Properties Tab --}}
+      <div class="tab" data-group="primary" data-tab="props">
+        <textarea class="feature-benefit" name="data.props" rows="3" cols="80" placeholder="Properties">{{data.props}}</textarea>
+        {{#if data.isweapon}}<textarea class="feature-benefit" name="data.critprops" rows="3" cols="80" placeholder="Critical Hit Properties">{{data.critprops}}</textarea>{{/if}}
+        {{#if data.isimplement}}{{#unless data.isweapon}}<textarea class="feature-benefit" name="data.critprops" rows="3" cols="80" placeholder="Critical Hit Properties">{{data.critprops}}</textarea>{{/unless}}{{/if}}
+      </div>
+      
+      {{!-- Power Tab --}}
+      <div class="tab" data-group="primary" data-tab="power">
+        <div class="flexcol">
+          <div class="flexrow">
+            <input name="data.power.keywords" type="text" value="{{data.power.keywords}}" placeholder="Keywords"/>
+            <input name="data.power.frequency" type="text" value="{{data.power.frequency}}" placeholder="Frequency"/>
+          </div>
+          <div class="flexrow">
+            <input name="data.power.action" type="text" value="{{data.power.action}}" placeholder="Action"/>
+            <input name="data.power.range" type="text" value="{{data.power.range}}" placeholder="Range"/>
+          </div>
+          <input name="data.power.targets" type="text" value="{{data.power.targets}}" placeholder="Targets"/>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.provoked.exists" type="checkbox" {{checked data.power.provoked.exists}}/>
+            <span class="placeholder-label">Is Provoked</span>
+            <textarea class="feature-benefit" name="data.power.provoked.text" rows="3" cols="80" placeholder="Provoked">{{data.power.provoked.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.requirement.exists" type="checkbox" {{checked data.power.requirement.exists}}/>
+            <span class="placeholder-label">Has Requirement</span>
+            <textarea class="feature-benefit" name="data.power.requirement.text" rows="3" cols="80" placeholder="Requirement">{{data.power.requirement.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.effect.exists" type="checkbox" {{checked data.power.effect.exists}}/>
+            <span class="placeholder-label">Has Effect</span>
+            <textarea class="feature-benefit" name="data.power.effect.text" rows="3" cols="80" placeholder="Effect">{{data.power.effect.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.attack.exists" type="checkbox" {{checked data.power.attack.exists}}/>
+            <span class="placeholder-label">Has Attack</span>
+            <div class="flex-group-center flexcol">
+              <div class="grid grid-3col">
+                <span>Bonus</span>
+                <span>vs.</span>
+                <span>Threat</span>
+
+                <input type="number" name="data.power.attack.bonus" value="{{data.power.attack.bonus}}" data-dtype="Number"/>
+
+                  <select name="data.power.attack.vsdefense" data-type="String">
+                      {{#select data.power.attack.vsdefense}}
+                      <option value=""></option>
+                      {{#each data.defenses as |def d|}}
+                      <option value="{{d}}">{{def.label}}</option>
+                      {{/each}}
+                      {{/select}}
+                  </select>
+
+                <span><input name="data.power.attack.hasthreat" type="checkbox" {{checked data.power.attack.hasthreat}}/></span>
+              </div>
+              <textarea class="feature-benefit" name="data.power.hit.text" rows="3" cols="80" placeholder="Hit">{{data.power.hit.text}}</textarea>
+              <textarea class="feature-benefit" name="data.power.crit.text" rows="3" cols="80" placeholder="Crit">{{data.power.crit.text}}</textarea>
+              <textarea class="feature-benefit" name="data.power.miss.text" rows="3" cols="80" placeholder="Miss">{{data.power.miss.text}}</textarea>
+            </div>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.maintain.exists" type="checkbox" {{checked data.power.maintain.exists}}/>
+            <span class="placeholder-label">Is Maintained</span>
+            <textarea class="feature-benefit" name="data.power.maintain.text" rows="3" cols="80" placeholder="Maintain">{{data.power.maintain.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.special.exists" type="checkbox" {{checked data.power.special.exists}}/>
+            <span class="placeholder-label">Special Notes</span>
+            <textarea class="feature-benefit" name="data.power.special.text" rows="3" cols="80" placeholder="Effect">{{data.power.special.text}}</textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+</form>

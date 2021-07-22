@@ -1,0 +1,364 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+      <div class="header-fields">
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      </div>
+  </header>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    <div class="flexcol">
+      <div class="flexrow">
+        <input type="number" class="centered" name="data.eachvalue" value="{{data.eachvalue}}" data-dtype="string"/>
+        <input type="number" class="centered" name="data.eachweight" value="{{data.eachweight}}" data-dtype="string"/>
+        <input type="number" class="centered" name="data.quantity" value="{{data.quantity}}" data-dtype="string"/>
+        <select class="centered" name="data.slot.value" data-type="String">
+            {{#select data.slot.value}}
+            <option value=""></option>
+            {{#each data.slot.slots as |type t|}}
+            <option value="{{t}}">{{type}}</option>
+            {{/each}}
+            {{/select}}
+        </select>
+      </div>
+      <div class="flexrow underline">
+        <span class="caption">Value (gp ea.)</span>
+        <span class="caption">Weight (lbs. ea.)</span>
+        <span class="caption">Quantity</span>
+        <span class="caption">Slot</span>
+      </div>
+      <div class="flexrow spread">
+        <input type="checkbox" name="data.isarmor" {{checked data.isarmor}}/>
+        <input type="checkbox" name="data.isshield" {{checked data.isshield}}/>
+        <input type="checkbox" name="data.isweapon" {{checked data.isweapon}}/>
+        <input type="checkbox" name="data.isimplement" {{checked data.isimplement}}/>
+        <input type="checkbox" name="data.isconsumable" {{checked data.isconsumable}}/>
+      </div>
+      <div class="flexrow underline">
+        <span class="caption">Armor</span>
+        <span class="caption">Shield</span>
+        <span class="caption">Weapon</span>
+        <span class="caption">Implement</span>
+        <span class="caption">Consumable</span>
+      </div>
+      <div class="flexrow spread">
+        <input type="checkbox" name="data.magical" {{checked data.magical}}/>
+        <input type="checkbox" name="data.relatedprops" {{checked data.relatedprops}}/>
+        <input type="checkbox" name="data.relatedpower" {{checked data.relatedpower}}/>
+      </div>
+      <div class="flexrow">
+        <span class="caption">Is Magical</span>
+        <span class="caption">Has Related Properties</span>
+        <span class="caption">Has Related Power</span>
+      </div>
+    </div>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs item-tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+        {{#if data.relatedprops}}<a class="item" data-tab="props">Properties</a>{{/if}}
+        {{#if data.relatedpower}}<a class="item" data-tab="power">Power</a>{{/if}}
+        {{#if data.isarmor}}<a class="item" data-tab="armor">Armor</a>{{/if}}
+        {{#if data.isshield}}<a class="item" data-tab="shield">Shield</a>{{/if}}
+        {{#if data.isweapon}}<a class="item" data-tab="weapon">Weapon</a>{{/if}}
+        {{#if data.isimplement}}<a class="item" data-tab="implement">Implement</a>{{/if}}
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+      {{!-- Description Tab --}}
+      <div class="tab" data-group="primary" data-tab="description">
+          {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+      </div>
+      {{!-- Armor Tab --}}
+      <div class="tab" data-group="primary" data-tab="armor">
+        <div class="flexcol">
+          <div class="flexrow gridrow">
+            <input type="number" class="centered" name="data.armor.acbonus" value="{{data.armor.acbonus}}" data-dtype="Number"/>
+            <input type="number" class="centered" name="data.armor.resist" value="{{data.armor.resist}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.armor.encumbrance" value="{{data.armor.encumbrance}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.armor.speed" value="{{data.armor.speed}}" data-dtype="string"/>
+          </div>
+          <div class="flexrow gridrow">
+            <span class="caption">AC Bonus</span>
+            <span class="caption">Armor Resist.</span>
+            <span class="caption">Encumbrance</span>
+            <span class="caption">Speed</span>
+          </div>
+          <div class="flexrow gridrow">
+            <select name="data.armor.group.value" data-type="String">
+                {{#select data.armor.group.value}}
+                <option value=""></option>
+                {{#each data.armor.group.groups as |group g|}}
+                <option value="{{g}}">{{group}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+            <span class="centered"><input type="checkbox" name="data.armor.isheavy" {{checked data.armor.isheavy}}/></span>
+          </div>
+          <div class="flexrow gridrow">
+            <span class="caption">Group</span>
+            <span class="caption">Heavy</span>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Shield Tab --}}
+      <div class="tab" data-group="primary" data-tab="shield">
+        <div class="flexcol">
+          <div class="flexrow gridrow">
+            <input type="number" class="centered" name="data.shield.defbonus" value="{{data.shield.defbonus}}" data-dtype="Number"/>
+            <input type="number" class="centered" name="data.shield.encumbrance" value="{{data.shield.encumbrance}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.shield.speed" value="{{data.shield.speed}}" data-dtype="string"/>
+          </div>
+          <div class="flexrow gridrow">
+            <span class="caption">Defense Bonus</span>
+            <span class="caption">Encumbrance</span>
+            <span class="caption">Speed</span>
+          </div>
+          <div class="flexrow gridrow">
+            <input type="text" class="centered" name="data.shield.dice" value="{{data.shield.dice}}" data-dtype="string"/>
+            <select name="data.shield.group.value" data-type="String">
+                {{#select data.shield.group.value}}
+                <option value=""></option>
+                {{#each data.shield.group.groups as |group g|}}
+                <option value="{{g}}">{{group}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+          </div>
+          <div class="flexrow gridrow">
+            <span class="caption">Damage Dice</span>
+            <span class="caption">Group</span>
+          </div>
+          <div class="flexrow gridrow">
+            <input type="number" class="centered" name="data.shield.attack.feat" value="{{data.shield.attack.feat}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.shield.attack.itemb" value="{{data.shield.attack.itemb}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.shield.damage.feat" value="{{data.shield.damage.feat}}" data-dtype="string"/>
+            <input type="number" class="centered" name="data.shield.damage.itemb" value="{{data.shield.damage.itemb}}" data-dtype="string"/>
+          </div>
+          <div class="flexrow gridrow">
+            <span class="caption">Feat Attack Bonus</span>
+            <span class="caption">Item Attack Bonus</span>
+            <span class="caption">Feat Damage Bonus</span>
+            <span class="caption">Item Damage Bonus</span>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Weapon Tab --}}
+      <div class="tab" data-group="primary" data-tab="weapon">
+        <div class="flexcol">
+          <div class="flexrow">
+            <select name="data.weapon.complexity.value" data-type="String">
+                {{#select data.weapon.complexity.value}}
+                <option value=""></option>
+                {{#each data.weapon.complexity.complexities as |type t|}}
+                <option value="{{t}}">{{type}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+            <select name="data.weapon.hands.value" data-type="String">
+                {{#select data.weapon.hands.value}}
+                <option value=""></option>
+                {{#each data.weapon.hands.handses as |type t|}}
+                <option value="{{t}}">{{type}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+            <select name="data.weapon.mvsr.value" data-type="String">
+                {{#select data.weapon.mvsr.value}}
+                <option value=""></option>
+                {{#each data.weapon.mvsr.mvsrs as |type t|}}
+                <option value="{{t}}">{{type}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Complexity</span>
+            <span class="caption">Hands</span>
+            <span class="caption">Melee or Ranged</span>
+          </div>
+          <div class="flexrow">
+            <input type="number" class="centered" name="data.weapon.prof" value="{{data.weapon.prof}}" data-dtype="Number"/>
+            <input type="text" class="centered" name="data.weapon.dice" value="{{data.weapon.dice}}" data-dtype="string"/>
+            <input type="text" class="centered" name="data.weapon.range" value="{{data.weapon.range}}" data-dtype="string"/>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Proficiency</span>
+            <span class="caption">Damage Dice</span>
+            <span class="caption">Range</span>
+          </div>
+          <div class="flexrow">
+            <input type="text" class="centered" name="data.weapon.groups" value="{{data.weapon.groups}}" data-dtype="string"/>
+            <input type="text" class="centered" name="data.weapon.quals" value="{{data.weapon.quals}}" data-dtype="string"/>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Groups</span>
+            <span class="caption">Weapon Qualities</span>
+          </div>
+          <div class="flex-group-center flexcol">
+            <h3>Attack Roll</h3>
+            <div class="flexrow flex-spread">
+              <select name="data.weapon.attack.abil" data-type="String">
+                  {{#select data.weapon.attack.abil}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <span>{{numberFormat data.weapon.attack.bonus decimals=0 sign=true}}{{#if data.weapon.attack.hasthreat}}T{{/if}} vs. </span>
+              <select name="data.weapon.attack.vsdefense" data-type="String">
+                  {{#select data.weapon.attack.vsdefense}}
+                  <option value=""></option>
+                  {{#each data.defenses as |def d|}}
+                  <option value="{{d}}">{{def.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </div>
+            <div class="flexrow continued">
+              <span class="caption">Mod</span>
+              <span class="caption">Prof.</span>
+              <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
+              <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
+              <span class="caption">Misc.</span>
+              <span class="caption">Threat</span>
+            </div>
+            <div class="flexrow">
+              <span>{{numberFormat data.weapon.attack.mod decimals=0 sign=true}}</span>
+              <span>{{numberFormat data.weapon.prof decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.weapon.attack.feat" value="{{data.weapon.attack.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.weapon.attack.itemb" value="{{data.weapon.attack.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.weapon.attack.misc" value="{{data.weapon.attack.misc}}" data-dtype="Number"/></span>
+              <span><input name="data.weapon.attack.hasthreat" type="checkbox" {{checked data.weapon.attack.hasthreat}} {{#if data.weapon.weaponthreat}}disabled="true"{{/if}}/></span>
+            </div>
+          </div>
+          <div class="flex-group-center flexcol">
+            <h3>Damage Roll</h3>
+            <div class="flexrow flex-spread">
+              <select name="data.weapon.damage.abil" data-type="String">
+                  {{#select data.weapon.damage.abil}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <span>{{data.weapon.damage.total}}</span>
+              <input type="text" name="data.weapon.damage.type" value="{{data.weapon.damage.type}}" data-dtype="Text" placeholder="Type"/>
+            </div>
+            <div class="flexrow continued">
+              <span class="caption">Dice</span>
+              <span class="caption">Mod</span>
+              <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
+              <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
+              <span class="caption">Misc.</span>
+            </div>
+            <div class="flexrow">
+              <span>{{data.weapon.dice}}</span>
+              <span>{{numberFormat data.weapon.damage.mod decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.weapon.damage.feat" value="{{data.weapon.damage.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.weapon.damage.itemb" value="{{data.weapon.damage.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.weapon.damage.misc" value="{{data.weapon.damage.misc}}" data-dtype="Number"/></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Implement Tab --}}
+      <div class="tab" data-group="primary" data-tab="implement">
+        <div class="flex-group-center flexcol">
+          <div class="flexrow flex-spread">
+            <span><input type="number" name="data.implement.attack.itemb" value="{{data.implement.attack.itemb}}" data-dtype="Number"/></span>
+            <span><input type="number" name="data.implement.attack.misc" value="{{data.implement.attack.misc}}" data-dtype="Number"/></span>
+            <span><input type="number" name="data.implement.damage.itemb" value="{{data.implement.damage.itemb}}" data-dtype="Number"/></span>
+            <span><input type="number" name="data.implement.damage.misc" value="{{data.implement.damage.misc}}" data-dtype="Number"/></span>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Item Bonus to Attack</span>
+            <span class="caption">Misc. Bonus to Attack</span>
+            <span class="caption">Item Bonus to Damage</span>
+            <span class="caption">Misc. Bonus to Damage</span>
+          </div>
+        </div>
+      </div>
+      {{!-- Properties Tab --}}
+      <div class="tab" data-group="primary" data-tab="props">
+        <textarea class="feature-benefit" name="data.props" rows="3" cols="80" placeholder="Properties">{{data.props}}</textarea>
+        {{#if data.isweapon}}<textarea class="feature-benefit" name="data.critprops" rows="3" cols="80" placeholder="Critical Hit Properties">{{data.critprops}}</textarea>{{/if}}
+        {{#if data.isimplement}}{{#unless data.isweapon}}<textarea class="feature-benefit" name="data.critprops" rows="3" cols="80" placeholder="Critical Hit Properties">{{data.critprops}}</textarea>{{/unless}}{{/if}}
+      </div>
+      {{!-- Power Tab --}}
+      <div class="tab" data-group="primary" data-tab="power">
+        <div class="flexcol">
+          <div class="flexrow">
+            <input name="data.power.keywords" type="text" value="{{data.power.keywords}}" placeholder="Keywords"/>
+            <input name="data.power.frequency" type="text" value="{{data.power.frequency}}" placeholder="Frequency"/>
+          </div>
+          <div class="flexrow">
+            <input name="data.power.action" type="text" value="{{data.power.action}}" placeholder="Action"/>
+            <input name="data.power.range" type="text" value="{{data.power.range}}" placeholder="Range"/>
+          </div>
+          <input name="data.power.targets" type="text" value="{{data.power.targets}}" placeholder="Targets"/>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.provoked.exists" type="checkbox" {{checked data.power.provoked.exists}}/>
+            <span class="placeholder-label">Is Provoked</span>
+            <textarea class="feature-benefit" name="data.power.provoked.text" rows="3" cols="80" placeholder="Provoked">{{data.power.provoked.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.requirement.exists" type="checkbox" {{checked data.power.requirement.exists}}/>
+            <span class="placeholder-label">Has Requirement</span>
+            <textarea class="feature-benefit" name="data.power.requirement.text" rows="3" cols="80" placeholder="Requirement">{{data.power.requirement.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.effect.exists" type="checkbox" {{checked data.power.effect.exists}}/>
+            <span class="placeholder-label">Has Effect</span>
+            <textarea class="feature-benefit" name="data.power.effect.text" rows="3" cols="80" placeholder="Effect">{{data.power.effect.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.attack.exists" type="checkbox" {{checked data.power.attack.exists}}/>
+            <span class="placeholder-label">Has Attack</span>
+            <div class="flex-group-center flexcol">
+              <div class="grid grid-3col">
+                <span>Bonus</span>
+                <span>vs.</span>
+                <span>Threat</span>
+
+                <input type="number" name="data.power.attack.bonus" value="{{data.power.attack.bonus}}" data-dtype="Number"/>
+
+                  <select name="data.power.attack.vsdefense" data-type="String">
+                      {{#select data.power.attack.vsdefense}}
+                      <option value=""></option>
+                      {{#each data.defenses as |def d|}}
+                      <option value="{{d}}">{{def.label}}</option>
+                      {{/each}}
+                      {{/select}}
+                  </select>
+
+                <span><input name="data.power.attack.hasthreat" type="checkbox" {{checked data.power.attack.hasthreat}}/></span>
+              </div>
+              <textarea class="feature-benefit" name="data.power.hit.text" rows="3" cols="80" placeholder="Hit">{{data.power.hit.text}}</textarea>
+              <textarea class="feature-benefit" name="data.power.crit.text" rows="3" cols="80" placeholder="Crit">{{data.power.crit.text}}</textarea>
+              <textarea class="feature-benefit" name="data.power.miss.text" rows="3" cols="80" placeholder="Miss">{{data.power.miss.text}}</textarea>
+            </div>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.maintain.exists" type="checkbox" {{checked data.power.maintain.exists}}/>
+            <span class="placeholder-label">Is Maintained</span>
+            <textarea class="feature-benefit" name="data.power.maintain.text" rows="3" cols="80" placeholder="Maintain">{{data.power.maintain.text}}</textarea>
+          </div>
+          <div class="flexrow">
+            <input class="section-select" name="data.power.special.exists" type="checkbox" {{checked data.power.special.exists}}/>
+            <span class="placeholder-label">Special Notes</span>
+            <textarea class="feature-benefit" name="data.power.special.text" rows="3" cols="80" placeholder="Effect">{{data.power.special.text}}</textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+</form>

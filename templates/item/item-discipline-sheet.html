@@ -1,0 +1,133 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+      <div class="flexcol">
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+        <div class="flexrow">
+          <input type="text" name="data.powertype" value="{{data.powertype}}" data-dtype="string" placeholder="Power Category"/>
+          <input type="text" name="data.keyword" value="{{data.keyword}}" data-dtype="string" placeholder="Keyword"/>
+        </div>
+      </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+      <div class="flexcol">
+        <div class="flex-group-center flexcol">
+          <h3>Attack</h3>
+          <div class="flexrow">
+            <input type="number" class="centered" name="data.attack.feat" value="{{data.attack.feat}}" data-dtype="number"/>
+            <input type="number" class="centered" name="data.attack.itemb" value="{{data.attack.itemb}}" data-dtype="number"/>
+            <input type="number" class="centered" name="data.attack.misc" value="{{data.attack.misc}}" data-dtype="number"/>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Feat Bonus to Attack</span>
+            <span class="caption">Item Bonus to Attack</span>
+            <span class="caption">Misc. Bonus to Attack</span>
+          </div>
+        </div>
+        <div class="flex-group-center flexcol">
+          <h3>Damage</h3>
+          <div class="flexrow">
+            <input type="number" class="centered" name="data.damage.feat" value="{{data.damage.feat}}" data-dtype="number"/>
+            <input type="number" class="centered" name="data.damage.itemb" value="{{data.damage.itemb}}" data-dtype="number"/>
+            <input type="number" class="centered" name="data.damage.misc" value="{{data.damage.misc}}" data-dtype="number"/>
+          </div>
+          <div class="flexrow">
+            <span class="caption">Feat Bonus to Damage</span>
+            <span class="caption">Item Bonus to Damage</span>
+            <span class="caption">Misc. Bonus to Damage</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sheet-tabs tabs" data-group="primary">
+          <a class="item" data-tab="description">Description</a>
+          {{#if data.relatedprops}}<a class="item" data-tab="props">Properties</a>{{/if}}
+          {{#if data.relatedpower}}<a class="item" data-tab="power">Power</a>{{/if}}
+      </nav>
+
+      {{!-- Sheet Body --}}
+      <section class="sheet-body">
+
+          {{!-- Description Tab --}}
+          <div class="tab" data-group="primary" data-tab="description">
+              {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+          </div>
+
+          {{!-- Properties Tab --}}
+          <div class="tab" data-group="primary" data-tab="props">
+          <textarea class="feature-benefit" name="data.otherprops" rows="8" cols="80" placeholder="">{{data.otherprops}}</textarea>
+          </div>
+
+          {{!-- Power Tab --}}
+          <div class="tab" data-group="primary" data-tab="power">
+            <div class="flexcol">
+              <div class="flexrow">
+                <input name="data.power.keywords" type="text" value="{{data.power.keywords}}" placeholder="Keywords"/>
+                <input name="data.power.frequency" type="text" value="{{data.power.frequency}}" placeholder="Frequency"/>
+              </div>
+              <div class="flexrow">
+                <input name="data.power.action" type="text" value="{{data.power.action}}" placeholder="Action"/>
+                <input name="data.power.range" type="text" value="{{data.power.range}}" placeholder="Range"/>
+              </div>
+              <input name="data.power.targets" type="text" value="{{data.power.targets}}" placeholder="Targets"/>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.provoked.exists" type="checkbox" {{checked data.power.provoked.exists}}/>
+                <span class="placeholder-label">Is Provoked</span>
+                <textarea class="feature-benefit" name="data.power.provoked.text" rows="3" cols="80" placeholder="Provoked">{{data.power.provoked.text}}</textarea>
+              </div>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.requirement.exists" type="checkbox" {{checked data.power.requirement.exists}}/>
+                <span class="placeholder-label">Has Requirement</span>
+                <textarea class="feature-benefit" name="data.power.requirement.text" rows="3" cols="80" placeholder="Requirement">{{data.power.requirement.text}}</textarea>
+              </div>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.effect.exists" type="checkbox" {{checked data.power.effect.exists}}/>
+                <span class="placeholder-label">Has Effect</span>
+                <textarea class="feature-benefit" name="data.power.effect.text" rows="3" cols="80" placeholder="Effect">{{data.power.effect.text}}</textarea>
+              </div>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.attack.exists" type="checkbox" {{checked data.power.attack.exists}}/>
+                <span class="placeholder-label">Has Attack</span>
+                <div class="flex-group-center flexcol">
+                  <div class="grid grid-10col">
+                    <span>Bonus</span>
+                    <span>vs.</span>
+                    <span>Threat</span>
+
+                    <input type="number" name="data.power.attack.bonus" value="{{data.power.attack.bonus}}" data-dtype="Number"/>
+
+                      <select name="data.power.attack.vsdefense" data-type="String">
+                          {{#select data.power.attack.vsdefense}}
+                          <option value=""></option>
+                          {{#each data.power.defenses as |def d|}}
+                          <option value="{{d}}">{{def.label}}</option>
+                          {{/each}}
+                          {{/select}}
+                      </select>
+
+                    <span><input name="data.power.attack.hasthreat" type="checkbox" {{checked data.power.attack.hasthreat}}/></span>
+                  </div>
+                  <textarea class="feature-benefit" name="data.power.hit.text" rows="3" cols="80" placeholder="Hit">{{data.power.hit.text}}</textarea>
+                  <textarea class="feature-benefit" name="data.power.crit.text" rows="3" cols="80" placeholder="Crit">{{data.power.crit.text}}</textarea>
+                  <textarea class="feature-benefit" name="data.power.miss.text" rows="3" cols="80" placeholder="Miss">{{data.power.miss.text}}</textarea>
+                </div>
+              </div>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.maintain.exists" type="checkbox" {{checked data.power.maintain.exists}}/>
+                <span class="placeholder-label">Is Maintained</span>
+                <textarea class="feature-benefit" name="data.power.maintain.text" rows="3" cols="80" placeholder="Maintain">{{data.power.maintain.text}}</textarea>
+              </div>
+              <div class="flexrow">
+                <input class="section-select" name="data.power.special.exists" type="checkbox" {{checked data.power.special.exists}}/>
+                <span class="placeholder-label">Special Notes</span>
+                <textarea class="feature-benefit" name="data.power.special.text" rows="3" cols="80" placeholder="Effect">{{data.power.special.text}}</textarea>
+              </div>
+            </div>
+          </div>
+      </section>
+
+</form>

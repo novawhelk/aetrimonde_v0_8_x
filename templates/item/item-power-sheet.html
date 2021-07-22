@@ -1,0 +1,206 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="flexrow">
+              <select name="data.powergroup" data-type="String">
+                  {{#select data.powergroup}}
+                  <option value="Power Type"></option>
+                  {{#each data.powertypes as |ptype p|}}
+                  <option value="{{p}}">{{ptype.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <input name="data.powertype" type="text" value="{{data.powertype}}" placeholder="Source"/>
+              <input class="star" name="data.favorite" type="checkbox" {{checked data.favorite}}/>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+      <div class="flexcol">
+        <textarea class="feature-benefit" name="data.flavortext" rows="3" cols="80" placeholder="Description">{{data.flavortext}}</textarea>
+        <div class="flexrow">
+          <input name="data.keywords" type="text" value="{{data.keywords}}" placeholder="Keywords"/>
+          {{#if data.hasfrequency}}<input name="data.frequency" type="text" value="{{data.frequency}}" placeholder="Frequency"/>{{/if}}
+        </div>
+        <div class="flexrow">
+          <input name="data.action" type="text" value="{{data.action}}" placeholder="Action"/>
+          <input name="data.range" type="text" value="{{data.range}}" placeholder="Range"/>
+        </div>
+        <div class="flexrow">
+          <input name="data.targets" type="text" value="{{data.targets}}" placeholder="Targets"/>
+        </div>
+        {{#if data.requiresitem}}
+        <div class="flexrow">
+          <select name="data.mainitem" data-type="String">
+              {{#select data.mainitem}}
+              <option value="">Default {{data.relevantitemtype}}</option>
+              {{#each data.relevantitems as |item i|}}
+              <option value="{{item._id}}">{{item.name}}</option>
+              {{/each}}
+              {{/select}}
+          </select>
+          {{#if data.attack.off}}
+          <select name="data.offitem" data-type="String">
+              {{#select data.offitem}}
+              <option value="">Default {{data.relevantoffitemtype}}</option>
+              {{#each data.relevantitems as |item i|}}
+              <option value="{{item._id}}">{{item.name}}</option>
+              {{/each}}
+              {{/select}}
+          </select>
+          {{/if}}
+        </div>
+        {{/if}}
+        <div class="flexrow">
+          <input class="section-select" name="data.provoked.exists" type="checkbox" {{checked data.provoked.exists}}/>
+          <span class="placeholder-label">Is Provoked</span>
+          <textarea class="feature-benefit" name="data.provoked.text" rows="3" cols="80" placeholder="Provoked">{{data.provoked.text}}</textarea>
+        </div>
+        <div class="flexrow">
+          <input class="section-select" name="data.requirement.exists" type="checkbox" {{checked data.requirement.exists}}/>
+          <span class="placeholder-label">Has Requirement</span>
+          <textarea class="feature-benefit" name="data.requirement.text" rows="3" cols="80" placeholder="Requirement">{{data.requirement.text}}</textarea>
+        </div>
+        <div class="flexrow">
+          <input class="section-select" name="data.effect.exists" type="checkbox" {{checked data.effect.exists}}/>
+          <span class="placeholder-label">Has Effect</span>
+          <textarea class="feature-benefit" name="data.effect.text" rows="3" cols="80" placeholder="Effect">{{data.effect.text}}</textarea>
+        </div>
+        <div class="flexrow">
+          <input class="section-select" name="data.attack.exists" type="checkbox" {{checked data.attack.exists}}/>
+          <span class="placeholder-label">Has Attack</span>
+          <div class="flex-group-center flexcol">
+            {{#unless data.isnpc}}
+            <div class="flexrow flex-spread gridrow">
+              <select name="data.attack.abil" data-type="String">
+                  {{#select data.attack.abil}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <span>{{numberFormat data.attack.bonus decimals=0 sign=true}}{{#if data.attack.hasthreat}}T{{/if}}{{#if data.attack.off}}/{{numberFormat data.attack.offbonus decimals=0 sign=true}}{{#if data.attack.hasoffthreat}}T{{/if}}{{/if}} vs. </span>
+              <select name="data.attack.vsdefense" data-type="String">
+                  {{#select data.attack.vsdefense}}
+                  <option value=""></option>
+                  {{#each data.defenses as |def d|}}
+                  <option value="{{d}}">{{def.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </div>
+            <div class="flexrow gridrow">
+              <span>{{numberFormat data.attack.mod decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.attack.prof" value="{{data.attack.prof}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.feat" value="{{data.attack.feat}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.itemb" value="{{data.attack.itemb}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.misc" value="{{data.attack.misc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.powermisc" value="{{data.attack.powermisc}}" data-dtype="Number"/></span>
+              <span><input name="data.attack.hasthreat" type="checkbox" {{checked data.attack.hasthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              {{#if data.attack.off}}
+              <span></span>
+            </div>
+            <div class="flexrow gridrow">
+              <span>{{numberFormat data.attack.mod decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.attack.offprof" value="{{data.attack.offprof}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.offfeat" value="{{data.attack.offfeat}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.offitemb" value="{{data.attack.offitemb}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.offmisc" value="{{data.attack.offmisc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span>{{numberFormat data.attack.powermisc decimals=0 sign=true}}</span>
+              <span><input name="data.attack.hasoffthreat" type="checkbox" {{checked data.attack.hasoffthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              {{/if}}
+              <span><input name="data.attack.off" type="checkbox" {{checked data.attack.off}}/></span>
+            </div>
+            <div class="flexrow gridrow">
+              <span class="caption">Mod</span>
+              <span class="caption">Prof.</span>
+              <span class="caption">Feat</span>
+              <span class="caption">Item</span>
+              <span class="caption">Misc.</span>
+              <span class="caption">Inherent</span>
+              <span class="caption">Threat</span>
+              <span class="caption">Off-Hand</span>
+            </div>
+            {{/unless}}
+            {{#if data.isnpc}}
+            <div class="flexrow flex-spread gridrow">
+              <select name="data.attack.abil" data-type="String">
+                  {{#select data.attack.abil}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <div class="flexrow">
+                <input type="number" name="data.attack.bonus" value="{{data.attack.bonus}}" placeholder="{{data.attack.autobonus}}" data-dtype="Number"/>
+                {{#if data.attack.off}}
+                <input type="number" name="data.attack.offbonus" value="{{data.attack.offbonus}}" placeholder="{{data.attack.offautobonus}}" data-dtype="Number"/>
+                {{/if}}
+              </div>
+              <select name="data.attack.vsdefense" data-type="String">
+                  {{#select data.attack.vsdefense}}
+                  <option value=""></option>
+                  {{#each data.defenses as |def d|}}
+                  <option value="{{d}}">vs. {{def.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </div>
+            <div class="flexrow gridrow">
+              <span>{{numberFormat data.attack.mod decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.attack.prof" value="{{data.attack.prof}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.feat" value="{{data.attack.feat}}" data-dtype="Number" disabled="true"/></span>
+              <span><input type="number" name="data.attack.itemb" value="{{data.attack.itemb}}" data-dtype="Number" disabled="true"/></span>
+              <span><input type="number" name="data.attack.misc" value="{{data.attack.misc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.powermisc" value="{{data.attack.powermisc}}" data-dtype="Number"/></span>
+              <span><input name="data.attack.hasthreat" type="checkbox" {{checked data.attack.hasthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              {{#if data.attack.off}}
+              <span></span>
+            </div>
+            <div class="flexrow gridrow">
+              <span>{{numberFormat data.attack.mod decimals=0 sign=true}}</span>
+              <span><input type="number" name="data.attack.offprof" value="{{data.attack.offprof}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span><input type="number" name="data.attack.offfeat" value="{{data.attack.offfeat}}" data-dtype="Number" disabled="true"/></span>
+              <span><input type="number" name="data.attack.offitemb" value="{{data.attack.offitemb}}" data-dtype="Number" disabled="true"/></span>
+              <span><input type="number" name="data.attack.offmisc" value="{{data.attack.offmisc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
+              <span>{{numberFormat data.attack.powermisc decimals=0 sign=true}}</span>
+              <span><input name="data.attack.hasoffthreat" type="checkbox" {{checked data.attack.hasoffthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              {{/if}}
+              <span><input name="data.attack.off" type="checkbox" {{checked data.attack.off}}/></span>
+            </div>
+            <div class="flexrow gridrow">
+              <span class="caption">Mod</span>
+              <span class="caption">Prof.</span>
+              <span class="caption">Tier</span>
+              <span class="caption">Rank</span>
+              <span class="caption">Misc.</span>
+              <span class="caption">Inherent</span>
+              <span class="caption">Threat</span>
+              <span class="caption">Off-Hand</span>
+            </div>
+            {{/if}}
+            <textarea class="feature-benefit" name="data.hit.text" rows="3" cols="80" placeholder="Hit">{{data.hit.text}}</textarea>
+            <textarea class="feature-benefit" name="data.crit.text" rows="3" cols="80" placeholder="Crit">{{data.crit.text}}</textarea>
+            <textarea class="feature-benefit" name="data.miss.text" rows="3" cols="80" placeholder="Miss">{{data.miss.text}}</textarea>
+          </div>
+        </div>
+        <div class="flexrow">
+          <input class="section-select" name="data.maintain.exists" type="checkbox" {{checked data.maintain.exists}}/>
+          <span class="placeholder-label">Is Maintained</span>
+          <textarea class="feature-benefit" name="data.maintain.text" rows="3" cols="80" placeholder="Maintain">{{data.maintain.text}}</textarea>
+        </div>
+        <div class="flexrow">
+          <input class="section-select" name="data.special.exists" type="checkbox" {{checked data.special.exists}}/>
+          <span class="placeholder-label">Special Notes</span>
+          <textarea class="feature-benefit" name="data.special.text" rows="3" cols="80" placeholder="Effect">{{data.special.text}}</textarea>
+        </div>
+      </div>
+
+    </section>
+</form>

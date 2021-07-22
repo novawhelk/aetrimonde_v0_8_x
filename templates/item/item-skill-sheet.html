@@ -1,0 +1,43 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+      <div class="flex-group-center grid grid-9col">
+        <span>Total</span>
+        <span></span>
+        <span>Abil.</span>
+        <span>Mod</span>
+        <span>Trained</span>
+        <span>Encm.</span>
+        <span>Feat</span>
+        <span>Item</span>
+        <span>Misc.</span>
+
+        <span>{{numberFormat data.total decimals=0 sign=true}}</span>
+        <span>=</span>
+        <span>
+          <select name="data.abil" data-type="String">
+              {{#select data.abil}}
+              <option value=""></option>
+              {{#each data.abilities as |abl a|}}
+              <option value="{{a}}">{{abl.label}}</option>
+              {{/each}}
+              {{/select}}
+          </select>
+        </span>
+        <span>{{numberFormat data.mod decimals=0 sign=true}}</span>
+        <span><input name="data.trained" type="checkbox" {{checked data.trained}}/></span>
+        <span><input name="data.encumbered" type="checkbox" {{checked data.encumbered}}/></span>
+        <span><input type="number" name="data.feat" value="{{data.feat}}" data-dtype="Number"/></span>
+        <span><input type="number" name="data.itemb" value="{{data.itemb}}" data-dtype="Number"/></span>
+        <span><input type="number" name="data.misc" value="{{data.misc}}" data-dtype="Number"/></span>
+      </div>
+
+    </section>
+</form>

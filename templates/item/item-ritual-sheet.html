@@ -1,0 +1,65 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+      <div class="flexcol">
+        <div class="flexrow">
+          <div class="flexcol borderbox">
+            <h3 class="centered">Casting</h3>
+            <span class="centered">
+              <select name="data.keyskill" data-type="String">
+                  {{#select data.keyskill}}
+                  <option value=""></option>
+                  {{#each data.skills as |skl s|}}
+                  <option value="{{s}}">{{skl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </span>
+          <span class="caption">Key Skill</span>
+            <input type="text" class="centered" name="data.category" value="{{data.category}}" data-dtype="string"/>
+            <span class="caption">Category</span>
+            <input type="text" class="centered" name="data.duration" value="{{data.duration}}" data-dtype="string"/>
+            <span class="caption">Duration</span>
+          </div>
+          <div class="flexcol borderbox">
+            <h3 class="centered">As Ritual</h3>
+            <span class="centered"><input name="data.known" type="checkbox" {{checked data.known}}/></span>
+            <span class="caption">Known Ritual</span>
+            <input type="text" class="centered" name="data.ccost" value="{{data.ccost}}" data-dtype="string"/>
+            <span class="caption">Casting Cost</span>
+            <input type="text" class="centered" name="data.ctime" value="{{data.ctime}}" data-dtype="string"/>
+            <span class="caption">Casting Time</span>
+          </div>
+          <div class="flexcol borderbox">
+            <h3 class="centered">As Scroll</h3>
+            <input type="text" class="centered" name="data.scrollquantity" value="{{data.scrollquantity}}" data-dtype="string"/>
+            <span class="caption">Scroll Quantity</span>
+            <input type="text" class="centered" name="data.scost" value="{{data.scost}}" data-dtype="string"/>
+            <span class="caption">Casting Cost</span>
+            <input type="text" class="centered" name="data.stime" value="{{data.stime}}" data-dtype="string"/>
+            <span class="caption">Casting Time</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sheet-tabs tabs" data-group="primary">
+          <a class="item" data-tab="description">Description</a>
+      </nav>
+
+      {{!-- Sheet Body --}}
+      <section class="sheet-body">
+
+          {{!-- Description Tab --}}
+          <div class="tab" data-group="primary" data-tab="description">
+              {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+          </div>
+      </section>
+
+</form>
