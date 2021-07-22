@@ -81,26 +81,19 @@ export class AetrimondeItem extends Item {
     data.multiple = data.quantity > 1;
     data.slotlabel = data.slot.slots[`${data.slot.value}`];
     data.isheld = data.slot.value === "held";
-    // if (actorData) {
-    //   // if (this.data.data.slot.value === "held" && this.data.data.isweapon && this.data.data.hands.value === "2h") {
-    //   //   if ((actorData.equipped.mainhand === this._id && actorData.equipped.offhand != this._id))
-    //   // }
-    //   const newEquipment = actorData.equipped;
-    //   for (let slot in newEquipment) {
-    //     newEquipment[`${slot}`] = (newEquipment[`${slot}`] != this._id || (slot.includes(data.slot.value) || (data.slot.value === "held" && ["mainhand", "offhand"].includes(slot)))) ? newEquipment[`${slot}`] : "";
-    //   }
-    //   this.actor.update({"data.equipped": newEquipment});
-    //
-    //   data.equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === this._id || actorData.equipped.ring2 === this._id)) || this._id === actorData.equipped[`${data.slot.value}`]) : false;
-    //   data.equippedmh = (this._id === actorData.equipped.mainhand);
-    //   data.equippedoh = (this._id === actorData.equipped.offhand);
-    //   data.equippedanywhere = data.equipped || data.equippedmh || data.equippedoh;
-    //   if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
-    //     data.warning = true;
-    //     data.warningmessage = "This weapon requires two hands to wield properly."
-    //   }
-    //   data.npcowner = this.actor.data.type === "npc";
-    // }
+    if (actorData) {
+      const unslotted = data.slot.value === "noslot";
+      const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this._id || actorData.equipped.ring2 === this._id);
+      const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this._id;
+      data.equippedmh = (this._id === actorData.equipped.mainhand);
+      data.equippedoh = (this._id === actorData.equipped.offhand);
+      data.equippedanywhere = unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
+      if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
+        data.warning = true;
+        data.warningmessage = "This weapon requires two hands to wield properly."
+      }
+      data.npcowner = this.actor.data.type === "npc";
+    }
 
     if (data.isarmor) {
       data.armor.grouplabel = (data.armor.group.value != "") ? data.armor.group.groups[`${data.armor.group.value}`] : "";

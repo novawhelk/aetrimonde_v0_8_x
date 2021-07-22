@@ -407,6 +407,14 @@ export class AetrimondeActorSheet extends ActorSheet {
         li.addEventListener("dragstart", handler, false);
       });
     }
+
+    // Equipment management
+    html.find('.armor-toggle').click(this._armorToggle.bind(this));
+    html.find('.weap-toggle').click(this._weapToggle.bind(this));
+    html.find('.weapoh-toggle').click(this._weapToggleOH.bind(this));
+    html.find('.unarmed-toggle').click(this._unarmedToggle.bind(this));
+    html.find('.implement-toggle').click(this._implementToggle.bind(this));
+    html.find('.equipment-toggle').click(this._equipmentToggle.bind(this));
   }
 
   /**
@@ -467,5 +475,122 @@ export class AetrimondeActorSheet extends ActorSheet {
       return roll;
     }
   }
+  _armorToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+    const otheritems = this.actor.items.filter(entry => (entry.type === "armor" && entry.data._id != thisitem._id && entry.data.data.isshield === thisitem.data.data.isshield))
 
+    if(thisitem.data.data.isshield) {
+      this.actor.update({"data.shield": this.actor.data.data.shield === thisitem._id ? "": thisitem._id});
+      thisitem.update({"data.equipped": this.actor.data.data.shield === thisitem._id ? false : true})
+    }
+    else {
+      thisitem.update({"data.equipped": thisitem.data.data.equipped ? false : true})
+    }
+    if(this.actor.data.data.shield != thisitem._id) {
+      for (let item of otheritems) {
+        item.update({"data.equipped": false});
+      }
+    }
+  }
+  _weapToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+    const weapons = this.actor.items.filter(entry => (entry.type === "weapon" && entry.data._id != thisitem._id && !entry.data.data.groups.includes("Unarmed")));
+
+    const equipthis = this.actor.data.data.weapon != thisitem._id;
+    const twohander = thisitem.data.data.hands === "2h";
+    const oldoffweapon = this.actor.items.get(this.actor.data.data.offweapon);
+    const newweapon = equipthis ? thisitem._id : "";
+    const newoffweapon = twohander ? newweapon : (oldoffweapon.data.data.hands === "2h" ? "" : this.actor.data.data.offweapon);
+    this.actor.update({"data.weapon": newweapon,
+    "data.offweapon": newoffweapon})
+    thisitem.update({"data.equipped": equipthis,
+    "data.equippedoh": twohander ? equipthis : thisitem.data.data.equippedoh})
+    if(equipthis) {
+      for (let weapon of weapons) {
+        weapon.update({"data.equipped": false,
+        "data.equippedoh": (twohander || weapon.data.data.hands === "2h") ? false : weapon.data.equippedoh});
+      }
+    }
+  }
+  _weapToggleOH(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+    const weapons = this.actor.items.filter(entry => (entry.type === "weapon" && entry.data._id != thisitem._id && !entry.data.data.groups.includes("Unarmed")));
+
+    const equipthis = this.actor.data.data.offweapon != thisitem._id;
+    const twohander = thisitem.data.data.hands === "2h";
+    const oldweapon = this.actor.items.get(this.actor.data.data.weapon);
+    const newoffweapon = equipthis ? thisitem._id : "";
+    const newweapon = twohander ? newoffweapon : (oldweapon.data.data.hands === "2h" ? "" : this.actor.data.data.weapon);
+    this.actor.update({"data.weapon": newweapon,
+    "data.offweapon": newoffweapon})
+    thisitem.update({"data.equippedoh": equipthis,
+    "data.equipped": twohander ? equipthis : thisitem.data.data.equipped})
+    if(equipthis) {
+      for (let weapon of weapons) {
+        weapon.update({"data.equippedoh": false,
+        "data.equipped": (twohander || weapon.data.data.hands === "2h") ? false : weapon.data.equipped});
+      }
+    }
+  }
+  _unarmedToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+
+    const weapons = this.actor.items.filter(entry => (entry.type === "weapon" && entry.data._id != thisitem._id && entry.data.data.groups.includes("Unarmed")));
+    this.actor.update({"data.unarmed": this.actor.data.data.unarmed === thisitem._id ? "": thisitem._id})
+    thisitem.update({"data.equipped": this.actor.data.data.unarmed === thisitem._id ? false : true})
+    if(this.actor.data.data.unarmed != thisitem._id) {
+      for (let weapon of weapons) {
+        weapon.update({"data.equipped": false});
+      }
+    }
+  }
+  _implementToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+
+    const weapons = this.actor.items.filter(entry => (entry.type === "implement" && entry.data._id != thisitem._id));
+    this.actor.update({"data.implement": this.actor.data.data.implement === thisitem._id ? "": thisitem._id})
+    thisitem.update({"data.equipped": this.actor.data.data.implement === thisitem._id ? false : true})
+    if(this.actor.data.data.implement != thisitem._id) {
+      for (let weapon of weapons) {
+        weapon.update({"data.equipped": false});
+      }
+    }
+  }
+  _equipmentToggle(event) {
+    event.preventDefault();
+    const itemid = event.currentTarget.dataset.id;
+    const equipSlot = event.currentTarget.dataset.slot;
+    const actor = this.actor;
+    const actorData = actor.data.data;
+    const thisItem = actor.items.get(event.currentTarget.dataset.id);
+    const thisItemData = thisItem.data.data;
+    const newEquipment = actorData.equipped;
+    if (equipSlot === "ring") {
+      if (thisItemData.equipped) {
+        if (actorData.equipped.ring1 === itemid) {
+          newEquipment.ring1 = "";
+        }
+        else {
+          newEquipment.ring2 = "";
+        }
+      }
+      else {
+        if (actorData.equipped.ring1) {
+          newEquipment.ring2 = itemid;
+        }
+        else {
+          newEquipment.ring1 = itemid;
+        }
+      }
+    }
+    else if (equipSlot != "noslot") {
+      newEquipment[`${equipSlot}`] = itemId === actorData.equipped[`${equipSlot}`] ? "" : thisItem._id;
+    }
+    actor.update({"data.equipped": newEquipment});
+  }
 }
