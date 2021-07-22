@@ -16,7 +16,7 @@ export class AetrimondeItemSheet extends ItemSheet {
 
   /** @override */
   get template() {
-    const path = "systems/aetrimonde/templates/item";
+    const path = "systems/aetrimonde_v0_8_x/templates/item";
     // Return a single sheet for all item types.
     // return `${path}/item-sheet.html`;
 
