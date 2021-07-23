@@ -223,7 +223,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         if (i.data.relatedprops) {
           const itemprops = {
             "name": i.name,
-            "id": i.id,
+            "_id": i._id,
             "img": i.img,
             "dependent": true,
             "data": {
@@ -236,7 +236,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         if (i.data.relatedpower) {
           const itempower = {
             "name": i.name,
-            "id": i.id,
+            "_id": i._id,
             "img": i.img,
             "dependent": true,
             "data": i.data.power
@@ -286,7 +286,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     const safeabil = abil === "" ? (ranged ? "dex" : "str") : abil;
     const weaponattack = {
       "name": weapon.name,
-      "id": weapon.id,
+      "_id": weapon._id,
       "img": weapon.img,
       "dependent": true,
       "isweapon": true,
