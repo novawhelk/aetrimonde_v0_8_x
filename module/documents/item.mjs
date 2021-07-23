@@ -168,8 +168,8 @@ export class AetrimondeItem extends Item {
 
       const mainequipped = actor.data.data.equipped.mainhand ? actor.data.items.get(actor.data.data.equipped.mainhand).data : "";
       const offequipped = actor.data.data.equipped.offhand ? actor.data.items.get(actor.data.data.equipped.offhand).data : "";
-      const mainselected = data.mainitem ? actor.data.items.get(data.mainitem) : "";
-      const offselected = data.offitem ? actor.data.items.get(data.offitem) : "";
+      const mainselected = data.mainitem ? actor.data.items.get(data.mainitem).data : "";
+      const offselected = data.offitem ? actor.data.items.get(data.offitem).data : "";
 
       const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
       data.attack.mod = mod;
