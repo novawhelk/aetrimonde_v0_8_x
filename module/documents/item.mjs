@@ -166,8 +166,10 @@ export class AetrimondeItem extends Item {
         }
       };
 
-      const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry.id === actor.data.data.equipped.mainhand)).data : "";
-      const offhanditem = actor.data.data.equipped.offhand ? actor.data.items.find(entry => (entry.id === actor.data.data.equipped.offhand)).data : "";
+      const mainequipped = actor.data.data.equipped.mainhand ? actor.data.items.get(actor.data.data.equipped.mainhand).data : "";
+      const offequipped = actor.data.data.equipped.offhand ? actor.data.items.get(actor.data.data.equipped.offhand).data : "";
+      const mainselected = data.mainitem ? actor.data.items.get(data.mainitem) : "";
+      const offselected = data.offitem ? actor.data.items.get(data.offitem) : "";
 
       const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
       data.attack.mod = mod;
@@ -186,10 +188,31 @@ export class AetrimondeItem extends Item {
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon));
 
         // Determine which item(s) to use with this power.
-        const defaultmainweapon = mainhanditem.data.isweapon ? mainhanditem : (offhanditem.data.isweapon ? offhanditem : defaultweapon);
-        const defaultoffweapon = mainhanditem.data.isweapon ? (offhanditem.data.isweapon ? offhanditem : defaultweapon) : defaultweapon;
-        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data : defaultmainweapon;
-        const offweapon = data.offitem ? actor.data.items.filter(entry => entry.id === data.offitem)[0].data : defaultoffweapon;
+        let mainweapon = defaultweapon;
+        let offweapon = defaultweapon;
+        if (mainselected) {
+          mainweapon = mainselected;
+          if (offselected) { // If main- and off-weapon both selected
+            offweapon = offselected;
+          }
+          else if (offequipped) { // If main-weapon selected but not off-weapon, and there is something equipped in the off-hand
+            offweapon = offequipped.data.isweapon ? offequipped : defaultweapon;
+          }
+        }
+        else if (offselected) {
+          offweapon = offselected;
+          if (offweapon != mainequipped) { // If off-weapon selected but not main-weapon, and the item equipped in main-hand is not the selected off-weapon
+            mainweapon = mainequipped.data.isweapon ? mainequipped : defaultweapon;
+          }
+        }
+        else {
+          if (mainequipped) { // If nothing selected but something is equipped in main-hand
+            mainweapon = mainequipped.data.isweapon ? mainequipped : defaultweapon;
+          }
+          if (offequipped) { // If nothing selected but something is equipped in off-hand
+            offweapon = offequipped.data.isweapon ? offequipped : defaultweapon;
+          }
+        }
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
         data.useditems = data.useditems.concat(mainweapon);
