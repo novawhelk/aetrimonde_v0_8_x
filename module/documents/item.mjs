@@ -220,9 +220,9 @@ export class AetrimondeItem extends Item {
         data.useditems = data.useditems.concat(offweapon);
 
         // Issue a warning if it doesn't look like the right items are equipped.
-        const missingmelee = data.range.includes("Melee") && (mainweapon.data.weapon.mvsr.value != "melee" || (data.attack.offattack && offweapon.data.weapon.mvsr.value != "melee"));
-        const missingranged = data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) && (data.attack.offattack && offweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.quals.includes("Thrown")));
-        data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.data.equippedmh && (mainweapon.data.slot != "held" && !mainweapon.data.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.data.equippedoh && (offweapon.data.slot != "held" && !offweapon.data.equippedanywhere)));
+        const missingmelee = data.range.includes("Melee") && (mainweapon.data.weapon.mvsr.value != "melee" || (data.attack.off && offweapon.data.weapon.mvsr.value != "melee"));
+        const missingranged = data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) || (data.attack.off && offweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.quals.includes("Thrown")));
+        data.warning = missingmelee || missingranged || !mainweapon.data.equippedanywhere || (data.attack.off && !offweapon.data.equippedanywhere);
         data.warningmessage = "You might not have the right item(s) equipped.";
 
         // Calculate all the bonuses for attacks and damage.
