@@ -136,7 +136,7 @@ export class AetrimondeItem extends Item {
 
   _preparePowerData(itemData) {
     const data = itemData.data;
-    const actor = game.actors.get(this.actor.id);
+    const actor = this.actor;
 
     if (this.actor) {
       data.autoprof = false;
@@ -166,10 +166,11 @@ export class AetrimondeItem extends Item {
         }
       };
 
-      const mainequipped = actor.data.data.equipped.mainhand ? actor.data.items.get(actor.data.data.equipped.mainhand).data : "";
-      const offequipped = actor.data.data.equipped.offhand ? actor.data.items.get(actor.data.data.equipped.offhand).data : "";
-      const mainselected = data.mainitem ? actor.data.items.get(data.mainitem).data : "";
-      const offselected = data.offitem ? actor.data.items.get(data.offitem).data : "";
+      const overActor = game.actors.get(this.actor.id);
+      const mainequipped = actor.data.data.equipped.mainhand ? overActor.items.get(actor.data.data.equipped.mainhand).data : "";
+      const offequipped = actor.data.data.equipped.offhand ? overActor.items.get(actor.data.data.equipped.offhand).data : "";
+      const mainselected = data.mainitem ? overActor.items.get(data.mainitem).data : "";
+      const offselected = data.offitem ? overActor.items.get(data.offitem).data : "";
 
       const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
       data.attack.mod = mod;
