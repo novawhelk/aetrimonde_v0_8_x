@@ -628,13 +628,13 @@
                       </div>
                     </li>
                     {{#each powers.entries as |item id|}}
-                        <li class="item power flexrow {{group}} " data-item-id="{{item.id}}">
+                        <li class="item power flexrow {{group}} " data-item-id="{{item._id}}">
                             <div class="item-image" style="background-image: url('{{item.img}}');" >
                               <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item.json}}"><img src="systems/aetrimonde/icons/go.png"title="{{item.name}}" width="42" height="42"/></a>
                             </div>
                             <div class="flexcol item-name flex4">
                               <div class="flexrow">
-                                <a class="item-name truncated-ellipsis expander" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}} </a>
+                                <a class="item-name truncated-ellipsis expander" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}} </a>
                                 {{#if item.data.warning}}
                                 <span class="centered flex0">
                                   <i class="fas fa-exclamation-triangle" style="color: goldenrod;" title="{{item.data.warningmessage}}"></i>
