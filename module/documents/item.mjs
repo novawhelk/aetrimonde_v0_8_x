@@ -138,25 +138,27 @@ export class AetrimondeItem extends Item {
       data.autoprof = false;
       const actorData = actor.data.data;
       const defaultweapon = {
-        "weapon": {
-          "prof": 0,
-          "attack": {
-            "feat": 0,
-            "itemb": 0,
-            "misc": 0
+        "data": {
+          "weapon": {
+            "prof": 0,
+            "attack": {
+              "feat": 0,
+              "itemb": 0,
+              "misc": 0
+            },
+            "weaponthreat": false,
+            "mvsr": "",
+            "quals": ""
           },
-          "weaponthreat": false,
-          "mvsr": "",
-          "quals": ""
-        },
-        "shield": {
-          "attack": {
-            "feat": 0,
-            "itemb": 0,
-            "misc": 0
-          }
-        },
-        "equippedanywhere": true
+          "shield": {
+            "attack": {
+              "feat": 0,
+              "itemb": 0,
+              "misc": 0
+            }
+          },
+          "equippedanywhere": true
+        }
       };
 
       const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.mainhand)).data : "";
@@ -175,30 +177,30 @@ export class AetrimondeItem extends Item {
       if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = data.attack.off ? "Main-Weapon" : "Weapon";
-        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon));
-        const defaultmainweapon = mainhanditem.isweapon ? mainhanditem : (offhanditem.isweapon ? offhanditem : defaultweapon);
-        const defaultoffweapon = mainhanditem.isweapon ? (offhanditem.isweapon ? offhanditem : defaultweapon) : defaultweapon;
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon));
+        const defaultmainweapon = mainhanditem.data.isweapon ? mainhanditem : (offhanditem.data.isweapon ? offhanditem : defaultweapon);
+        const defaultoffweapon = mainhanditem.data.isweapon ? (offhanditem.data.isweapon ? offhanditem : defaultweapon) : defaultweapon;
         const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultmainweapon;
         const offweapon = data.offitem ? actor.data.items.filter(entry => entry._id === data.offitem)[0].data : defaultoffweapon;
         data.useditems = data.useditems.concat(mainweapon);
         if (mainweapon != offweapon)
         data.useditems = data.useditems.concat(offweapon);
-        const missingmelee = (data.range.includes("Melee") && ((mainweapon.weapon.mvsr.value != "melee" && offweapon.weapon.mvsr.value != "melee") || (data.attack.off && (mainweapon.weapon.mvsr.value != "melee" || offweapon.weapon.mvsr.value != "melee" || actorData.equipped.mainhand === actorData.equipped.offhand))));
-        const missingranged = (data.range.includes("Ranged") && ((mainweapon.weapon.mvsr.value != "ranged" && offweapon.weapon.mvsr.value != "ranged" && !mainweapon.weapon.quals.includes("Thrown") && !offweapon.weapon.quals.includes("Thrown")) || (data.attack.off && ((mainweapon.weapon.mvsr.value != "ranged" && !mainweapon.weapon.quals.includes("Thrown")) || (offweapon.weapon.mvsr.value != "ranged" && !offweapon.weapon.quals.includes("Thrown")) || actorData.equipped.mainhand === actorData.equipped.offhand))));
-        data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.equippedmh && (mainweapon.slot != "held" && !mainweapon.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.equippedoh && (offweapon.slot != "held" && !offweapon.equippedanywhere)));
+        const missingmelee = (data.range.includes("Melee") && ((mainweapon.data.weapon.mvsr.value != "melee" && offweapon.data.weapon.mvsr.value != "melee") || (data.attack.off && (mainweapon.data.weapon.mvsr.value != "melee" || offweapon.data.weapon.mvsr.value != "melee" || actorData.equipped.mainhand === actorData.equipped.offhand))));
+        const missingranged = (data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown") && !offweapon.data.weapon.quals.includes("Thrown")) || (data.attack.off && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) || (offweapon.data.weapon.mvsr.value != "ranged" && !offweapon.data.weapon.quals.includes("Thrown")) || actorData.equipped.mainhand === actorData.equipped.offhand))));
+        data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.data.equippedmh && (mainweapon.data.slot != "held" && !mainweapon.data.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.data.equippedoh && (offweapon.data.slot != "held" && !offweapon.data.equippedanywhere)));
         data.warningmessage = "You might not have the right item(s) equipped.";
-        data.attack.prof = mainweapon.weapon.prof;
-        data.attack.feat = Math.max(attbonus.feat, mainweapon.weapon.attack.feat);
-        data.attack.itemb = Math.max(attbonus.itemb, mainweapon.weapon.attack.itemb);
-        data.attack.misc = attbonus.misc + mainweapon.weapon.attack.misc;
+        data.attack.prof = mainweapon.data.weapon.prof;
+        data.attack.feat = Math.max(attbonus.feat, mainweapon.data.weapon.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, mainweapon.data.weapon.attack.itemb);
+        data.attack.misc = attbonus.misc + mainweapon.data.weapon.attack.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
-        data.attack.hasthreat = mainweapon.weapon.weaponthreat ? true : data.attack.hasthreat;
-        data.attack.offprof = offweapon.weapon.prof;
-        data.attack.offfeat = Math.max(attbonus.feat, offweapon.weapon.attack.feat);
-        data.attack.offitemb = Math.max(attbonus.itemb, offweapon.weapon.attack.itemb);
-        data.attack.offmisc = attbonus.misc + offweapon.weapon.attack.misc;
+        data.attack.hasthreat = mainweapon.data.weapon.weaponthreat ? true : data.attack.hasthreat;
+        data.attack.offprof = offweapon.data.weapon.prof;
+        data.attack.offfeat = Math.max(attbonus.feat, offweapon.data.weapon.attack.feat);
+        data.attack.offitemb = Math.max(attbonus.itemb, offweapon.data.weapon.attack.itemb);
+        data.attack.offmisc = attbonus.misc + offweapon.data.weapon.attack.misc;
         data.attack.offbonus = mod + data.attack.offprof + data.attack.offfeat + data.attack.offitemb + data.attack.offmisc + data.attack.powermisc;
-        data.attack.hasoffthreat = offweapon.weapon.weaponthreat ? true : data.attack.hasoffthreat;
+        data.attack.hasoffthreat = offweapon.data.weapon.weaponthreat ? true : data.attack.hasoffthreat;
         data.damagebonus = this._powerDamageBonus(this.data)
         data.autoprof = true;
         data.autoweapon = true;
@@ -206,7 +208,7 @@ export class AetrimondeItem extends Item {
       else if (  data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Unarmed Attack";
-        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isweapon && entry.data.weapon.unarmed && entry.data.equippedanywhere));
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon && entry.data.data.weapon.unarmed && entry.data.data.equippedanywhere));
         const unarmedattack = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data.weapon : defaultweapon.weapon;
         data.useditems = data.useditems.concat(unarmedattack);
         data.warning = data.relevantitems && !data.mainitem;
@@ -225,8 +227,8 @@ export class AetrimondeItem extends Item {
       else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Shield";
-        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.isshield));
-        const defaultshield = offhanditem.isshield ? offhanditem : (mainhanditem.isshield ? mainhanditem : defaultweapon);
+        data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isshield));
+        const defaultshield = offhanditem.data.isshield ? offhanditem : (mainhanditem.data.isshield ? mainhanditem : defaultweapon);
         const shield = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultshield;
         data.useditems = data.useditems.concat(shield);
         data.warning = !data.mainitem && !shield.shield.dice || !shield.equippedanywhere;
