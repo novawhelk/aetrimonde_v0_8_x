@@ -3,11 +3,11 @@
  * @extends {Actor}
  */
 export class AetrimondeActor extends Actor {
-  _onCreate(data, options, userId) {
-    super._onCreate();
+  async _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
 
     const allSkills = ["Acrobatics", "Arcana", "Athletics", "Deception", "Endurance", "Engineering", "History", "Insight", "Intimidate", "Medicine", "Nature", "Perception", "Persuasion", "Religion", "Society", "Stealth", "Subterfuge", "Warfare"];
-    const compend = game.packs.get("world.defaultskills");
+    const compend = game.packs.get("aetrimonde_v0_8_x.defaultskills");
     await compend.getIndex();
     const skillInds = compend.index.filter(entry => allSkills.includes(entry.name))
     const defaultSkills = [];

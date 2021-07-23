@@ -9,7 +9,15 @@
   "esmodules": ["module/aetrimonde_v0_8_x.mjs"],
   "styles": ["css/aetrimonde_v0_8_x.css"],
   "scripts": [],
-  "packs": [],
+  "packs": [
+      {
+          "name": "defaultskills",
+          "label": "System Skills",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultskills.db",
+          "entity": "Item"
+      }
+  ],
   "languages": [
     {
       "lang": "en",
