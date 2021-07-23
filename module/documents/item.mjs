@@ -136,7 +136,7 @@ export class AetrimondeItem extends Item {
 
   _preparePowerData(itemData) {
     const data = itemData.data;
-    const actor = this.actor;
+    const actor = game.actors.get(this.actor.id);
 
     if (this.actor) {
       data.autoprof = false;
