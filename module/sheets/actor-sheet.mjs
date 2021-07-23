@@ -223,7 +223,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         if (i.data.relatedprops) {
           const itemprops = {
             "name": i.name,
-            "_id": i._id,
+            "id": i.id,
             "img": i.img,
             "dependent": true,
             "data": {
@@ -236,7 +236,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         if (i.data.relatedpower) {
           const itempower = {
             "name": i.name,
-            "_id": i._id,
+            "id": i.id,
             "img": i.img,
             "dependent": true,
             "data": i.data.power
@@ -286,7 +286,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     const safeabil = abil === "" ? (ranged ? "dex" : "str") : abil;
     const weaponattack = {
       "name": weapon.name,
-      "_id": weapon._id,
+      "id": weapon.id,
       "img": weapon.img,
       "dependent": true,
       "isweapon": true,
@@ -416,7 +416,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
@@ -439,6 +439,9 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     // Equipment management
     html.find('.equipment-toggle').click(this._equipmentToggle.bind(this));
+
+    // Quick skill training toggle
+    html.find('.skill-trained').click(this._skillToggle.bind(this));
   }
 
   /**
@@ -523,17 +526,17 @@ export class AetrimondeActorSheet extends ActorSheet {
     const chatHtml = await renderTemplate(template, templateData);
 
     const chatData = {
-      user: game.user._id,
+      user: game.user.id,
       content: chatHtml,
       speaker: {
-        actor: this.actor._id,
+        actor: this.actor.id,
         token: this.actor.token,
         alias: this.actor.name
       }
     };
     const rollMode = game.settings.get("core", "rollMode");
     if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "selfroll") chatData.whisper = [game.user.id];
     if (rollMode === "blindroll") chatData.blind = true;
     await ChatMessage.create(chatData);
   }
@@ -717,8 +720,19 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
     else if (equipSlot != "noslot") {
-      newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : thisItem._id;
+      newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : thisItem.id;
     }
     actor.update({"data.equipped": newEquipment});
+  }
+
+  _skillToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+    if (thisitem.data.data.trained) {
+      thisitem.update({"data.trained": false});
+    }
+    else {
+      thisitem.update({"data.trained": true});
+    }
   }
 }

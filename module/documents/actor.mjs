@@ -3,6 +3,20 @@
  * @extends {Actor}
  */
 export class AetrimondeActor extends Actor {
+  async _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+
+    const allSkills = ["Acrobatics", "Arcana", "Athletics", "Deception", "Endurance", "Engineering", "History", "Insight", "Intimidate", "Medicine", "Nature", "Perception", "Persuasion", "Religion", "Society", "Stealth", "Subterfuge", "Warfare"];
+    const compend = game.packs.get("aetrimonde_v0_8_x.defaultskills");
+    await compend.getIndex();
+    const skillInds = compend.index.filter(entry => allSkills.includes(entry.name))
+    const defaultSkills = [];
+    for (let ind of skillInds) {
+      const skill = await compend.getEntry(ind._id);
+      defaultSkills.push(skill)
+    }
+    this.createOwnedItem(defaultSkills);
+  }
 
   /** @override */
   prepareData() {
@@ -62,7 +76,7 @@ export class AetrimondeActor extends Actor {
     data.heavycap = data.abilities.str.value * 20;
     data.dragcap = data.abilities.str.value * 30;
 
-    data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"_id": a.data._id, "name": a.data.name}))
+    data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"id": a.data.id, "name": a.data.name}))
 
     const cash = data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {

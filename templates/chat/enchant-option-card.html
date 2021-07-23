@@ -1,4 +1,4 @@
-<div class="aetrimonde chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}"
+<div class="aetrimonde chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}"
   <header class="card-header flexrow">
     <h3 class="item-name">Enchantment: {{item.name}}</h3>
   </header>
@@ -15,7 +15,7 @@
     {{#select targetitem}}
     <option value="brandnew">Create a new item</option>
     {{#each itemoptions as |target t|}}
-    <option value="{{target._id}}">{{target.name}}</option>
+    <option value="{{target.id}}">{{target.name}}</option>
     {{/each}}
     {{/select}}
   </select>
