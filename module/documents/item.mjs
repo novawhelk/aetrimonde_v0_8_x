@@ -180,32 +180,43 @@ export class AetrimondeItem extends Item {
       data.useditems = [];
 
       if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
+        // Set up data for item-select dropdown
         data.requiresitem = true;
         data.relevantitemtype = data.attack.off ? "Main-Weapon" : "Weapon";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon));
+
+        // Determine which item(s) to use with this power.
         const defaultmainweapon = mainhanditem.data.isweapon ? mainhanditem : (offhanditem.data.isweapon ? offhanditem : defaultweapon);
         const defaultoffweapon = mainhanditem.data.isweapon ? (offhanditem.data.isweapon ? offhanditem : defaultweapon) : defaultweapon;
-        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultmainweapon;
-        const offweapon = data.offitem ? actor.data.items.filter(entry => entry._id === data.offitem)[0].data : defaultoffweapon;
+        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data : defaultmainweapon;
+        const offweapon = data.offitem ? actor.data.items.filter(entry => entry.id === data.offitem)[0].data : defaultoffweapon;
+
+        // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
         data.useditems = data.useditems.concat(mainweapon);
         if (mainweapon != offweapon)
         data.useditems = data.useditems.concat(offweapon);
+
+        // Issue a warning if it doesn't look like the right items are equipped.
         const missingmelee = (data.range.includes("Melee") && ((mainweapon.data.weapon.mvsr.value != "melee" && offweapon.data.weapon.mvsr.value != "melee") || (data.attack.off && (mainweapon.data.weapon.mvsr.value != "melee" || offweapon.data.weapon.mvsr.value != "melee" || actorData.equipped.mainhand === actorData.equipped.offhand))));
         const missingranged = (data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown") && !offweapon.data.weapon.quals.includes("Thrown")) || (data.attack.off && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) || (offweapon.data.weapon.mvsr.value != "ranged" && !offweapon.data.weapon.quals.includes("Thrown")) || actorData.equipped.mainhand === actorData.equipped.offhand))));
         data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.data.equippedmh && (mainweapon.data.slot != "held" && !mainweapon.data.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.data.equippedoh && (offweapon.data.slot != "held" && !offweapon.data.equippedanywhere)));
         data.warningmessage = "You might not have the right item(s) equipped.";
+
+        // Calculate all the bonuses for attacks and damage.
         data.attack.prof = mainweapon.data.weapon.prof;
         data.attack.feat = Math.max(attbonus.feat, mainweapon.data.weapon.attack.feat);
         data.attack.itemb = Math.max(attbonus.itemb, mainweapon.data.weapon.attack.itemb);
         data.attack.misc = attbonus.misc + mainweapon.data.weapon.attack.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
         data.attack.hasthreat = mainweapon.data.weapon.weaponthreat ? true : data.attack.hasthreat;
+
         data.attack.offprof = offweapon.data.weapon.prof;
         data.attack.offfeat = Math.max(attbonus.feat, offweapon.data.weapon.attack.feat);
         data.attack.offitemb = Math.max(attbonus.itemb, offweapon.data.weapon.attack.itemb);
         data.attack.offmisc = attbonus.misc + offweapon.data.weapon.attack.misc;
         data.attack.offbonus = mod + data.attack.offprof + data.attack.offfeat + data.attack.offitemb + data.attack.offmisc + data.attack.powermisc;
         data.attack.hasoffthreat = offweapon.data.weapon.weaponthreat ? true : data.attack.hasoffthreat;
+
         data.damagebonus = this._powerDamageBonus(this.data)
         data.autoprof = true;
         data.autoweapon = true;
