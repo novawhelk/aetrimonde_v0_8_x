@@ -76,7 +76,7 @@ export class AetrimondeActor extends Actor {
     data.heavycap = data.abilities.str.value * 20;
     data.dragcap = data.abilities.str.value * 30;
 
-    data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"id": a.data.id, "name": a.data.name}))
+    data.helditems = this.items.filter(entry => (entry.type === "equipment")).filter(entry => (entry.data.data.slot.value === "held")).map(a => ({"id": a.id, "name": a.name}))
 
     const cash = data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {
