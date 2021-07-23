@@ -114,6 +114,10 @@ export class AetrimondeItem extends Item {
         data.weapon.damage.mod = (data.weapon.damage.abil === "") ? 0 : actorData.abilities[`${data.weapon.damage.abil}`].mod;
         const dbonus = (data.weapon.damage.mod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc)
         data.weapon.damage.total = data.weapon.dice + " + " + dbonus;
+
+        data.weapon.range = data.weapon.range ? data.weapon.range : "";
+        data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
+        data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
       }
       data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
       data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
@@ -148,7 +152,8 @@ export class AetrimondeItem extends Item {
             },
             "weaponthreat": false,
             "mvsr": "",
-            "quals": ""
+            "quals": "",
+            "range": ""
           },
           "shield": {
             "attack": {
