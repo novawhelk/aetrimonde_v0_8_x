@@ -439,6 +439,9 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     // Equipment management
     html.find('.equipment-toggle').click(this._equipmentToggle.bind(this));
+
+    // Quick skill training toggle
+    html.find('.skill-trained').click(this._skillToggle.bind(this));
   }
 
   /**
@@ -720,5 +723,16 @@ export class AetrimondeActorSheet extends ActorSheet {
       newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : thisItem.id;
     }
     actor.update({"data.equipped": newEquipment});
+  }
+
+  _skillToggle(event) {
+    event.preventDefault();
+    const thisitem = this.actor.items.get(event.currentTarget.dataset.id)
+    if (thisitem.data.data.trained) {
+      thisitem.update({"data.trained": false});
+    }
+    else {
+      thisitem.update({"data.trained": true});
+    }
   }
 }
