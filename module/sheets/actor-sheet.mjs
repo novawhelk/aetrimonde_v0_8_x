@@ -698,7 +698,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     const equipSlot = event.currentTarget.dataset.slot;
     const actor = this.actor;
     const actorData = actor.data.data;
-    const thisItem = actor.items.get(event.currentTarget.dataset.id);
+    const thisItem = actor.items.get(itemid);
     const thisItemData = thisItem.data.data;
     const newEquipment = actorData.equipped;
     if (equipSlot === "ring") {
@@ -720,7 +720,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
     else if (equipSlot != "noslot") {
-      newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : thisItem.id;
+      newEquipment[`${equipSlot}`] = itemid === actorData.equipped[`${equipSlot}`] ? "" : itemid;
     }
     actor.update({"data.equipped": newEquipment});
   }
