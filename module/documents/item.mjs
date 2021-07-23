@@ -220,8 +220,8 @@ export class AetrimondeItem extends Item {
         data.useditems = data.useditems.concat(offweapon);
 
         // Issue a warning if it doesn't look like the right items are equipped.
-        const missingmelee = (data.range.includes("Melee") && ((mainweapon.data.weapon.mvsr.value != "melee" && offweapon.data.weapon.mvsr.value != "melee") || (data.attack.off && (mainweapon.data.weapon.mvsr.value != "melee" || offweapon.data.weapon.mvsr.value != "melee" || actorData.equipped.mainhand === actorData.equipped.offhand))));
-        const missingranged = (data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown") && !offweapon.data.weapon.quals.includes("Thrown")) || (data.attack.off && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) || (offweapon.data.weapon.mvsr.value != "ranged" && !offweapon.data.weapon.quals.includes("Thrown")) || actorData.equipped.mainhand === actorData.equipped.offhand))));
+        const missingmelee = data.range.includes("Melee") && (mainweapon.data.weapon.mvsr.value != "melee" || (data.attack.offattack && offweapon.data.weapon.mvsr.value != "melee"));
+        const missingranged = data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) && (data.attack.offattack && offweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.quals.includes("Thrown")));
         data.warning = missingmelee || missingranged || (data.mainitem && (!mainweapon.data.equippedmh && (mainweapon.data.slot != "held" && !mainweapon.data.equippedanywhere))) || (data.attack.off && data.offitem && (!offweapon.data.equippedoh && (offweapon.data.slot != "held" && !offweapon.data.equippedanywhere)));
         data.warningmessage = "You might not have the right item(s) equipped.";
 
@@ -244,7 +244,7 @@ export class AetrimondeItem extends Item {
         data.autoprof = true;
         data.autoweapon = true;
       }
-      else if (  data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
+      else if (data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Unarmed Attack";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon && entry.data.data.weapon.unarmed && entry.data.data.equippedanywhere));
