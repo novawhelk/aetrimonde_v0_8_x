@@ -364,8 +364,8 @@
                     <div class="flex0"></div>
                   </li>
                   {{#each skills as |item id|}}
-                  <li class="item flexrow skill" data-item-id="{{item._id}}">
-                      <span class="flex2 skill-trained {{item.data.trained}}" data-id="{{item._id}}">{{item.name}}: </span>
+                  <li class="item flexrow skill" data-item-id="{{item.id}}">
+                      <span class="flex2 skill-trained {{item.data.trained}}" data-id="{{item.id}}">{{item.name}}: </span>
                       <span class="skill-rolls flex3">
                         <span class="rollable" data-roll="2d10 + {{item.data.total}}" data-label="{{item.name}}">{{numberFormat item.data.total decimals=0 sign=true}}</span>
                         (
@@ -468,7 +468,7 @@
                       </div>
                     </li>
                     {{#each perks as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
+                    <li class="item flexrow" data-item-id="{{item.id}}">
                         <span class="flex3 item-col truncated-ellipsis" title="{{item.name}}">{{item.name}}: </span>
                         <span class="rollable flex0" data-roll="2d10 + {{item.data.total}}" data-label="{{item.name}}">{{numberFormat item.data.total decimals=0 sign=true}}</span>
                         <div class="item-controls flex0">
@@ -492,7 +492,7 @@
                     <a class="item-control item-create" title="Create item" data-type="resistance"><i class="fas fa-plus"></i></a>
                   </div>
                 </li>
-                <li class="item flexrow" data-item-id="{{item._id}}">
+                <li class="item flexrow" data-item-id="{{item.id}}">
                     <div class="item-image"><img src="icons/equipment/chest/breastplate-cuirass-steel-grey.webp" width="24" height="24"/></div>
                     <span class="item-col truncated-ellipsis">Armor</span>
                     <span class="centered">{{data.armorresist}}</span>
@@ -500,7 +500,7 @@
                     </div>
                 </li>
                 {{#each resists as |item id|}}
-                <li class="item flexrow" data-item-id="{{item._id}}">
+                <li class="item flexrow" data-item-id="{{item.id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <span class="item-col truncated-ellipsis">{{item.name}}</span>
                     <span class="centered">{{item.data.amount}}</span>
@@ -526,7 +526,7 @@
                     </div>
                   </li>
                   {{#each languages as |item id|}}
-                  <li class="item flexrow" data-item-id="{{item._id}}">
+                  <li class="item flexrow" data-item-id="{{item.id}}">
                       <span class="flex3" title="{{item.name}}">{{item.name}} </span>
                       <div class="item-controls flex0">
                           <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
@@ -560,14 +560,14 @@
                       </div>
                     </li>
                     {{#each features.entries as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
+                        <li class="item flexrow" data-item-id="{{item.id}}">
                             <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <a class="feature-postable item-name truncated-ellipsis expander flex1" data-id="{{item._id}}">{{item.name}}</a>
+                            <a class="feature-postable item-name truncated-ellipsis expander flex1" data-id="{{item.id}}">{{item.name}}</a>
                             <span class="truncated-ellipsis">{{item.data.category}}</span>
                             <span class="truncated-ellipsis rowend flex3">{{item.data.benefit}}</span>
                             <div class="item-controls">
                                 <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                                <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                                 <a class="item-control item-{{#if item.dependent}}no{{/if}}delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                             </div>
                         </li>
@@ -598,7 +598,7 @@
                   {{#select data.equipped.mainhand}}
                   <option value="">None</option>
                   {{#each data.helditems as |item i|}}
-                  <option value="{{item._id}}">{{item.name}}</option>
+                  <option value="{{item.id}}">{{item.name}}</option>
                   {{/each}}
                   {{/select}}
               </select>
@@ -606,7 +606,7 @@
                   {{#select data.equipped.offhand}}
                   <option value="">None</option>
                   {{#each data.helditems as |item i|}}
-                  <option value="{{item._id}}">{{item.name}}</option>
+                  <option value="{{item.id}}">{{item.name}}</option>
                   {{/each}}
                   {{/select}}
               </select>
@@ -628,13 +628,13 @@
                       </div>
                     </li>
                     {{#each powers.entries as |item id|}}
-                        <li class="item power flexrow {{group}} " data-item-id="{{item._id}}">
+                        <li class="item power flexrow {{group}} " data-item-id="{{item.id}}">
                             <div class="item-image" style="background-image: url('{{item.img}}');" >
                               <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item.json}}"><img src="systems/aetrimonde/icons/go.png"title="{{item.name}}" width="42" height="42"/></a>
                             </div>
                             <div class="flexcol item-name flex4">
                               <div class="flexrow">
-                                <a class="item-name truncated-ellipsis expander" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}} </a>
+                                <a class="item-name truncated-ellipsis expander" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}} </a>
                                 {{#if item.data.warning}}
                                 <span class="centered flex0">
                                   <i class="fas fa-exclamation-triangle" style="color: goldenrod;" title="{{item.data.warningmessage}}"></i>
@@ -682,7 +682,7 @@
                             </div>
                             <div class="item-controls flexrow">
                                 <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                                <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                                 <a class="item-control item-{{#if item.dependent}}no{{/if}}delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                             </div>
                         </li>
@@ -757,11 +757,11 @@
                 </div>
               </li>
               {{#each armor as |item id|}}
-              <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
+              <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item.id}}">
                 {{#if item.data.isarmor}}
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                   <div class="flexrow item-name">
-                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
                     {{#if item.data.multitype}}
                     <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                     {{/if}}
@@ -776,24 +776,24 @@
                   {{#if item.data.slot.value}}
                   <span class="equip-controls">
                     {{#if item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item._id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
-                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item.id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item.id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item.id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
                     {{/unless}}
                   </span>
                   {{/if}}
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                      <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                      <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
                 {{/if}}
                 {{#if item.data.isshield}}
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                   <div class="flexrow item-name">
-                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}
+                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}
                     {{#if item.data.multitype}}
                     <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                     {{/if}}
@@ -809,17 +809,17 @@
                   <span class="equip-controls">
                     {{#if item.data.slot.value}}
                     {{#if item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item._id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
-                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item.id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item.id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item.id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
                     {{/unless}}
                     {{/if}}
                   </span>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                      <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                      <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
                 {{/if}}
@@ -845,10 +845,10 @@
                   </div>
                 </li>
                 {{#each weapons as |item id|}}
-                <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
+                <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item.id}}">
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                   <div class="flexrow flex2 item-name">
-                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+                    <span class="flex1 truncated-ellipsis" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
                     {{#if item.data.multitype}}
                     <span class="centered flex0">
                       <i class="fas fa-exclamation-circle" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
@@ -868,17 +868,17 @@
                   <span class="equip-controls">
                     {{#if item.data.slot.value}}
                     {{#if item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item._id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
-                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item.id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item.id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                     {{/if}}
                     {{#unless item.data.isheld}}
-                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-fist-raised"></i></a>
+                    <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item.id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-fist-raised"></i></a>
                     {{/unless}}
                     {{/if}}
                   </span>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                      <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                      <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
                 </li>
@@ -901,10 +901,10 @@
                       </div>
                     </li>
                     {{#each imps as |item id|}}
-                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
+                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item.id}}">
                         <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <div class="flexrow item-col">
-                          <span class="flex1 truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+                          <span class="flex1 truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
                           {{#if item.data.multitype}}
                           <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                           {{/if}}
@@ -914,17 +914,17 @@
                         <span class="equip-controls">
                           {{#if item.data.slot.value}}
                           {{#if item.data.isheld}}
-                          <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item._id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
-                          <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item.id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item.id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                           {{/if}}
                           {{#unless item.data.isheld}}
-                          <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-magic"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedanywhere}}" title="{{item.data.slotlabel}}" data-id="{{item.id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-magic"></i></a>
                           {{/unless}}
                           {{/if}}
                         </span>
                         <div class="item-controls">
                             <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                            <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                            <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                         </div>
                     </li>
@@ -942,7 +942,7 @@
                       </div>
                     </li>
                     {{#each disciplines as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
+                    <li class="item flexrow" data-item-id="{{item.id}}">
                       <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                       <span class="item-name">{{item.name}}</span>
                       <div class="item-controls">
@@ -972,25 +972,25 @@
                       </div>
                     </li>
                     {{#each gear as |item id|}}
-                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
+                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item.id}}">
                         <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <span class="item-name truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+                        <span class="item-name truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
                         <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
                         <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                         <span class="equip-controls">
                           {{#if item.data.slot.value}}
                           {{#if item.data.isheld}}
-                          <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item._id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
-                          <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item._id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedmh}}" title="Main-Hand" data-id="{{item.id}}" data-slot="mainhand"><i class="fas fa-hand-paper"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equippedoh}}" title="Off-Hand" data-id="{{item.id}}" data-slot="offhand"><i class="fas fa-hand-paper fa-flip-horizontal"></i></a>
                           {{/if}}
                           {{#unless item.data.isheld}}
-                          <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item._id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
+                          <a class="item-control equipment-toggle {{item.data.equipped}}" title="{{item.data.slotlabel}}" data-id="{{item.id}}" data-slot="{{item.data.slot.value}}"><i class="fas fa-shield-alt"></i></a>
                           {{/unless}}
                           {{/if}}
                         </span>
                         <div class="item-controls">
                             <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                            <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                            <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                         </div>
                     </li>
@@ -1010,10 +1010,10 @@
                       </div>
                     </li>
                     {{#each consumables as |item id|}}
-                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
+                    <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item.id}}">
                         <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <div class="flexrow item-col">
-                          <span class="flex1 truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
+                          <span class="flex1 truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item.id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
                           {{#if item.data.multitype}}
                           <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                           {{/if}}
@@ -1022,7 +1022,7 @@
                         <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                         <div class="item-controls">
                             <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                            <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
+                            <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                         </div>
                     </li>
@@ -1046,7 +1046,7 @@
                   </div>
                 </li>
                 {{#each rituals as |item id|}}
-                <li class="item flexrow" data-item-id="{{item._id}}">
+                <li class="item flexrow" data-item-id="{{item.id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <span class="item-name">{{item.name}}</span>
                     <span class="centered">{{item.data.skilllabel}}</span>
@@ -1076,7 +1076,7 @@
               </div>
             </li>
             {{#each logentries as |item id|}}
-            <li class="item flexrow" data-item-id="{{item._id}}">
+            <li class="item flexrow" data-item-id="{{item.id}}">
               <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
               <span class="item-name">{{item.name}}</span>
               <span class="item-name flex3 truncated-ellipsis">{{item.data.description}}</span>

@@ -83,10 +83,10 @@ export class AetrimondeItem extends Item {
     data.isheld = data.slot.value === "held";
     if (actorData) {
       const unslotted = data.slot.value === "noslot";
-      const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this._id || actorData.equipped.ring2 === this._id);
-      const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this._id;
-      data.equippedmh = (this._id === actorData.equipped.mainhand);
-      data.equippedoh = (this._id === actorData.equipped.offhand);
+      const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
+      const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
+      data.equippedmh = (this.id === actorData.equipped.mainhand);
+      data.equippedoh = (this.id === actorData.equipped.offhand);
       data.equippedanywhere = unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
       if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
         data.warning = true;
@@ -166,8 +166,8 @@ export class AetrimondeItem extends Item {
         }
       };
 
-      const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.mainhand)).data : "";
-      const offhanditem = actor.data.data.equipped.offhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.offhand)).data : "";
+      const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry.id === actor.data.data.equipped.mainhand)).data : "";
+      const offhanditem = actor.data.data.equipped.offhand ? actor.data.items.find(entry => (entry.id === actor.data.data.equipped.offhand)).data : "";
 
       const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
       data.attack.mod = mod;
@@ -185,8 +185,8 @@ export class AetrimondeItem extends Item {
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon));
         const defaultmainweapon = mainhanditem.data.isweapon ? mainhanditem : (offhanditem.data.isweapon ? offhanditem : defaultweapon);
         const defaultoffweapon = mainhanditem.data.isweapon ? (offhanditem.data.isweapon ? offhanditem : defaultweapon) : defaultweapon;
-        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultmainweapon;
-        const offweapon = data.offitem ? actor.data.items.filter(entry => entry._id === data.offitem)[0].data : defaultoffweapon;
+        const mainweapon = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data : defaultmainweapon;
+        const offweapon = data.offitem ? actor.data.items.filter(entry => entry.id === data.offitem)[0].data : defaultoffweapon;
         data.useditems = data.useditems.concat(mainweapon);
         if (mainweapon != offweapon)
         data.useditems = data.useditems.concat(offweapon);
@@ -214,7 +214,7 @@ export class AetrimondeItem extends Item {
         data.requiresitem = true;
         data.relevantitemtype = "Unarmed Attack";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon && entry.data.data.weapon.unarmed && entry.data.data.equippedanywhere));
-        const unarmedattack = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data.weapon : defaultweapon.weapon;
+        const unarmedattack = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data.weapon : defaultweapon.weapon;
         data.useditems = data.useditems.concat(unarmedattack);
         data.warning = data.relevantitems && !data.mainitem;
         data.warningmessage = "You have alternate unarmed attacks; you might need to select one."
@@ -234,7 +234,7 @@ export class AetrimondeItem extends Item {
         data.relevantitemtype = "Shield";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isshield));
         const defaultshield = offhanditem.data.isshield ? offhanditem : (mainhanditem.data.isshield ? mainhanditem : defaultweapon);
-        const shield = data.mainitem ? actor.data.items.filter(entry => entry._id === data.mainitem)[0].data : defaultshield;
+        const shield = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data : defaultshield;
         data.useditems = data.useditems.concat(shield);
         data.warning = !data.mainitem && !shield.shield.dice || !shield.equippedanywhere;
         data.warningmessage = "You might not have the right item(s) equipped.";
@@ -295,9 +295,9 @@ export class AetrimondeItem extends Item {
     if (!actorData)
       return false;
 
-    const equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === item._id || actorData.equipped.ring2 === item._id)) || item._id === actorData.equipped[`${data.slot.value}`]) : false;
-    const equippedmh = (item._id === actorData.equipped.mainhand);
-    const equippedoh = (item._id === actorData.equipped.offhand);
+    const equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === item.id || actorData.equipped.ring2 === item.id)) || item.id === actorData.equipped[`${data.slot.value}`]) : false;
+    const equippedmh = (item.id === actorData.equipped.mainhand);
+    const equippedoh = (item.id === actorData.equipped.offhand);
     return equipped || equippedmh || equippedoh;
   }
 
