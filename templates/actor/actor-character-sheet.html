@@ -364,8 +364,8 @@
                     <div class="flex0"></div>
                   </li>
                   {{#each skills as |item id|}}
-                  <li class="item flexrow skill" data-item-id="{{item.id}}">
-                      <span class="flex2 skill-trained {{item.data.trained}}" data-id="{{item.id}}">{{item.name}}: </span>
+                  <li class="item flexrow skill" data-item-id="{{item._id}}">
+                      <span class="flex2 skill-trained {{item.data.trained}}" data-id="{{item._id}}">{{item.name}}: </span>
                       <span class="skill-rolls flex3">
                         <span class="rollable" data-roll="2d10 + {{item.data.total}}" data-label="{{item.name}}">{{numberFormat item.data.total decimals=0 sign=true}}</span>
                         (
