@@ -39,7 +39,7 @@
               {{#select data.mainitem}}
               <option value="">Default {{data.relevantitemtype}}</option>
               {{#each data.relevantitems as |item i|}}
-              <option value="{{item._id}}">{{item.name}}</option>
+              <option value="{{item.id}}">{{item.name}}</option>
               {{/each}}
               {{/select}}
           </select>
@@ -48,7 +48,7 @@
               {{#select data.offitem}}
               <option value="">Default {{data.relevantoffitemtype}}</option>
               {{#each data.relevantitems as |item i|}}
-              <option value="{{item._id}}">{{item.name}}</option>
+              <option value="{{item.id}}">{{item.name}}</option>
               {{/each}}
               {{/select}}
           </select>
