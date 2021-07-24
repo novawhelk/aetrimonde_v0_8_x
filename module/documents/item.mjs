@@ -28,7 +28,7 @@ export class AetrimondeItem extends Item {
   _prepareSkillData(itemData) {
     const data = itemData.data;
 
-    if (this.actor) {
+    if (this.actor.data) {
       const actorData = this.actor.data.data;
       const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
       // const training = data.trained ? (actorData.isnpc ? 5 + Math.floor(actorData.tier / 2 + 0.5) * 2 : 5) : 0;
@@ -47,7 +47,7 @@ export class AetrimondeItem extends Item {
   _preparePerkData(itemData) {
     const data = itemData.data;
 
-    if (this.actor) {
+    if (this.actor.data) {
       const actorData = this.actor.data.data;
       const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
       const encumbrance = data.encumbered ? actorData.encumbrance.total : 0;
@@ -138,12 +138,13 @@ export class AetrimondeItem extends Item {
     const data = itemData.data;
     const actor = this.actor;
 
-    if (this.actor) {
+    if (this.actor.data) {
       data.autoprof = false;
       const actorData = actor.data.data;
       const defaultweapon = {
         "data": {
-          "weapon": {
+            "data": {
+"weapon": {
             "prof": 0,
             "attack": {
               "feat": 0,
@@ -162,15 +163,17 @@ export class AetrimondeItem extends Item {
               "misc": 0
             }
           },
-          "equippedanywhere": true
+          "equippedanywhere": true,
+          "default": true
+            }
+          
         }
       };
 
-      const overActor = game.actors.get(this.actor.id);
-      const mainequipped = actor.data.data.equipped.mainhand ? overActor.items.get(actor.data.data.equipped.mainhand).data : "";
-      const offequipped = actor.data.data.equipped.offhand ? overActor.items.get(actor.data.data.equipped.offhand).data : "";
-      const mainselected = data.mainitem ? overActor.items.get(data.mainitem).data : "";
-      const offselected = data.offitem ? overActor.items.get(data.offitem).data : "";
+      const mainequipped = actor.data.data.equipped.mainhand ? actor.items.get(actor.data.data.equipped.mainhand) : "";
+      const offequipped = actor.data.data.equipped.offhand ? actor.items.get(actor.data.data.equipped.offhand) : "";
+      const mainselected = data.mainitem ? actor.items.get(data.mainitem) : "";
+      const offselected = data.offitem ? actor.items.get(data.offitem) : "";
 
       const mod = (data.attack.abil === "") ? 0 : actorData.abilities[`${data.attack.abil}`].mod;
       data.attack.mod = mod;
@@ -197,22 +200,30 @@ export class AetrimondeItem extends Item {
             offweapon = offselected;
           }
           else if (offequipped) { // If main-weapon selected but not off-weapon, and there is something equipped in the off-hand
-            offweapon = offequipped.data.isweapon ? offequipped : defaultweapon;
+            offweapon = offequipped.data.data.isweapon ? offequipped : defaultweapon;
           }
         }
         else if (offselected) {
           offweapon = offselected;
           if (offweapon != mainequipped) { // If off-weapon selected but not main-weapon, and the item equipped in main-hand is not the selected off-weapon
-            mainweapon = mainequipped.data.isweapon ? mainequipped : defaultweapon;
+            mainweapon = mainequipped.data.data.isweapon ? mainequipped : defaultweapon;
           }
         }
         else {
           if (mainequipped) { // If nothing selected but something is equipped in main-hand
-            mainweapon = mainequipped.data.isweapon ? mainequipped : defaultweapon;
+            mainweapon = mainequipped.data.data.isweapon ? mainequipped : defaultweapon;
           }
           if (offequipped) { // If nothing selected but something is equipped in off-hand
-            offweapon = offequipped.data.isweapon ? offequipped : defaultweapon;
+            offweapon = offequipped.data.data.isweapon ? offequipped : defaultweapon;
           }
+        }
+        if (!mainweapon.default){
+            mainweapon.prepareData;
+            mainweapon = mainweapon.data;
+        }
+        if (!offweapon.default){
+            offweapon.prepareData;
+            offweapon = offweapon.data;
         }
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
