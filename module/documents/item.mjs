@@ -69,7 +69,7 @@ export class AetrimondeItem extends Item {
 
   _prepareEquipmentData(itemData) {
     const data = itemData.data;
-    const actor = this.actor;
+    const actor = this.actor ? this.actor : "";
 
     if (actor.data) {
       const actorData = actor.data.data;
