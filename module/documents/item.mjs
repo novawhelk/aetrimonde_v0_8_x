@@ -217,14 +217,14 @@ export class AetrimondeItem extends Item {
             offweapon = offequipped.data.data.isweapon ? offequipped : defaultweapon;
           }
         }
-        if (!mainweapon.default){
-            mainweapon.prepareData;
-            mainweapon = mainweapon.data;
+        if (!mainweapon.data.data.default){
+            mainweapon.prepareData();
         }
-        if (!offweapon.default){
-            offweapon.prepareData;
-            offweapon = offweapon.data;
+        if (!offweapon.data.data.default){
+            offweapon.prepareData();
         }
+        mainweapon = mainweapon.data;
+        offweapon = offweapon.data;
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
         data.useditems = data.useditems.concat(mainweapon);
