@@ -69,7 +69,7 @@ export class AetrimondeItem extends Item {
 
   _prepareEquipmentData(itemData) {
     const data = itemData.data;
-    const actorData = this.actor ? this.actor.data.data : "";
+    const actor = this.actor;
 
     data.totalweight = data.eachweight * data.quantity;
     data.totalvalue = data.eachvalue * data.quantity;
@@ -81,7 +81,8 @@ export class AetrimondeItem extends Item {
     data.multiple = data.quantity > 1;
     data.slotlabel = data.slot.slots[`${data.slot.value}`];
     data.isheld = data.slot.value === "held";
-    if (actorData) {
+    if (actor.data) {
+      const actorData = actor.data.data;
       const unslotted = data.slot.value === "noslot";
       const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
       const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
@@ -143,30 +144,29 @@ export class AetrimondeItem extends Item {
       const actorData = actor.data.data;
       const defaultweapon = {
         "data": {
-            "data": {
-"weapon": {
-            "prof": 0,
-            "attack": {
-              "feat": 0,
-              "itemb": 0,
-              "misc": 0
+          "data": {
+            "weapon": {
+              "prof": 0,
+              "attack": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              },
+              "weaponthreat": false,
+              "mvsr": "",
+              "quals": "",
+              "range": ""
             },
-            "weaponthreat": false,
-            "mvsr": "",
-            "quals": "",
-            "range": ""
-          },
-          "shield": {
-            "attack": {
-              "feat": 0,
-              "itemb": 0,
-              "misc": 0
-            }
-          },
-          "equippedanywhere": true,
-          "default": true
-            }
-          
+            "shield": {
+              "attack": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              }
+            },
+            "equippedanywhere": true,
+            "default": true
+          }
         }
       };
 
