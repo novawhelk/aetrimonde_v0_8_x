@@ -71,18 +71,19 @@ export class AetrimondeItem extends Item {
     const data = itemData.data;
     const actor = this.actor;
 
-    data.totalweight = data.eachweight * data.quantity;
-    data.totalvalue = data.eachvalue * data.quantity;
-    data.totalgp = Math.floor(data.totalvalue);
-    data.totalsp = Math.floor(data.totalvalue * 10 % 10);
-    data.totalcp = Math.floor(data.totalvalue * 100 % 10);
-
-    data.multitype = (data.isarmor + data.isshield + data.isweapon + data.isimplement + data.isconsumable) > 1;
-    data.multiple = data.quantity > 1;
-    data.slotlabel = data.slot.slots[`${data.slot.value}`];
-    data.isheld = data.slot.value === "held";
     if (actor.data) {
       const actorData = actor.data.data;
+      data.totalweight = data.eachweight * data.quantity;
+      data.totalvalue = data.eachvalue * data.quantity;
+      data.totalgp = Math.floor(data.totalvalue);
+      data.totalsp = Math.floor(data.totalvalue * 10 % 10);
+      data.totalcp = Math.floor(data.totalvalue * 100 % 10);
+
+      data.multitype = (data.isarmor + data.isshield + data.isweapon + data.isimplement + data.isconsumable) > 1;
+      data.multiple = data.quantity > 1;
+      data.slotlabel = data.slot.slots[`${data.slot.value}`];
+      data.isheld = data.slot.value === "held";
+
       const unslotted = data.slot.value === "noslot";
       const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
       const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
@@ -94,45 +95,47 @@ export class AetrimondeItem extends Item {
         data.warningmessage = "This weapon requires two hands to wield properly."
       }
       data.npcowner = this.actor.data.type === "npc";
-    }
 
-    if (data.isarmor) {
-      data.armor.grouplabel = (data.armor.group.value != "") ? data.armor.group.groups[`${data.armor.group.value}`] : "";
-    }
-    if (data.isshield) {
-      data.shield.grouplabel = (data.shield.group.value != "") ? data.shield.group.groups[`${data.shield.group.value}`] : "";
-    }
-    if (data.isweapon) {
-      data.weapon.attack.vslabel = (data.weapon.attack.vsdefense != "") ? data.defenses[`${data.weapon.attack.vsdefense}`].slabel : "";
-      if (this.actor) {
-        if (this.actor.data.data.isnpc) {
-          data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
-          data.weapon.attack.itemb = actorData.rank === "champion" ? 1 : 0;
-          data.weapon.damage.feat = Math.floor(actorData.tier / 2) * 2;
-        }
-        data.weapon.attack.mod = (data.weapon.attack.abil === "") ? 0 : actorData.abilities[`${data.weapon.attack.abil}`].mod;
-        data.weapon.attack.bonus = data.weapon.attack.mod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
-        data.weapon.damage.mod = (data.weapon.damage.abil === "") ? 0 : actorData.abilities[`${data.weapon.damage.abil}`].mod;
-        const dbonus = (data.weapon.damage.mod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc)
-        data.weapon.damage.total = data.weapon.dice + " + " + dbonus;
-
-        data.weapon.range = data.weapon.range ? data.weapon.range : "";
-        data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
-        data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
+      if (data.isarmor) {
+        data.armor.grouplabel = (data.armor.group.value != "") ? data.armor.group.groups[`${data.armor.group.value}`] : "";
       }
-      data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
-      data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
-      data.weapon.attack.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
-    }
-    if (data.isimplement) {
+      if (data.isshield) {
+        data.shield.grouplabel = (data.shield.group.value != "") ? data.shield.group.groups[`${data.shield.group.value}`] : "";
+      }
+      if (data.isweapon) {
+        data.weapon.attack.vslabel = (data.weapon.attack.vsdefense != "") ? data.defenses[`${data.weapon.attack.vsdefense}`].slabel : "";
+        if (this.actor) {
+          if (this.actor.data.data.isnpc) {
+            data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
+            data.weapon.attack.itemb = actorData.rank === "champion" ? 1 : 0;
+            data.weapon.damage.feat = Math.floor(actorData.tier / 2) * 2;
+          }
+          data.weapon.attack.mod = (data.weapon.attack.abil === "") ? 0 : actorData.abilities[`${data.weapon.attack.abil}`].mod;
+          data.weapon.attack.bonus = data.weapon.attack.mod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
+          data.weapon.damage.mod = (data.weapon.damage.abil === "") ? 0 : actorData.abilities[`${data.weapon.damage.abil}`].mod;
+          const dbonus = (data.weapon.damage.mod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc)
+          data.weapon.damage.total = data.weapon.dice + " + " + dbonus;
 
-    }
-    if (data.isconsumable) {
+          data.weapon.range = data.weapon.range ? data.weapon.range : "";
+          data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
+          data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
+        }
+        data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
+        data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
+        data.weapon.attack.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
+      }
+      if (data.isimplement) {
 
+      }
+      if (data.isconsumable) {
+
+      }
+      if (data.relatedpower) {
+        data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
+      }
     }
-    if (data.relatedpower) {
-      data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
-    }
+
+
   }
 
   _preparePowerData(itemData) {
