@@ -27,8 +27,9 @@ export class AetrimondeItem extends Item {
 
   _prepareSkillData(itemData) {
     const data = itemData.data;
+    const actor = this.actor ? this.actor : "";
 
-    if (this.actor.data) {
+    if (actor.data) {
       const actorData = this.actor.data.data;
       const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
       // const training = data.trained ? (actorData.isnpc ? 5 + Math.floor(actorData.tier / 2 + 0.5) * 2 : 5) : 0;
@@ -46,8 +47,9 @@ export class AetrimondeItem extends Item {
 
   _preparePerkData(itemData) {
     const data = itemData.data;
+    const actor = this.actor ? this.actor : "";
 
-    if (this.actor.data) {
+    if (actor.data) {
       const actorData = this.actor.data.data;
       const mod = (data.abil === "") ? 0 : actorData.abilities[`${data.abil}`].mod;
       const encumbrance = data.encumbered ? actorData.encumbrance.total : 0;

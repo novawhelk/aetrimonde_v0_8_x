@@ -13,9 +13,9 @@ export class AetrimondeActor extends Actor {
     const defaultSkills = [];
     for (let ind of skillInds) {
       const skill = await compend.getDocument(ind._id);
-      defaultSkills.push(skill)
+      defaultSkills.push(skill.data)
     }
-    this.createEmbeddedDocuments(defaultSkills);
+    this.createEmbeddedDocuments("Item", defaultSkills);
   }
 
   /** @override */
@@ -36,10 +36,9 @@ export class AetrimondeActor extends Actor {
     const flags = actorData.flags.aetrimonde || {};
 
     //Prepare data common to all Actors
-    for (let [key, ability] of Object.entries(data.abilities)) {
+    for (let ability in data.abilities) {
      // Calculate the modifier using d20 rules.
-      ability.mod = Math.floor((ability.value - 10) / 2);
-      this.update({[`data.abilities.${key}.mod`]: ability.mod});
+      data.abilities[ability].mod = Math.floor((data.abilities[ability].value - 10) / 2);
     }
 
     const equipment = this.items.filter(entry => entry.type === "equipment")
