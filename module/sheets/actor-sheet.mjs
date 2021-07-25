@@ -816,6 +816,62 @@ export class AetrimondeActorSheet extends ActorSheet {
     }
   }
 
+  async _RunAttack(event) {
+    const name = event.currentTarget.dataset.name;
+    const poweritem = JSON.parse(JSON.stringify(this.actor.items.get(event.currentTarget.dataset.power)));
+    let power = JSON.parse(event.currentTarget.dataset.power);
+
+    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
+    power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
+    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
+    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
+    power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
+
+    let targets = [];
+    let offtargets = [];
+    let targetnames = "";
+    if (game.user.targets.size > 0){
+      for (let target of game.user.targets) {
+        targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
+                      "id": target.data._id});
+        targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
+      }
+    }
+    else {
+      targets.push({"name": "Unknown Target",
+                    "id": ""});
+      targetnames = "Unknown Target, ";
+    }
+    if (power.data.attack.off && !event.currentTarget.dataset.nooff) {
+      offtargets = JSON.parse(JSON.stringify(targets));
+    }
+    if (event.currentTarget.dataset.nomain) {
+      targets = [];
+    }
+    targetnames = targetnames.substring(0, targetnames.length - 2);
+
+    const template = `systems/aetrimonde/templates/chat/attack-option-card.html`;
+    const templateData = {
+      "power": power,
+      "greater": power.data.powergroup === "greater",
+      "targets": targets ? targets : [],
+      "offtargets": offtargets ? offtargets : [],
+      "targetnames": targetnames
+    };
+    const content = await renderTemplate(template, templateData);
+    let d = new Dialog({
+      title: "Attack Options",
+      content: content,
+      buttons: {
+        one: {
+          label: "Roll Attacks",
+          callback: html => this._runHitMiss(templateData, html.find('.target-line'), html.find('.expend-power'))
+        }
+      }
+    }).render(true);
+  }
+
   async _outputEffects(data, html, expendPower) {
     if (expendPower.length === 1) {
       if (expendPower[0].checked) {
