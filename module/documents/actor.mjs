@@ -12,10 +12,10 @@ export class AetrimondeActor extends Actor {
     const skillInds = compend.index.filter(entry => allSkills.includes(entry.name))
     const defaultSkills = [];
     for (let ind of skillInds) {
-      const skill = await compend.getEntry(ind._id);
+      const skill = await compend.getDocument(ind._id);
       defaultSkills.push(skill)
     }
-    this.createOwnedItem(defaultSkills);
+    this.createEmbeddedDocuments(defaultSkills);
   }
 
   /** @override */
