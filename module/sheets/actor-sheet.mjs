@@ -205,12 +205,12 @@ export class AetrimondeActorSheet extends ActorSheet {
           }
         }
         if (i.data.isarmor) {
-          const j = JSON.parse(JSON.stringify(i));
+          const j = deepClone(i).data;
           j.data.isshield = false;
           armor.push(j);
         }
         if (i.data.isshield) {
-          const j = JSON.parse(JSON.stringify(i));
+          const j = deepClone(i).data;
           j.data.isarmor = false;
           armor.push(j);
         }
@@ -476,13 +476,14 @@ export class AetrimondeActorSheet extends ActorSheet {
   }
 
   async _onItemPost(event) {
-    const poweritem = JSON.parse(JSON.stringify(this.actor.items.get(event.currentTarget.dataset.power)));
-    let power = [];
+    const posted = this.actor.items.get(event.currentTarget.dataset.power);
+    posted.prepareData();
+    const itemcopy = deepClone(posted).data;
     let template = "";
     let templateData = [];
-    if (poweritem.type === "power") {
-      power = poweritem;
-      power.data.powergroup = power.data.powergroup ? power.data.powertypes[`${power.data.powergroup}`].label : "";
+    if (itemcopy.type === "power") {
+      const power = itemcopy;
+      power.data.powertype = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "";
       const abilities = {
         "str": "Strength",
         "con": "Constitution",
@@ -496,21 +497,21 @@ export class AetrimondeActorSheet extends ActorSheet {
       power.data.hit.text = power.data.hit.text.replaceAll("[[", "").replaceAll("]]", "");
       power.data.crit.text = power.data.crit.text.replaceAll("[[", "").replaceAll("]]", "");
       power.data.miss.text = power.data.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-      template = `systems/aetrimonde/templates/chat/power-card.html`;
+      template = `systems/aetrimonde_v0_8_x/templates/chat/power-card.html`;
       templateData = {
         "power": power
       }
     }
-    else if (poweritem.type === "feature") {
-      const feature = poweritem;
+    else if (itemcopy.type === "feature") {
+      const feature = itemcopy;
       feature.data.source = feature.data.source ? feature.data.sources[`${feature.data.source}`].label : "";
-      template = `systems/aetrimonde/templates/chat/feature-card.html`;
+      template = `systems/aetrimonde_v0_8_x/templates/chat/feature-card.html`;
       templateData = {
         "feature": feature
       }
     }
-    else if (["equipment"].includes(poweritem.type)) {
-      const item = poweritem;
+    else if (["equipment"].includes(itemcopy.type)) {
+      const item = itemcopy;
 
       if (poweritem.data.isweapon) {
         item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
@@ -521,7 +522,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
       item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
       item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-      template = `systems/aetrimonde/templates/chat/` + poweritem.type + `-card.html`;
+      template = `systems/aetrimonde_v0_8_x/templates/chat/` + poweritem.type + `-card.html`;
       templateData = {
         "item": item
       };
@@ -771,7 +772,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     targetnames = targetnames.substring(0, targetnames.length - 2);
 
     if (power.data.effect.text.includes("[[")) {
-      const template = `systems/aetrimonde/templates/chat/effect-option-card.html`;
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
         "greater": power.data.powergroup === "greater",
@@ -792,7 +793,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       }).render(true);
     }
     else {
-      const template = `systems/aetrimonde/templates/chat/effect-option-card.html`;
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
         "powergroup": power.data.powergroup ? power.data.powertypes[`${power.data.powergroup}`].label : "",
@@ -818,7 +819,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
   async _RunAttack(event) {
     const name = event.currentTarget.dataset.name;
-    const poweritem = JSON.parse(JSON.stringify(this.actor.items.get(event.currentTarget.dataset.power)));
+    const poweritem = deepClone(this.actor.items.get(event.currentTarget.dataset.power));
     let power = JSON.parse(event.currentTarget.dataset.power);
 
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
@@ -851,7 +852,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     }
     targetnames = targetnames.substring(0, targetnames.length - 2);
 
-    const template = `systems/aetrimonde/templates/chat/attack-option-card.html`;
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-option-card.html`;
     const templateData = {
       "power": power,
       "greater": power.data.powergroup === "greater",
@@ -906,7 +907,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     }
 
     if (!data.power.data.attack.exists || !data.cont) {
-      const template = `systems/aetrimonde/templates/chat/effect-card.html`;
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-card.html`;
       const chatHtml = await renderTemplate(template, data);
 
       const chatData = {
@@ -932,7 +933,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         data.targets = [];
       }
       data.showeffect = data.power.data.effect.text;
-      const template = `systems/aetrimonde/templates/chat/attack-option-card.html`
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-option-card.html`
       const content = await renderTemplate(template, data);
       let d = new Dialog({
         title: "Attack Options",
@@ -948,7 +949,6 @@ export class AetrimondeActorSheet extends ActorSheet {
   }
 
   async _runHitMiss(data, oldhtml, expendPower) {
-    debugger
     if (expendPower.length === 1) {
       if (expendPower[0].checked) {
         if (data.power.data.powergroup === "greater") {
@@ -992,7 +992,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       i = i + 1;
     }
 
-    const chattemplate = `systems/aetrimonde/templates/chat/attack-card.html`;
+    const chattemplate = `systems/aetrimonde_v0_8_x/templates/chat/attack-card.html`;
     const chathtml = await renderTemplate(chattemplate, data);
     const chatData = {
       user: game.user._id,
@@ -1009,7 +1009,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     if (rollMode === "blindroll") chatData.blind = true;
     await ChatMessage.create(chatData);
 
-    const template = `systems/aetrimonde/templates/chat/hitmiss-option-card.html`;
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/hitmiss-option-card.html`;
     const dialoghtml = await renderTemplate(template, data)
     let d = new Dialog({
       title: "Assign Hits, Favor and Disfavor",
@@ -1096,7 +1096,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       i = i + 1;
     }
 
-    const template = `systems/aetrimonde/templates/chat/hitmiss-card.html`;
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/hitmiss-card.html`;
 
     if (!data.power.data.range.includes("Close") && !data.power.data.range.includes("Area")) {
       for (let t of crithits) {
@@ -1184,7 +1184,6 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
     else {
-      debugger
       const allHits = [{"content": this._RollOnce(data.power.data.hit.text)}];
       const allMisses = [{"content": this._RollOnce(data.power.data.miss.text)}];
 
