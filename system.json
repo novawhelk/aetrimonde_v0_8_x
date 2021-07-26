@@ -16,6 +16,20 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/defaultskills.db",
           "entity": "Item"
+      },
+      {
+          "name": "defaultclasses",
+          "label": "System Classes",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultclasses.db",
+          "entity": "Item"
+      },
+      {
+          "name": "defaultfeatures",
+          "label": "System Features",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultfeatures.db",
+          "entity": "Item"
       }
   ],
   "languages": [
