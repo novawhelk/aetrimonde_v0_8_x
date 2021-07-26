@@ -371,6 +371,13 @@
        "groups": "",
        "value": "",
        "quals": "",
+       "ammunition": {
+         "used": false,
+         "type": "",
+         "value": 0,
+         "max": 0,
+         "min": 0
+       },
        "attack": {
          "abil": "",
          "feat": 0,
