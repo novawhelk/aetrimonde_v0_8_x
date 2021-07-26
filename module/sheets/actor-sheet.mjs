@@ -298,8 +298,8 @@ export class AetrimondeActorSheet extends ActorSheet {
       "equippedmh": weapon.data.equippedmh,
       "equippedoh": weapon.data.equippedoh,
       "data": {
-        "powergroup": "normal",
-        "powertype": "",
+        "powertype": "normal",
+        "origin": "",
         "flavortext": "",
         "keywords": "Weapon",
         "action": "Main",
@@ -745,7 +745,6 @@ export class AetrimondeActorSheet extends ActorSheet {
     const name = event.currentTarget.dataset.name;
     const cont = !event.currentTarget.dataset.effectonly;
     let power = JSON.parse(event.currentTarget.dataset.power);
-    const powergroup =
 
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
@@ -775,7 +774,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
-        "greater": power.data.powergroup === "greater",
+        "greater": power.data.powertype === "greater",
         "targets": targets ? targets : [],
         "targetnames": targetnames,
         "cont": cont
@@ -796,8 +795,8 @@ export class AetrimondeActorSheet extends ActorSheet {
       const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
-        "powergroup": power.data.powergroup ? power.data.powertypes[`${power.data.powergroup}`].label : "",
-        "greater": power.data.powergroup === "greater",
+        "powertype": power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "",
+        "greater": power.data.powertype === "greater",
         "targets": targets ? targets : [],
         "targetnames": targetnames,
         "cont": cont,
@@ -855,7 +854,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-option-card.html`;
     const templateData = {
       "power": power,
-      "greater": power.data.powergroup === "greater",
+      "greater": power.data.powertype === "greater",
       "targets": targets ? targets : [],
       "offtargets": offtargets ? offtargets : [],
       "targetnames": targetnames
@@ -876,7 +875,7 @@ export class AetrimondeActorSheet extends ActorSheet {
   async _outputEffects(data, html, expendPower) {
     if (expendPower.length === 1) {
       if (expendPower[0].checked) {
-        if (data.power.data.powergroup === "greater") {
+        if (data.power.data.powertype === "greater") {
           this.actor.update({"data.gpower.value": Math.max(this.actor.data.data.gpower.value - 1, 0)});
         }
       }
@@ -951,7 +950,7 @@ export class AetrimondeActorSheet extends ActorSheet {
   async _runHitMiss(data, oldhtml, expendPower) {
     if (expendPower.length === 1) {
       if (expendPower[0].checked) {
-        if (data.power.data.powergroup === "greater") {
+        if (data.power.data.powertype === "greater") {
           this.actor.update({"data.gpower.value": Math.max(this.actor.data.data.gpower.value - 1, 0)});
         }
       }
