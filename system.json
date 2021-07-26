@@ -149,6 +149,48 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/talent-feats.db",
           "entity": "Item"
+      },
+      {
+          "name": "arcane-powers",
+          "label": "Arcane",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/arcane-powers.db",
+          "entity": "Item"
+      },
+      {
+          "name": "combat-maneuvers",
+          "label": "Combat Maneuvers",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/combat-maneuvers.db",
+          "entity": "Item"
+      },
+      {
+          "name": "divine-doctrine-powers",
+          "label": "Divine Doctrine",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/divine-doctrine-powers.db",
+          "entity": "Item"
+      },
+      {
+          "name": "divine-powers",
+          "label": "Divine",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/divine-powers.db",
+          "entity": "Item"
+      },
+      {
+          "name": "martial-powers",
+          "label": "Martial",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/martial-powers.db",
+          "entity": "Item"
+      },
+      {
+          "name": "martial-weapon-specialization-powers",
+          "label": "Martial Weapon Specialization",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/martial-weapon-specialization-powers.db",
+          "entity": "Item"
       }
   ],
   "languages": [
