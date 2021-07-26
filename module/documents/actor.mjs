@@ -43,7 +43,7 @@ export class AetrimondeActor extends Actor {
         if (data.data.skillbonuses.includes(i.name)) {
           if (i.data.misc === 0) {
             const update = {"_id": i._id, "data.misc": 2};
-            await this.updateEmbeddedEntity("OwnedItem", update);
+            await this.updateEmbeddedDocuments("OwnedItem", update);
           }
         }
       }
@@ -87,7 +87,7 @@ export class AetrimondeActor extends Actor {
       }).render(true);
     }
     else {
-      super.createEmbeddedEntity(embeddedName, data, options);
+      super.createEmbeddedDocuments(embeddedName, data, options);
     }
   }
 
@@ -106,14 +106,14 @@ export class AetrimondeActor extends Actor {
     this.createEmbeddedDocuments("Item", defaultSkills);
   }
 
-  async deleteEmbeddedEntity(embeddedName, data, options={}) {
+  async deleteEmbeddedDocuments(embeddedName, data, options={}) {
     const newEquipment = this.data.data.equipped;
     for (let slot in newEquipment) {
       newEquipment[slot] = newEquipment[slot] === data ? "" : newEquipment[slot];
     }
     this.update({"data.equipped": newEquipment});
 
-    super.deleteEmbeddedEntity(embeddedName, data, options)
+    super.deleteEmbeddedDocuments(embeddedName, data, options)
   }
 
   _enchantItem(chooserData, oldhtml) {
@@ -121,7 +121,7 @@ export class AetrimondeActor extends Actor {
     if (oldhtml[0].value === "brandnew") {
       delete chooserData.item._id;
       chooserData.item.type = "equipment";
-      this.createEmbeddedEntity("OwnedItem", chooserData.item);
+      this.createEmbeddedDocuments("OwnedItem", chooserData.item);
     }
     else {
       const chosenItem = chooserData.itemoptions.filter(entry => entry._id === oldhtml[0].value)[0];
@@ -135,7 +135,7 @@ export class AetrimondeActor extends Actor {
         "data.relatedpower": chooserData.item.data.relatedpower,
         "data.power": chooserData.item.data.power
       }
-      this.updateEmbeddedEntity("OwnedItem", updates)
+      this.updateEmbeddedDocuments("Item", updates)
 
     }
   }
