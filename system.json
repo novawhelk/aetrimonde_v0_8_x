@@ -30,6 +30,13 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/defaultfeatures.db",
           "entity": "Item"
+      },
+      {
+          "name": "defaultraces",
+          "label": "System Races",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultraces.db",
+          "entity": "Item"
       }
   ],
   "languages": [

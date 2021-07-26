@@ -560,7 +560,7 @@
                       </div>
                     </li>
                     {{#each features.entries as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item.id}}">
+                        <li class="item flexrow" data-item-id="{{item._id}}">
                             <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <a class="feature-postable item-name truncated-ellipsis expander flex1" data-id="{{item.id}}">{{item.name}}</a>
                             <span class="truncated-ellipsis">{{item.data.category}}</span>

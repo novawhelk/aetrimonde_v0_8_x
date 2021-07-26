@@ -28,47 +28,44 @@ export class AetrimondeActor extends Actor {
         this.update(updates);
       }
       else if(datum.type === "race") {
-        const compend = game.packs.get("aetrimonde.features");
-        await compend.getIndex();
+        const compend = game.packs.get("aetrimonde_v0_8_x.defaultfeatures");
+        await compend.getDocuments();
         let addons = [];
-        for (let id of compend.index) {
-          const entry = await compend.getEntry(id._id);
-          if ((datum.name.includes(entry.datum.category) && entry.datum.category != "") || (datum.name.includes(entry.datum.powertype) && entry.datum.powertype != "")) {
-            addons.push(entry);
-          }
-        }
-        this.createEmbeddedDocuments("OwnedItem", addons), options;
 
-        for (let i of this.datum.items.filter(entry => entry.type === "skill")) {
-          if (datum.datum.skillbonuses.includes(i.name)) {
-            if (i.datum.misc === 0) {
-              const update = {"_id": i._id, "datum.misc": 2};
-              await this.updateEmbeddedDocuments("OwnedItem", update);
-            }
+        for (let featurename of datum.data.associates) {
+          const entry = await compend.getName(featurename).data;
+          addons.push(entry);
+        }
+        this.createEmbeddedDocuments(embeddedName, addons, options);
+
+        for (let i of this.data.items.filter(entry => entry.type === "skill" && datum.data.skillbonuses.includes(entry.name))) {
+          if (i.data.misc === 0) {
+            const update = {"_id": i._id, "data.misc": 2};
+            await this.updateEmbeddedDocuments("OwnedItem", update);
           }
         }
         const updates = {
-          "datum.race": datum.name,
-          "datum.speed.base": datum.datum.speed
+          "data.race": datum.name,
+          "data.speed.base": datum.data.speed
         };
         this.update(updates);
       }
       else if (datum.type === "enchantment") {
         let rightitems = [];
-        if (datum.datum.isweapon) {
-          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isweapon))
+        if (datum.data.isweapon) {
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isweapon))
         }
-        if (datum.datum.isimplement) {
-          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isimplement))
+        if (datum.data.isimplement) {
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement))
         }
-        if (datum.datum.isarmor) {
-          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isarmor))
+        if (datum.data.isarmor) {
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isarmor))
         }
-        if (datum.datum.isshield) {
-          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isshield))
+        if (datum.data.isshield) {
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isshield))
         }
 
-        const chooserdatum = {
+        const chooserData = {
           "actor": this,
           "item": datum,
           "itemoptions": rightitems
