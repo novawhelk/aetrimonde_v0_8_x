@@ -4,90 +4,92 @@
  */
 export class AetrimondeActor extends Actor {
   async createEmbeddedDocuments(embeddedName, data, options={}) {
-    if(data.type === "class") {
-      const compend = game.packs.get("aetrimonde.features");
-      await compend.getIndex();
-      let addons = [];
+    for (let datum of data) {
+      if(datum.type === "class") {
+        const compend = game.packs.get("aetrimonde.features");
+        await compend.getIndex();
+        let addons = [];
 
-      for (let id of compend.index) {
-        const entry = await compend.getEntry(id._id);
-        if (entry.data.category === data.name || (entry.data.powertype ? entry.data.powertype.includes(data.name) : false)) {
-          addons.push(entry);
-        }
-      }
-      this.createEmbeddedDocuments(embeddedName, addons, options);
-
-      const updates = {
-        "data.defenses.fort.class": data.data.classfort,
-        "data.defenses.ref.class": data.data.classref,
-        "data.defenses.will.class": data.data.classwill,
-        "data.hp.class": data.data.classhp,
-        "data.resurgs.class": data.data.classresurgs,
-        "data.class": data.name
-      };
-      this.update(updates);
-    }
-    else if(data.type === "race") {
-      const compend = game.packs.get("aetrimonde.features");
-      await compend.getIndex();
-      let addons = [];
-      for (let id of compend.index) {
-        const entry = await compend.getEntry(id._id);
-        if ((data.name.includes(entry.data.category) && entry.data.category != "") || (data.name.includes(entry.data.powertype) && entry.data.powertype != "")) {
-          addons.push(entry);
-        }
-      }
-      this.createEmbeddedDocuments("OwnedItem", addons), options;
-
-      for (let i of this.data.items.filter(entry => entry.type === "skill")) {
-        if (data.data.skillbonuses.includes(i.name)) {
-          if (i.data.misc === 0) {
-            const update = {"_id": i._id, "data.misc": 2};
-            await this.updateEmbeddedDocuments("OwnedItem", update);
+        for (let id of compend.index) {
+          const entry = await compend.getEntry(id._id);
+          if (entry.datum.category === datum.name || (entry.datum.powertype ? entry.datum.powertype.includes(datum.name) : false)) {
+            addons.push(entry);
           }
         }
-      }
-      const updates = {
-        "data.race": data.name,
-        "data.speed.base": data.data.speed
-      };
-      this.update(updates);
-    }
-    else if (data.type === "enchantment") {
-      let rightitems = [];
-      if (data.data.isweapon) {
-        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isweapon))
-      }
-      if (data.data.isimplement) {
-        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement))
-      }
-      if (data.data.isarmor) {
-        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isarmor))
-      }
-      if (data.data.isshield) {
-        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isshield))
-      }
+        this.createEmbeddedDocuments(embeddedName, addons, options);
 
-      const chooserData = {
-        "actor": this,
-        "item": data,
-        "itemoptions": rightitems
-      };
-      const template = `systems/aetrimonde/templates/chat/enchant-option-card.html`;
-      const dialoghtml = await renderTemplate(template, chooserData)
-      let d = new Dialog({
-        title: "Choose Item to Enchant",
-        content: dialoghtml,
-        buttons: {
-          one: {
-            label: "Enchant!",
-            callback: html => this._enchantItem(chooserData, html.find('.chooser'))
+        const updates = {
+          "datum.defenses.fort.class": datum.datum.classfort,
+          "datum.defenses.ref.class": datum.datum.classref,
+          "datum.defenses.will.class": datum.datum.classwill,
+          "datum.hp.class": datum.datum.classhp,
+          "datum.resurgs.class": datum.datum.classresurgs,
+          "datum.class": datum.name
+        };
+        this.update(updates);
+      }
+      else if(datum.type === "race") {
+        const compend = game.packs.get("aetrimonde.features");
+        await compend.getIndex();
+        let addons = [];
+        for (let id of compend.index) {
+          const entry = await compend.getEntry(id._id);
+          if ((datum.name.includes(entry.datum.category) && entry.datum.category != "") || (datum.name.includes(entry.datum.powertype) && entry.datum.powertype != "")) {
+            addons.push(entry);
           }
         }
-      }).render(true);
-    }
-    else {
-      super.createEmbeddedDocuments(embeddedName, data, options);
+        this.createEmbeddedDocuments("OwnedItem", addons), options;
+
+        for (let i of this.datum.items.filter(entry => entry.type === "skill")) {
+          if (datum.datum.skillbonuses.includes(i.name)) {
+            if (i.datum.misc === 0) {
+              const update = {"_id": i._id, "datum.misc": 2};
+              await this.updateEmbeddedDocuments("OwnedItem", update);
+            }
+          }
+        }
+        const updates = {
+          "datum.race": datum.name,
+          "datum.speed.base": datum.datum.speed
+        };
+        this.update(updates);
+      }
+      else if (datum.type === "enchantment") {
+        let rightitems = [];
+        if (datum.datum.isweapon) {
+          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isweapon))
+        }
+        if (datum.datum.isimplement) {
+          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isimplement))
+        }
+        if (datum.datum.isarmor) {
+          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isarmor))
+        }
+        if (datum.datum.isshield) {
+          rightitems = rightitems.concat(this.datum.items.filter(entry => entry.type === "equipment" && entry.datum.isshield))
+        }
+
+        const chooserdatum = {
+          "actor": this,
+          "item": datum,
+          "itemoptions": rightitems
+        };
+        const template = `systems/aetrimonde/templates/chat/enchant-option-card.html`;
+        const dialoghtml = await renderTemplate(template, chooserData)
+        let d = new Dialog({
+          title: "Choose Item to Enchant",
+          content: dialoghtml,
+          buttons: {
+            one: {
+              label: "Enchant!",
+              callback: html => this._enchantItem(chooserData, html.find('.chooser'))
+            }
+          }
+        }).render(true);
+      }
+      else {
+        super.createEmbeddedDocuments(embeddedName, data, options);
+      }
     }
   }
 
