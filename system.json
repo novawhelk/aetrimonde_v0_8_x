@@ -191,6 +191,62 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/martial-weapon-specialization-powers.db",
           "entity": "Item"
+      },
+      {
+          "name": "adventuring-gear",
+          "label": "Adventuring Gear",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/adventuring-gear.db",
+          "entity": "Item"
+      },
+      {
+          "name": "alchemical-volatiles",
+          "label": "Volatiles",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/alchemical-volatiles.db",
+          "entity": "Item"
+      },
+      {
+          "name": "ammunition",
+          "label": "Ammunition",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/ammunition.db",
+          "entity": "Item"
+      },
+      {
+          "name": "armor-and-shields",
+          "label": "Armor and Shields",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/armor-and-shields.db",
+          "entity": "Item"
+      },
+      {
+          "name": "elixirs",
+          "label": "Elixirs",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/elixirs.db",
+          "entity": "Item"
+      },
+      {
+          "name": "implements",
+          "label": "Implements",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/implements.db",
+          "entity": "Item"
+      },
+      {
+          "name": "potions",
+          "label": "Potions",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/potions.db",
+          "entity": "Item"
+      },
+      {
+          "name": "weapons",
+          "label": "Weapons",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/weapons.db",
+          "entity": "Item"
       }
   ],
   "languages": [
