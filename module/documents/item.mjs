@@ -142,9 +142,9 @@ export class AetrimondeItem extends Item {
 
   _preparePowerData(itemData) {
     const data = itemData.data;
-    const actor = this.actor;
+    const actor = this.actor ? this.actor : "";
 
-    if (this.actor.data) {
+    if (actor.data) {
       data.autoprof = false;
       const actorData = actor.data.data;
       const defaultweapon = {
