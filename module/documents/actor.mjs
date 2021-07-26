@@ -3,6 +3,94 @@
  * @extends {Actor}
  */
 export class AetrimondeActor extends Actor {
+  async createEmbeddedDocuments(embeddedName, data, options={}) {
+    if(data.type === "class") {
+      const compend = game.packs.get("aetrimonde.features");
+      await compend.getIndex();
+      let addons = [];
+
+      for (let id of compend.index) {
+        const entry = await compend.getEntry(id._id);
+        if (entry.data.category === data.name || (entry.data.powertype ? entry.data.powertype.includes(data.name) : false)) {
+          addons.push(entry);
+        }
+      }
+      this.createEmbeddedDocuments(embeddedName, addons, options);
+
+      const updates = {
+        "data.defenses.fort.class": data.data.classfort,
+        "data.defenses.ref.class": data.data.classref,
+        "data.defenses.will.class": data.data.classwill,
+        "data.hp.class": data.data.classhp,
+        "data.resurgs.class": data.data.classresurgs,
+        "data.class": data.name
+      };
+      this.update(updates);
+    }
+    else if(data.type === "race") {
+      const compend = game.packs.get("aetrimonde.features");
+      await compend.getIndex();
+      let addons = [];
+      for (let id of compend.index) {
+        const entry = await compend.getEntry(id._id);
+        if ((data.name.includes(entry.data.category) && entry.data.category != "") || (data.name.includes(entry.data.powertype) && entry.data.powertype != "")) {
+          addons.push(entry);
+        }
+      }
+      this.createEmbeddedDocuments("OwnedItem", addons), options;
+
+      for (let i of this.data.items.filter(entry => entry.type === "skill")) {
+        if (data.data.skillbonuses.includes(i.name)) {
+          if (i.data.misc === 0) {
+            const update = {"_id": i._id, "data.misc": 2};
+            await this.updateEmbeddedEntity("OwnedItem", update);
+          }
+        }
+      }
+      const updates = {
+        "data.race": data.name,
+        "data.speed.base": data.data.speed
+      };
+      this.update(updates);
+    }
+    else if (data.type === "enchantment") {
+      let rightitems = [];
+      if (data.data.isweapon) {
+        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isweapon))
+      }
+      if (data.data.isimplement) {
+        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement))
+      }
+      if (data.data.isarmor) {
+        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isarmor))
+      }
+      if (data.data.isshield) {
+        rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isshield))
+      }
+
+      const chooserData = {
+        "actor": this,
+        "item": data,
+        "itemoptions": rightitems
+      };
+      const template = `systems/aetrimonde/templates/chat/enchant-option-card.html`;
+      const dialoghtml = await renderTemplate(template, chooserData)
+      let d = new Dialog({
+        title: "Choose Item to Enchant",
+        content: dialoghtml,
+        buttons: {
+          one: {
+            label: "Enchant!",
+            callback: html => this._enchantItem(chooserData, html.find('.chooser'))
+          }
+        }
+      }).render(true);
+    }
+    else {
+      super.createEmbeddedEntity(embeddedName, data, options);
+    }
+  }
+
   async _onCreate(data, options, userId) {
     super._onCreate(data, options, userId);
 
@@ -16,6 +104,40 @@ export class AetrimondeActor extends Actor {
       defaultSkills.push(skill.data)
     }
     this.createEmbeddedDocuments("Item", defaultSkills);
+  }
+
+  async deleteEmbeddedEntity(embeddedName, data, options={}) {
+    const newEquipment = this.data.data.equipped;
+    for (let slot in newEquipment) {
+      newEquipment[slot] = newEquipment[slot] === data ? "" : newEquipment[slot];
+    }
+    this.update({"data.equipped": newEquipment});
+
+    super.deleteEmbeddedEntity(embeddedName, data, options)
+  }
+
+  _enchantItem(chooserData, oldhtml) {
+    debugger
+    if (oldhtml[0].value === "brandnew") {
+      delete chooserData.item._id;
+      chooserData.item.type = "equipment";
+      this.createEmbeddedEntity("OwnedItem", chooserData.item);
+    }
+    else {
+      const chosenItem = chooserData.itemoptions.filter(entry => entry._id === oldhtml[0].value)[0];
+      const updates = {
+        "_id": chosenItem._id,
+        "data.eachvalue": chosenItem.data.eachvalue + chooserData.item.data.eachvalue,
+        "data.magical": chooserData.item.data.magical,
+        "data.relatedprops": chooserData.item.data.relatedprops,
+        "data.props": chooserData.item.data.props,
+        "data.critprops": chooserData.item.data.critprops,
+        "data.relatedpower": chooserData.item.data.relatedpower,
+        "data.power": chooserData.item.data.power
+      }
+      this.updateEmbeddedEntity("OwnedItem", updates)
+
+    }
   }
 
   /** @override */
