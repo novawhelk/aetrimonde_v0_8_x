@@ -4,27 +4,26 @@
  */
 export class AetrimondeActor extends Actor {
   async createEmbeddedDocuments(embeddedName, data, options={}) {
+    let normaldocs = [];
     for (let datum of data) {
       if(datum.type === "class") {
-        const compend = game.packs.get("aetrimonde.features");
-        await compend.getIndex();
+        const compend = game.packs.get("aetrimonde_v0_8_x.defaultfeatures");
+        await compend.getDocuments();
         let addons = [];
 
-        for (let id of compend.index) {
-          const entry = await compend.getEntry(id._id);
-          if (entry.datum.category === datum.name || (entry.datum.powertype ? entry.datum.powertype.includes(datum.name) : false)) {
-            addons.push(entry);
-          }
+        for (let featurename of datum.data.associates) {
+          const entry = await compend.getName(featurename).data;
+          addons.push(entry);
         }
         this.createEmbeddedDocuments(embeddedName, addons, options);
 
         const updates = {
-          "datum.defenses.fort.class": datum.datum.classfort,
-          "datum.defenses.ref.class": datum.datum.classref,
-          "datum.defenses.will.class": datum.datum.classwill,
-          "datum.hp.class": datum.datum.classhp,
-          "datum.resurgs.class": datum.datum.classresurgs,
-          "datum.class": datum.name
+          "data.defenses.fort.class": datum.data.classfort,
+          "data.defenses.ref.class": datum.data.classref,
+          "data.defenses.will.class": datum.data.classwill,
+          "data.hp.class": datum.data.classhp,
+          "data.resurgs.class": datum.data.classresurgs,
+          "data.class": datum.name
         };
         this.update(updates);
       }
@@ -88,9 +87,10 @@ export class AetrimondeActor extends Actor {
         }).render(true);
       }
       else {
-        super.createEmbeddedDocuments(embeddedName, data, options);
+        normaldocs.push(datum);
       }
     }
+    super.createEmbeddedDocuments(embeddedName, normaldocs, options)
   }
 
   async _onCreate(data, options, userId) {
@@ -98,11 +98,11 @@ export class AetrimondeActor extends Actor {
 
     const allSkills = ["Acrobatics", "Arcana", "Athletics", "Deception", "Endurance", "Engineering", "History", "Insight", "Intimidate", "Medicine", "Nature", "Perception", "Persuasion", "Religion", "Society", "Stealth", "Subterfuge", "Warfare"];
     const compend = game.packs.get("aetrimonde_v0_8_x.defaultskills");
-    await compend.getIndex();
-    const skillInds = compend.index.filter(entry => allSkills.includes(entry.name))
+    await compend.getDocuments();
+
     const defaultSkills = [];
-    for (let ind of skillInds) {
-      const skill = await compend.getDocument(ind._id);
+    for (let skillname of allSkills) {
+      const skill = await compend.getName(skillname);
       defaultSkills.push(skill.data)
     }
     this.createEmbeddedDocuments("Item", defaultSkills);
