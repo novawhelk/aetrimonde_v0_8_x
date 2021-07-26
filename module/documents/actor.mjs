@@ -170,7 +170,7 @@ export class AetrimondeActor extends Actor {
 
       const armorencumbrance = itemData.isarmor ? itemData.armor.encumbrance : 0;
       const shieldencumbrance = itemData.isshield ? itemData.shield.encumbrance : 0;
-      encumbrance = itemData._isEquipped() ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
+      encumbrance = i._isEquipped() ? Math.min(encumbrance, armorencumbrance, shieldencumbrance) : encumbrance;
     }
     data.encumbrance.armor = encumbrance;
     data.encumbrance.total = encumbrance + data.encumbrance.feat + data.encumbrance.item + data.encumbrance.misc;

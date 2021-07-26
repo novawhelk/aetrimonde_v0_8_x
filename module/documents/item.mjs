@@ -86,11 +86,9 @@ export class AetrimondeItem extends Item {
       data.slotlabel = data.slot.slots[`${data.slot.value}`];
       data.isheld = data.slot.value === "held";
 
-      const unslotted = data.slot.value === "noslot";
+      data.equippedanywhere = this._isEquipped();
       const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
       const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
-      data.equippedmh = (this.id === actorData.equipped.mainhand);
-      data.equippedoh = (this.id === actorData.equipped.offhand);
       data.equippedanywhere = unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
       if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
         data.warning = true;
@@ -340,19 +338,19 @@ export class AetrimondeItem extends Item {
   }
 
   _isEquipped() {
-    const data = item.data;
+    const data = this.data.data;
     const actorData = this.actor ? this.actor.data : false;
 
-    if (!actorData || item.type != "equipment")
+    if (!actorData || this.type != "equipment")
       return false;
 
     const unslotted = data.slot.value === "noslot";
-    const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
-    const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
-    const equippedmh = (this.id === actorData.equipped.mainhand);
-    const equippedoh = (this.id === actorData.equipped.offhand);
+    const equippedring = data.slot.value === "ring" && (actorData.data.equipped.ring1 === this.id || actorData.data.equipped.ring2 === this.id);
+    const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.data.equipped[`${data.slot.value}`] === this.id;
+    const equippedmh = (this.id === actorData.data.equipped.mainhand);
+    const equippedoh = (this.id === actorData.data.equipped.offhand);
 
-    return unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
+    return unslotted || equippedring || equippedworn || equippedmh || equippedoh;
   }
 
   _powerAttackBonus(power) {
