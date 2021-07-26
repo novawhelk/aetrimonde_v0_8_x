@@ -339,17 +339,20 @@ export class AetrimondeItem extends Item {
     };
   }
 
-  _isEquipped(item) {
+  _isEquipped() {
     const data = item.data;
-    const actorData = this.actor ? this.actor.data.data : false;
+    const actorData = this.actor ? this.actor.data : false;
 
-    if (!actorData)
+    if (!actorData || item.type != "equipment")
       return false;
 
-    const equipped = data.slot.value != "held" ? (data.slot.value === "noslot" || (data.slot.value === "ring" && (actorData.equipped.ring1 === item.id || actorData.equipped.ring2 === item.id)) || item.id === actorData.equipped[`${data.slot.value}`]) : false;
-    const equippedmh = (item.id === actorData.equipped.mainhand);
-    const equippedoh = (item.id === actorData.equipped.offhand);
-    return equipped || equippedmh || equippedoh;
+    const unslotted = data.slot.value === "noslot";
+    const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
+    const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
+    const equippedmh = (this.id === actorData.equipped.mainhand);
+    const equippedoh = (this.id === actorData.equipped.offhand);
+
+    return unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
   }
 
   _powerAttackBonus(power) {
