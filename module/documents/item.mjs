@@ -86,10 +86,9 @@ export class AetrimondeItem extends Item {
       data.slotlabel = data.slot.slots[`${data.slot.value}`];
       data.isheld = data.slot.value === "held";
 
+      data.equippedmh = (this.id === actorData.equipped.mainhand);
+      data.equippedoh = (this.id === actorData.equipped.offhand);
       data.equippedanywhere = this._isEquipped();
-      const equippedring = data.slot.value === "ring" && (actorData.equipped.ring1 === this.id || actorData.equipped.ring2 === this.id);
-      const equippedworn = !(["ring", "noslot", "held"].includes(data.slot.value)) && actorData.equipped[`${data.slot.value}`] === this.id;
-      data.equippedanywhere = unslotted || equippedring || equippedworn || data.equippedmh || data.equippedoh;
       if (data.isweapon && data.slot.value === "held" && data.weapon.hands.value === "2h" && data.equippedanywhere && (!data.equippedmh || !data.equippedoh)) {
         data.warning = true;
         data.warningmessage = "This weapon requires two hands to wield properly."
