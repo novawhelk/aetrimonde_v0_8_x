@@ -39,9 +39,9 @@ export class AetrimondeActor extends Actor {
         this.createEmbeddedDocuments(embeddedName, addons, options);
 
         for (let i of this.data.items.filter(entry => entry.type === "skill" && datum.data.skillbonuses.includes(entry.name))) {
-          if (i.data.misc === 0) {
-            const update = {"_id": i._id, "data.misc": 2};
-            await this.updateEmbeddedDocuments("OwnedItem", update);
+          if (i.data.data.misc === 0) {
+            const update = [{"_id": i.id, "data.misc": 2}];
+            await this.updateEmbeddedDocuments("Item", update);
           }
         }
         const updates = {
