@@ -91,7 +91,7 @@
           "name": "item-creation-feats",
           "label": "Item Creation",
           "system": "aetrimonde_v0_8_x",
-          "path": "./packs/defaultraces.db",
+          "path": "./packs/item-creation-feats.db",
           "entity": "Item"
       },
       {

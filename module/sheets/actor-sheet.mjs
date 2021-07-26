@@ -205,12 +205,12 @@ export class AetrimondeActorSheet extends ActorSheet {
           }
         }
         if (i.data.isarmor) {
-          const j = deepClone(i).data;
+          const j = deepClone(i);
           j.data.isshield = false;
           armor.push(j);
         }
         if (i.data.isshield) {
-          const j = deepClone(i).data;
+          const j = deepClone(i);
           j.data.isarmor = false;
           armor.push(j);
         }
