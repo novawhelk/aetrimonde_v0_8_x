@@ -8,7 +8,7 @@
     {{#if content}}{{content}}{{/if}}
     {{#each critcontent as |content no|}}
       <div class="card-content">
-        <span class="boldface">{{content.source}} </span>{{content.criteffect}}
+        {{content.source}} {{content.criteffect}}
       </div>
     {{/each}}
     {{#if entries}}
