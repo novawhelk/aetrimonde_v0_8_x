@@ -247,6 +247,13 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/weapons.db",
           "entity": "Item"
+      },
+      {
+          "name": "resistances",
+          "label": "Resistances",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/resistances.db",
+          "entity": "Item"
       }
   ],
   "languages": [
