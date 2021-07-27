@@ -264,6 +264,63 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
 
+    // Assign and return
+    actorData.features = features;
+    actorData.quals = quals;
+    actorData.skills = skills.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.perks = perks.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.powers = powers;
+    actorData.languages = languages;
+    actorData.logentries = logentries;
+    actorData.gear = gear.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.weapons = weapons.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.imps = imps.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.disciplines = disciplines.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.armor = armor.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.consumables = consumables.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.rituals = rituals.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+    actorData.resists = resists.sort(function(a, b) {
+      if(a.name > b.name) {return 1;}
+      if(a.name < b.name) {return -1;}
+      return 0;
+    });
+
     // Assign and return;
     context.features = features;
     context.skills = skills;
