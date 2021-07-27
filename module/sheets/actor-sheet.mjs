@@ -1109,7 +1109,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     if (!data.power.data.range.includes("Close") && !data.power.data.range.includes("Area")) {
       for (let content of data.power.data.critcontent) {
-        content.criteffect = this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
+        content.criteffect = this._PrepareInlineRolls(data.power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
       }
       for (let t of crithits) {
         const templateData = {
