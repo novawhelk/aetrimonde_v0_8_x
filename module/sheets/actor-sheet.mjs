@@ -1102,24 +1102,16 @@ export class AetrimondeActorSheet extends ActorSheet {
     const template = `systems/aetrimonde_v0_8_x/templates/chat/hitmiss-card.html`;
 
     if (!data.power.data.range.includes("Close") && !data.power.data.range.includes("Area")) {
+      for (let content of data.power.data.critcontent) {
+        content.criteffect = this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
+      }
       for (let t of crithits) {
-        const critcontent = [];
-        if (data.power.data.crit.text) {
-          critcontent.push({"content": data.power.name + " Critical: " + this._ApplyFavorDisfavor(data.power.data.crit.text, t.mode, t.main, t.off)});
-        }
-        const crititems = data.power.data.useditems.filter(entry => (entry.relatedprops && entry.critprops) || (entry.isweapon && entry.weapon.quals.includes("High Crit")));
-        for (let item of crititems) {
-          if (item.isweapon && item.weapon.quals.includes("High Crit"))
-            critcontent.push({"content": "High Crit Weapon: " + this._ApplyFavorDisfavor("[[" + item.weapon.dice + "]] critical damage.", t.mode)})
-          if (item.critprops)
-            critcontent.push({"content": item.name + " Critical: " + this._ApplyFavorDisfavor(item.critprops, t.mode)});
-        }
         const templateData = {
           "type": "Critical Hit",
           "power": data.power,
           "target": t,
           "content": "Critical Hit: " + this._ApplyFavorDisfavor(data.power.data.hit.text, "crit", t.main, t.off),
-          "critcontent": critcontent
+          "critcontent": data.power.data.critcontent
         }
         const chathtml = await renderTemplate(template, templateData);
         const chatData = {
