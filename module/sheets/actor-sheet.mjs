@@ -352,6 +352,11 @@ export class AetrimondeActorSheet extends ActorSheet {
         },
         "abilities": weapon.data.abilities,
         "defenses": weapon.data.defenses,
+        "powertypes": {
+            "normal": {
+                "label": "Normal Attack"
+            }
+        },
         "useditems": [weapon.data]
       }
     }
@@ -753,6 +758,8 @@ export class AetrimondeActorSheet extends ActorSheet {
     power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
     power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
+    power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : ""
+
     let targets = [];
     let offtargets = [];
     let targetnames = "";
@@ -795,7 +802,6 @@ export class AetrimondeActorSheet extends ActorSheet {
       const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
-        "powertype": power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "",
         "greater": power.data.powertype === "greater",
         "targets": targets ? targets : [],
         "targetnames": targetnames,
