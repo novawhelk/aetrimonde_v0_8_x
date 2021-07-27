@@ -1189,12 +1189,9 @@ export class AetrimondeActorSheet extends ActorSheet {
       const allMisses = [{"content": this._RollOnce(data.power.data.miss.text)}];
 
       const critcontent = [];
-      if (data.power.data.crit.text) {
-        critcontent.push({"content": this._RollOnce(data.power.name + " Critical: " + data.power.data.crit.text)});
-      }
-      const crititems = data.power.data.useditems.filter(entry => entry.relatedprops && entry.critprops);
-      for (let item of crititems) {
-        critcontent.push({"content": this._RollOnce(item.name + " Critical: " + item.critprops)});
+      for (let content of data.power.data.critcontent) {
+        content.criteffect = this._RollOnce(this._PrepareInlineRolls(data.power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}));
+        critcontent.push({"content": content.source + content.criteffect});
       }
 
       const sortedCrits = {
