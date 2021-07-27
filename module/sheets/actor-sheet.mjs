@@ -753,7 +753,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     const cont = !event.currentTarget.dataset.effectonly;
     let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
     if (event.currentTarget.dataset.dependent) {
-      power = event.currentTarget.dataset.json;
+      power = JSON.parse(event.currentTarget.dataset.dependent);
     }
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
@@ -1380,9 +1380,32 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     const actor = this.actor;
     const actorData = this.actor.data.data;
+    const defaultweapon = {
+      "weapon": {
+        "prof": 0,
+        "damage": {
+          "feat": 0,
+          "itemb": 0,
+          "misc": 0
+        },
+        "dice": "1d4",
+        "weaponthreat": false,
+        "mvsr": "",
+        "quals": ""
+      },
+      "shield": {
+        "damage": {
+          "feat": 0,
+          "itemb": 0,
+          "misc": 0
+        },
+        "dice": "1d4"
+      },
+      "equippedanywhere": true
+    };
 
-    const mainweapon = power.data.mainequipped.data;
-    const offweapon = power.data.offequipped.data;
+    const mainweapon = power.data.mainequipped ? power.data.mainequipped.data : defaultweapon;
+    const offweapon = power.data.offequipped ? power.data.offequipped.data : defaultweapon;
 
     for (let a of ["STR", "CON", "DEX", "INT", "WIS", "CHA"]) {
       const label = a.toLowerCase();
