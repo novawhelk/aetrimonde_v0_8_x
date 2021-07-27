@@ -1376,48 +1376,14 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     const actor = this.actor;
     const actorData = this.actor.data.data;
-    const defaultweapon = {
-      "weapon": {
-        "prof": 0,
-        "damage": {
-          "feat": 0,
-          "itemb": 0,
-          "misc": 0
-        },
-        "dice": "1d4",
-        "weaponthreat": false,
-        "mvsr": "",
-        "quals": ""
-      },
-      "shield": {
-        "damage": {
-          "feat": 0,
-          "itemb": 0,
-          "misc": 0
-        },
-        "dice": "1d4"
-      },
-      "equippedanywhere": true
-    };
 
-    const mainhanditem = actor.data.data.equipped.mainhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.mainhand)).data : "";
-    const offhanditem = actor.data.data.equipped.offhand ? actor.data.items.find(entry => (entry._id === actor.data.data.equipped.offhand)).data : "";
-
-    dambonus = dambonus ? dambonus : {"feat": 0, "itemb": 0, "misc": 0}
+    const mainweapon = power.data.mainequipped.data;
+    const offweapon = power.data.offequipped.data;
 
     for (let a of ["STR", "CON", "DEX", "INT", "WIS", "CHA"]) {
       const label = a.toLowerCase();
       content = content.replaceAll("<" + a + ">", actorData.abilities[`${label}`].mod)
     }
-
-    const defaultmainweapon = mainhanditem.isweapon ? mainhanditem : (offhanditem.isweapon ? offhanditem : defaultweapon);
-    const mainweapon = power.data.mainitem ? actor.data.items.filter(entry => entry._id === power.data.mainitem)[0].data : defaultmainweapon;
-    const defaultoffweapon = mainhanditem.isweapon ? (offhanditem.isweapon ? offhanditem : defaultweapon) : defaultweapon;
-    const offweapon = power.data.offitem ? actor.data.items.filter(entry => entry._id === power.data.offitem)[0].data : defaultoffweapon;
-    const unarmattack = power.data.mainitem ? actor.data.items.filter(entry => entry._id === power.data.mainitem)[0].data : defaultweapon;
-    const defaultshield = offhanditem.isshield ? offhanditem : (mainhanditem.isshield ? mainhanditem : defaultweapon);
-    const equippedItem = power.data.mainitem ? actor.data.items.filter(entry => entry._id === power.data.mainitem)[0].data : defaultshield;
-    const shield = equippedItem.isshield ? equippedItem : defaultweapon;
 
     let dstrings = content.match(/\[\[[^\[\]]*?(\d+(d\d+(r\d+)?|<Weapon>|<Main-Weapon>|<Off-Weapon>|<Shield>|<Unarmed>) *(\+ *){0,1})*[^\[\]]*?\]\]( additional)?/g);
     if (dstrings) {
@@ -1435,11 +1401,6 @@ export class AetrimondeActorSheet extends ActorSheet {
             const restring = string.replaceAll(weapon, replacement);
             const matchstring = string.replaceAll("[", "\\[").replaceAll("]", "\\]").replaceAll("+", "\\+")
             rstring = rstring.replaceAll(RegExp(matchstring, "g"), restring);
-            dstringdambonus = {
-              "feat": Math.max(dstringdambonus.feat, mainweapon.weapon.damage.feat),
-              "itemb": Math.max(dstringdambonus.itemb, mainweapon.weapon.damage.itemb),
-              "misc": Math.max(dstringdambonus.misc, mainweapon.weapon.damage.misc)
-            }
           }
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Off-Weapon>[^\[\]]*?\]\]/g);
@@ -1453,17 +1414,12 @@ export class AetrimondeActorSheet extends ActorSheet {
             const restring = string.replaceAll(weapon, replacement);
             const matchstring = string.replaceAll("[", "\\[").replaceAll("]", "\\]").replaceAll("+", "\\+")
             rstring = rstring.replaceAll(RegExp(matchstring, "g"), restring);
-            dstringdambonus = {
-              "feat": Math.max(dstringdambonus.feat, offweapon.weapon.damage.feat),
-              "itemb": Math.max(dstringdambonus.itemb, offweapon.weapon.damage.itemb),
-              "misc": Math.max(dstringdambonus.misc, offweapon.weapon.damage.misc)
-            }
           }
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Shield>[^\[\]]*?\]\]/g);
         if (subcontent) {
-          let equippedCount = shield.shield.dice.match(/\d+(?=d)/g);
-          let equippedDice = shield.shield.dice.match(/(?<=d).+/g);
+          let equippedCount = mainweapon.shield.dice.match(/\d+(?=d)/g);
+          let equippedDice = mainweapon.shield.dice.match(/(?<=d).+/g);
           for (let string of subcontent) {
             const weapon = string.match(/\d<(Shield)>/g)[0];
             const count = weapon.match(/\d+(?=<)/g);
@@ -1471,11 +1427,6 @@ export class AetrimondeActorSheet extends ActorSheet {
             const restring = string.replaceAll(weapon, replacement);
             const matchstring = string.replaceAll("[", "\\[").replaceAll("]", "\\]").replaceAll("+", "\\+")
             rstring = rstring.replaceAll(RegExp(matchstring, "g"), restring);
-            dstringdambonus = {
-              "feat": Math.max(dstringdambonus.feat, shield.shield.damage.feat),
-              "itemb": Math.max(dstringdambonus.itemb, shield.shield.damage.itemb),
-              "misc": Math.max(dstringdambonus.misc, shield.shield.damage.misc)
-            }
           }
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Unarmed>[^\[\]]*?\]\]/g);
@@ -1489,11 +1440,6 @@ export class AetrimondeActorSheet extends ActorSheet {
             const restring = string.replaceAll(weapon, replacement);
             const matchstring = string.replaceAll("[", "\\[").replaceAll("]", "\\]").replaceAll("+", "\\+")
             rstring = rstring.replaceAll(RegExp(matchstring, "g"), restring);
-            dstringdambonus = {
-              "feat": Math.max(dstringdambonus.feat, unarmattack.weapon.damage.feat),
-              "itemb": Math.max(dstringdambonus.itemb, unarmattack.weapon.damage.itemb),
-              "misc": Math.max(dstringdambonus.misc, unarmattack.weapon.damage.misc)
-            }
           }
         }
         dstringdambonus = dstringdambonus ? dstringdambonus : {"feat": 0, "itemb": 0, "misc": 0}
