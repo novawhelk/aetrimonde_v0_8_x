@@ -154,6 +154,11 @@ export class AetrimondeItem extends Item {
                 "itemb": 0,
                 "misc": 0
               },
+              "damage": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              },
               "weaponthreat": false,
               "mvsr": "",
               "quals": "",
@@ -161,6 +166,23 @@ export class AetrimondeItem extends Item {
             },
             "shield": {
               "attack": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              },
+              "damage": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              }
+            },
+            "implement": {
+              "attack": {
+                "feat": 0,
+                "itemb": 0,
+                "misc": 0
+              },
+              "damage": {
                 "feat": 0,
                 "itemb": 0,
                 "misc": 0
@@ -185,7 +207,10 @@ export class AetrimondeItem extends Item {
       data.relevantitemtype = "Item";
       data.relevantoffitemtype = "Off-Weapon";
 
-      data.useditems = [];
+      data.critcontent = [];
+      if (data.attack.crit) {
+        data.critcontent.push({"source": this.name + " Critical:", "criteffect": data.attack.crit});
+      }
 
       if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
         // Set up data for item-select dropdown
@@ -229,9 +254,18 @@ export class AetrimondeItem extends Item {
         offweapon = offweapon.data;
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
-        data.useditems = data.useditems.concat(mainweapon);
-        if (mainweapon != offweapon)
-        data.useditems = data.useditems.concat(offweapon);
+        if (mainweapon.data.weapon.quals.includes("High Crit")) {
+          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+        }
+        if (mainweapon.data.relatedprops && mainweapon.data.critprops) {
+          data.critcontent.push({"source": mainweapon.name + " Critical:", "criteffect": mainweapon.data.critprops})
+        }
+        if (offweapon.data.weapon.quals.includes("High Crit")) {
+          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+        }
+        if (offweapon.data.relatedprops && offweapon.data.critprops) {
+          data.critcontent.push({"source": offweapon.name + " Critical:", "criteffect": offweapon.data.critprops})
+        }
 
         // Issue a warning if it doesn't look like the right items are equipped.
         const missingmelee = data.range.includes("Melee") && (mainweapon.data.weapon.mvsr.value != "melee" || (data.attack.off && offweapon.data.weapon.mvsr.value != "melee"));
@@ -246,6 +280,7 @@ export class AetrimondeItem extends Item {
         data.attack.misc = attbonus.misc + mainweapon.data.weapon.attack.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
         data.attack.hasthreat = mainweapon.data.weapon.weaponthreat ? true : data.attack.hasthreat;
+        data.attack.damagebonus = this._powerDamageBonus(this.data, mainweapon.data.data.weapon);
 
         data.attack.offprof = offweapon.data.weapon.prof;
         data.attack.offfeat = Math.max(attbonus.feat, offweapon.data.weapon.attack.feat);
@@ -253,63 +288,131 @@ export class AetrimondeItem extends Item {
         data.attack.offmisc = attbonus.misc + offweapon.data.weapon.attack.misc;
         data.attack.offbonus = mod + data.attack.offprof + data.attack.offfeat + data.attack.offitemb + data.attack.offmisc + data.attack.powermisc;
         data.attack.hasoffthreat = offweapon.data.weapon.weaponthreat ? true : data.attack.hasoffthreat;
+        data.attack.offdamagebonus = this._powerDamageBonus(this.data, offweapon.data.data.weapon);
 
-        data.damagebonus = this._powerDamageBonus(this.data)
+        data.damagebonus = this._powerDamageBonus(this.data);
         data.autoprof = true;
         data.autoweapon = true;
+        data.mainitem = mainweapon;
+        data.offitem = offweapon;
       }
       else if (data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Unarmed Attack";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon && entry.data.data.weapon.unarmed && entry.data.data.equippedanywhere));
-        const unarmedattack = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data.weapon : defaultweapon.weapon;
-        data.useditems = data.useditems.concat(unarmedattack);
+
+        const unarmedattack = mainselected ? mainselected : (mainequipped ? mainequipped : defaultweapon);
+        if (!unarmedattack.data.data.default){
+            unarmedattack.prepareData();
+        }
+        unarmedattack = unarmedattack.data;
+
+        if (unarmedattack.data.weapon.quals.includes("High Crit")) {
+          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+        }
+        if (unarmedattack.data.relatedprops && unarmedattack.data.critprops) {
+          data.critcontent.push({"source": unarmedattack.name + " Critical:", "criteffect": unarmedattack.data.critprops})
+        }
+
         data.warning = data.relevantitems && !data.mainitem;
         data.warningmessage = "You have alternate unarmed attacks; you might need to select one."
-        data.attack.prof = unarmedattack.prof;
-        data.attack.feat = Math.max(attbonus.feat, unarmedattack.attack.feat);
-        data.attack.itemb = Math.max(attbonus.itemb, unarmedattack.attack.itemb);
-        data.attack.misc = attbonus.misc + unarmedattack.attack.misc;
+        data.attack.prof = unarmedattack.data.prof;
+        data.attack.feat = Math.max(attbonus.feat, unarmedattack.data.weapon.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, unarmedattack.data.weapon.attack.itemb);
+        data.attack.misc = attbonus.misc + unarmedattack.data.weapon.attack.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
-        data.attack.hasthreat = unarmedattack.weaponthreat ? true : data.attack.hasthreat;
-        data.damagebonus = this._powerDamageBonus(this.data)
+        data.attack.hasthreat = unarmedattack.data.weaponthreat ? true : data.attack.hasthreat;
+
+        data.damagebonus = this._powerDamageBonus(this.data, unarmedattack.data.weapon);
         data.autoprof = true;
         data.unarmed = true;
         data.autoweapon = true;
+        data.mainitem = unarmedattack;
       }
       else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
         data.relevantitemtype = "Shield";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isshield));
-        const defaultshield = offhanditem.data.isshield ? offhanditem : (mainhanditem.data.isshield ? mainhanditem : defaultweapon);
-        const shield = data.mainitem ? actor.data.items.filter(entry => entry.id === data.mainitem)[0].data : defaultshield;
-        data.useditems = data.useditems.concat(shield);
-        data.warning = !data.mainitem && !shield.shield.dice || !shield.equippedanywhere;
+
+        let shield = defaultweapon;
+        if (mainselected) {
+          shield = mainselected;
+        }
+        else if (offequipped) {
+          if (offequipped.data.data.isshield) {
+            shield = offequipped;
+          }
+          else if (mainequipped) {
+            if (mainequipped.data.data.isshield) {
+              shield = mainequipped;
+            }
+          }
+        }
+        else if (mainequipped) {
+          if (mainequipped.data.data.isshield) {
+            shield = mainequipped;
+          }
+        }
+        if (!shield.data.data.default){
+            shield.prepareData();
+        }
+        shield = shield.data;
+
+        if (shield.data.relatedprops && shield.data.critprops) {
+          data.critcontent.push({"source": shield.name + " Critical:", "criteffect": shield.data.critprops})
+        }
+
+        data.warning = !shield.data.isshield || !shield.data.shield.dice || !shield.data.equippedanywhere;
         data.warningmessage = "You might not have the right item(s) equipped.";
-        data.attack.feat = Math.max(attbonus.feat, shield.shield.attack.feat);
-        data.attack.itemb = Math.max(attbonus.itemb, shield.shield.attack.itemb);
-        data.attack.misc = attbonus.misc + shield.shield.attack.misc;
+        data.attack.feat = Math.max(attbonus.feat, shield.data.shield.attack.feat);
+        data.attack.itemb = Math.max(attbonus.itemb, shield.data.shield.attack.itemb);
+        data.attack.misc = attbonus.misc + shield.data.shield.attack.misc;
         data.attack.prof = 0;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
-        data.damagebonus = this._powerDamageBonus(this.data)
+
+        data.damagebonus = this._powerDamageBonus(this.data, shield.data.shield);
         data.autoprof = true;
         data.autoweapon = true;
+        data.mainitem = shield;
       }
       else if (data.keywords.includes("Implement") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
+        let imp = defaultweapon;
+        if (mainselected) {
+          imp = mainselected;
+        }
+        else if (mainequipped) {
+          if (mainequipped.data.data.isimplement) {
+            imp = mainequipped;
+          }
+          else if (offequipped) {
+            if (offequipped.data.data.isimplement) {
+              imp = offequipped;
+            }
+          }
+        }
+        else if (offequipped) {
+          if (offequipped.data.data.isimplement) {
+            imp = offequipped;
+          }
+        }
+        if (!imp.data.data.default){
+            imp.prepareData();
+        }
+        imp = imp.data;
+
+        if (imp.data.relatedprops && imp.data.critprops) {
+          data.critcontent.push({"source": imp.name + " Critical:", "criteffect": imp.data.critprops})
+        }
+
         data.attack.prof = 0;
         data.attack.feat = attbonus.feat;
         data.attack.itemb = attbonus.itemb;
         data.attack.misc = attbonus.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
-        data.damagebonus = this._powerDamageBonus(this.data)
+
+        data.damagebonus = this._powerDamageBonus(this.data, imp.data.implement);
         data.autoprof = true;
-        const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement && this._isEquipped(entry));
-        if (imps.length) {
-          for (const imp of imps) {
-            // if (this._isEquipped(imp))
-            data.useditems = data.useditems.concat(imp.data);
-          }
-        }
+        data.mainitem = imp;
       }
       else if (["normal", "lesser", "greater", "feature"].includes(data.powertype) && !this.actor.data.data.isnpc){
         data.attack.prof = 0;
@@ -352,18 +455,19 @@ export class AetrimondeItem extends Item {
     return unslotted || equippedring || equippedworn || equippedmh || equippedoh;
   }
 
-  _powerAttackBonus(power) {
+  _powerAttackBonus(power, item = false, offitem = false) {
     const keywords = power.data.keywords;
 
     let feat = 0;
     let itemb = 0;
     let misc = 0;
 
-    if (keywords.includes("Implement")) {
-      const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement && entry.data.equippedanywhere);
-      for (let i of imps) {
-        itemb = Math.max(itemb, i.data.implement.attack.itemb);
-        misc = Math.max(misc, i.data.implement.attack.misc);
+    if (item) {
+      feat = item.attack.feat;
+      itemb = item.attack.itemb;
+      if (offitem) {
+        feat = Math.max(feat, offitem.attack.feat);
+        itemb = Math.max(itemb, offitem.attack.itemb);
       }
     }
 
@@ -381,18 +485,19 @@ export class AetrimondeItem extends Item {
     return {"feat": feat,"itemb": itemb,"misc": misc};
   }
 
-  _powerDamageBonus(power) {
+  _powerDamageBonus(power, item = false) {
     const keywords = power.data.keywords;
 
     let feat = 0;
     let itemb = 0;
     let misc = 0;
 
-    if (keywords.includes("Implement") && this.actor.data.data.implement) {
-      const imps = this.actor.data.items.filter(entry => entry.type === "equipment" && entry.data.equippedanywhere && entry.data.isimplement);
-      for (let i of imps) {
-        itemb = Math.max(itemb, i.data.implement.damage.itemb);
-        misc = Math.max(misc, i.data.implement.damage.misc);
+    if (item) {
+      feat = item.damage.feat;
+      itemb = item.damage.itemb;
+      if (offitem) {
+        feat = Math.max(feat, offitem.damage.feat);
+        itemb = Math.max(itemb, offitem.damage.itemb);
       }
     }
 
