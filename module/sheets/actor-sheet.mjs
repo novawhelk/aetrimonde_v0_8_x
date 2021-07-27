@@ -769,9 +769,9 @@ export class AetrimondeActorSheet extends ActorSheet {
     let targetnames = "";
     if (game.user.targets.size > 0){
       for (let target of game.user.targets) {
-        targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
-                      "id": target.data._id});
-        targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
+        targets.push({"name": target.name,
+                      "id": target.actorId});
+        targetnames = targetnames + target.name + ", ";
       }
     }
     else {
@@ -1190,8 +1190,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
       const critcontent = [];
       for (let content of data.power.data.critcontent) {
-        content.criteffect = this._RollOnce(this._PrepareInlineRolls(data.power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}));
-        critcontent.push({"content": content.source + content.criteffect});
+        critcontent.push({"content": this._RollOnce(this._PrepareInlineRolls(data.power, content.source + content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
       }
 
       const sortedCrits = {

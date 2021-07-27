@@ -207,8 +207,8 @@ export class AetrimondeItem extends Item {
       data.relevantoffitemtype = "Off-Weapon";
 
       data.critcontent = [];
-      if (data.attack.crit) {
-        data.critcontent.push({"source": this.name + " Critical:", "criteffect": data.attack.crit});
+      if (data.crit) {
+        data.critcontent.push({"source": this.name + " Critical:", "criteffect": data.crit.text});
       }
 
       if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
