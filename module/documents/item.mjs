@@ -259,10 +259,10 @@ export class AetrimondeItem extends Item {
         if (mainweapon.data.relatedprops && mainweapon.data.critprops) {
           data.critcontent.push({"source": mainweapon.name + " Critical:", "criteffect": mainweapon.data.critprops})
         }
-        if (offweapon.data.weapon.quals.includes("High Crit")) {
+        if (data.attack.off && offweapon.data.weapon.quals.includes("High Crit")) {
           data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
         }
-        if (offweapon.data.relatedprops && offweapon.data.critprops) {
+        if (data.attack.off && offweapon.data.relatedprops && offweapon.data.critprops) {
           data.critcontent.push({"source": offweapon.name + " Critical:", "criteffect": offweapon.data.critprops})
         }
 
