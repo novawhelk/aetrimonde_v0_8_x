@@ -419,11 +419,13 @@ export class AetrimondeItem extends Item {
         data.mainequipped = imp;
       }
       else if (["normal", "lesser", "greater", "feature"].includes(data.powertype) && !this.actor.data.data.isnpc){
+        const attbonus = this._powerAttackBonus(this.data);
         data.attack.prof = 0;
         data.attack.bonus = mod + attbonus.feat + attbonus.itemb + attbonus.misc + data.attack.powermisc;
         data.damagebonus = this._powerDamageBonus(this.data)
       }
       else {
+        const attbonus = this._powerAttackBonus(this.data);
         data.attack.feat = Math.max(data.attack.feat, attbonus.feat);
         data.attack.itemb = Math.max(data.attack.itemb, attbonus.itemb);
         data.attack.misc = data.attack.misc + attbonus.misc;
