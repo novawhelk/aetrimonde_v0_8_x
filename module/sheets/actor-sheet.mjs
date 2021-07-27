@@ -353,6 +353,11 @@ export class AetrimondeActorSheet extends ActorSheet {
         },
         "abilities": weapon.data.abilities,
         "defenses": weapon.data.defenses,
+        "powertypes": {
+            "normal": {
+                "label": "Normal Attack"
+            }
+        },
         "useditems": [weapon.data]
       },
       "dependent": "weaponattack"
@@ -746,9 +751,9 @@ export class AetrimondeActorSheet extends ActorSheet {
   async _RunEffect(event) {
     const name = event.currentTarget.dataset.name;
     const cont = !event.currentTarget.dataset.effectonly;
-    let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power));
+    let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
     if (event.currentTarget.dataset.dependent) {
-      power = event.currentTarget.dataset.json;
+      power = JSON.parse(event.currentTarget.dataset.dependent);
     }
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
@@ -756,6 +761,8 @@ export class AetrimondeActorSheet extends ActorSheet {
     power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
     power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
     power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
+
+    power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : ""
 
     let targets = [];
     let offtargets = [];
@@ -799,7 +806,6 @@ export class AetrimondeActorSheet extends ActorSheet {
       const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
       const templateData = {
         "power": power,
-        "powertype": power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "",
         "greater": power.data.powertype === "greater",
         "targets": targets ? targets : [],
         "targetnames": targetnames,
@@ -1103,7 +1109,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     if (!data.power.data.range.includes("Close") && !data.power.data.range.includes("Area")) {
       for (let content of data.power.data.critcontent) {
-        content.criteffect = this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
+        content.criteffect = this._PrepareInlineRolls(data.power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
       }
       for (let t of crithits) {
         const templateData = {
@@ -1366,9 +1372,32 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     const actor = this.actor;
     const actorData = this.actor.data.data;
+    const defaultweapon = {
+      "weapon": {
+        "prof": 0,
+        "damage": {
+          "feat": 0,
+          "itemb": 0,
+          "misc": 0
+        },
+        "dice": "1d4",
+        "weaponthreat": false,
+        "mvsr": "",
+        "quals": ""
+      },
+      "shield": {
+        "damage": {
+          "feat": 0,
+          "itemb": 0,
+          "misc": 0
+        },
+        "dice": "1d4"
+      },
+      "equippedanywhere": true
+    };
 
-    const mainweapon = power.data.mainequipped.data;
-    const offweapon = power.data.offequipped.data;
+    const mainweapon = power.data.mainequipped ? power.data.mainequipped.data : defaultweapon;
+    const offweapon = power.data.offequipped ? power.data.offequipped.data : defaultweapon;
 
     for (let a of ["STR", "CON", "DEX", "INT", "WIS", "CHA"]) {
       const label = a.toLowerCase();

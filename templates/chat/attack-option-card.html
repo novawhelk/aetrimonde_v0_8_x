@@ -2,7 +2,7 @@
   <header class="card-header">
     <div class="card-content flexrow flex-between underline">
       <span class="card-header">{{power.name}}</span>
-      <span class="card-header">{{power.data.powertype}}</span>
+      <span class="card-header">{{power.data.powerlabel}}</span>
     </div>
   </header>
 
@@ -37,11 +37,6 @@
   <div class="underline">
 
   </div>
-  {{#if greater}}
-  <div class="card-content">
-    <input type="checkbox" class="expend-power" checked="true"/> Expend Power
-  </div>
-  {{/if}}
   {{#if targets}}{{#if power.data.attack.exists}}
   <div class="card-content flexrow underline">
     <span class="flex4 boldface">{{#if offtargets}}Main-hand {{/if}}Attack Rolls: </span>
