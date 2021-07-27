@@ -749,7 +749,7 @@ export class AetrimondeActorSheet extends ActorSheet {
   async _RunEffect(event) {
     const name = event.currentTarget.dataset.name;
     const cont = !event.currentTarget.dataset.effectonly;
-    let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power));
+    let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
 
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";

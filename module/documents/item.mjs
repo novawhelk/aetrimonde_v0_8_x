@@ -280,7 +280,7 @@ export class AetrimondeItem extends Item {
         data.attack.misc = attbonus.misc + mainweapon.data.weapon.attack.misc;
         data.attack.bonus = mod + data.attack.prof + data.attack.feat + data.attack.itemb + data.attack.misc + data.attack.powermisc;
         data.attack.hasthreat = mainweapon.data.weapon.weaponthreat ? true : data.attack.hasthreat;
-        data.attack.damagebonus = this._powerDamageBonus(this.data, mainweapon.data.data.weapon);
+        data.attack.damagebonus = this._powerDamageBonus(this.data, mainweapon.data.weapon);
 
         data.attack.offprof = offweapon.data.weapon.prof;
         data.attack.offfeat = Math.max(attbonus.feat, offweapon.data.weapon.attack.feat);
@@ -288,13 +288,13 @@ export class AetrimondeItem extends Item {
         data.attack.offmisc = attbonus.misc + offweapon.data.weapon.attack.misc;
         data.attack.offbonus = mod + data.attack.offprof + data.attack.offfeat + data.attack.offitemb + data.attack.offmisc + data.attack.powermisc;
         data.attack.hasoffthreat = offweapon.data.weapon.weaponthreat ? true : data.attack.hasoffthreat;
-        data.attack.offdamagebonus = this._powerDamageBonus(this.data, offweapon.data.data.weapon);
+        data.attack.offdamagebonus = this._powerDamageBonus(this.data, offweapon.data.weapon);
 
         data.damagebonus = this._powerDamageBonus(this.data);
         data.autoprof = true;
         data.autoweapon = true;
-        data.mainitem = mainweapon;
-        data.offitem = offweapon;
+        data.mainequipped = mainweapon;
+        data.offequipped = offweapon;
       }
       else if (data.keywords.includes("Unarmed") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
@@ -327,7 +327,7 @@ export class AetrimondeItem extends Item {
         data.autoprof = true;
         data.unarmed = true;
         data.autoweapon = true;
-        data.mainitem = unarmedattack;
+        data.mainequipped = unarmedattack;
       }
       else if (data.keywords.includes("Shield") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         data.requiresitem = true;
@@ -373,7 +373,7 @@ export class AetrimondeItem extends Item {
         data.damagebonus = this._powerDamageBonus(this.data, shield.data.shield);
         data.autoprof = true;
         data.autoweapon = true;
-        data.mainitem = shield;
+        data.mainequipped = shield;
       }
       else if (data.keywords.includes("Implement") && ["normal", "lesser", "greater", "feature"].includes(data.powertype)) {
         let imp = defaultweapon;
@@ -412,7 +412,7 @@ export class AetrimondeItem extends Item {
 
         data.damagebonus = this._powerDamageBonus(this.data, imp.data.implement);
         data.autoprof = true;
-        data.mainitem = imp;
+        data.mainequipped = imp;
       }
       else if (["normal", "lesser", "greater", "feature"].includes(data.powertype) && !this.actor.data.data.isnpc){
         data.attack.prof = 0;
@@ -485,7 +485,7 @@ export class AetrimondeItem extends Item {
     return {"feat": feat,"itemb": itemb,"misc": misc};
   }
 
-  _powerDamageBonus(power, item = false) {
+  _powerDamageBonus(power, item = false, offitem = false) {
     const keywords = power.data.keywords;
 
     let feat = 0;
