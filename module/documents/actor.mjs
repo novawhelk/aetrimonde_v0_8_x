@@ -304,6 +304,52 @@ export class AetrimondeActor extends Actor {
 
     // Make modifications to data here. For example:
     const data = actorData.data;
+
+    const defenseIncrement = Math.floor(data.tier / 2 + 0.5);
+    const damageIncrement = Math.max(0, Math.floor(data.tier / 2));
+
+    this.data.data.defenses.ac.feat = defenseIncrement;
+    this.data.data.defenses.fort.feat = defenseIncrement;
+    this.data.data.defenses.ref.feat = defenseIncrement;
+    this.data.data.defenses.will.feat = defenseIncrement;
+
+    this.data.data.defenses.ac.item = data.rank === "champion" ? 1 : 0;
+    this.data.data.defenses.fort.item = data.rank === "champion" ? 1 : 0;
+    this.data.data.defenses.ref.item = data.rank === "champion" ? 1 : 0;
+    this.data.data.defenses.will.item = data.rank === "champion" ? 1 : 0;
+
+    this.data.data.defenses.ac.total= 10 + data.defenses.ac.abil + data.defenses.ac.armor + this.data.data.defenses.ac.feat + data.defenses.ac.item + data.defenses.ac.misc;
+    this.data.data.defenses.fort.total = 10 + data.defenses.fort.abil + data.defenses.fort.class + this.data.data.defenses.fort.feat + data.defenses.fort.item + data.defenses.fort.misc;
+    this.data.data.defenses.ref.total = 10 + data.defenses.ref.abil + data.defenses.ref.class + this.data.data.defenses.ref.feat + data.defenses.ref.item + data.defenses.ref.misc + data.defenses.ref.shield;
+    this.data.data.defenses.will.total = 10 + data.defenses.will.abil + data.defenses.will.class + this.data.data.defenses.will.feat + data.defenses.will.item + data.defenses.will.misc;
+
+    this.data.data.hp.feat = (4 - 3 * (this.data.data.rank === "minion")) * damageIncrement;
+    this.data.data.hp.abil = this.data.data.rank != "minion" ? data.abilities.con.value : data.abilities.con.mod;
+    const hpbase = data.hp.class + data.abilities.con.value + data.hp.feat + data.hp.item + data.hp.misc;
+    const epsub = (100 + (data.tier % 2 ? 50 : 0)) * 2 ** (((data.tier) - (data.tier) % 2) / 2);
+    if (this.data.data.rank === "normal") {
+      this.data.data.hp.max = hpbase;
+      this.data.data.ep = epsub;
+    }
+    else if (this.data.data.rank === "elite") {
+      this.data.data.hp.max = hpbase * 2;
+      this.data.data.ep = epsub * 2;
+    }
+    else if (this.data.data.rank === "champion") {
+      this.data.data.hp.max = hpbase * 4;
+      this.data.data.ep = epsub * 5;
+    }
+    else {
+      this.data.data.hp.class = 0;
+      this.data.data.hp.max = Math.max(1, data.abilities.con.mod) + data.hp.feat + data.hp.item + data.hp.misc;
+      this.data.data.ep = epsub / 5;
+    }
+    this.data.data.resurgs.max = 1;
+    this.data.data.hp.bloodied.value = Math.floor(data.hp.max / 2) + data.hp.bloodied.feat + data.hp.bloodied.item  + data.hp.bloodied.misc;
+    this.data.data.resurgs.size.value = Math.floor(data.hp.max / 4) + data.resurgs.size.feat + data.resurgs.size.item  + data.resurgs.size.misc;
+
+    this.data.token.height = this.data.data.sizes.medium.tokensize ? this.data.data.sizes[`${this.data.data.size}`].tokensize : 1;
+    this.data.token.width = this.data.data.sizes.medium.tokensize ? this.data.data.sizes[`${this.data.data.size}`].tokensize : 1;
   }
 
   /**

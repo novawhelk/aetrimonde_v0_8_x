@@ -264,8 +264,19 @@ export class AetrimondeActorSheet extends ActorSheet {
       }
     }
 
+    let quals = [];
+    if (this.actor.data.type === "npc") {
+      quals = quals.concat(features.feat.entries);
+      quals = quals.concat(features.cfeature.entries);
+      quals = quals.concat(features.rfeature.entries);
+      quals = quals.concat(features.ifeature.entries);
+      quals = quals.concat(features.prof.entries);
+      quals = quals.concat(features.other.entries);
+    }
+
     // Assign and return
     context.features = features;
+    actorData.quals = quals;
     context.skills = skills.sort(function(a, b) {
       if(a.name > b.name) {return 1;}
       if(a.name < b.name) {return -1;}
