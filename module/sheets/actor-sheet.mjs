@@ -239,7 +239,8 @@ export class AetrimondeActorSheet extends ActorSheet {
             "_id": i._id,
             "img": i.img,
             "dependent": true,
-            "data": i.data.power
+            "data": i.data.power,
+            "dependent": "itempower"
           };
           itempower.json = JSON.stringify(itempower);
           powers.item.entries.push(itempower)
@@ -358,7 +359,8 @@ export class AetrimondeActorSheet extends ActorSheet {
             }
         },
         "useditems": [weapon.data]
-      }
+      },
+      "dependent": "weaponattack"
     }
     if (ranged) {
       weaponattack.data.range = "Ranged " + weapon.data.weapon.range;
@@ -750,7 +752,9 @@ export class AetrimondeActorSheet extends ActorSheet {
     const name = event.currentTarget.dataset.name;
     const cont = !event.currentTarget.dataset.effectonly;
     let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
-
+    if (event.currentTarget.dataset.dependent) {
+      power = event.currentTarget.dataset.json;
+    }
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
     power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
