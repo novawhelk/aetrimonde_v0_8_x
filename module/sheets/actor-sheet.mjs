@@ -391,6 +391,7 @@ export class AetrimondeActorSheet extends ActorSheet {
         "crit": {
           "text": ""
         },
+        "critcontent": [],
         "miss": {
           "text": ""
         },
@@ -431,6 +432,12 @@ export class AetrimondeActorSheet extends ActorSheet {
       else {
         weaponattack.data.range = "Melee 1";
       }
+    }
+    if (weapon.data.weapon.quals.includes("High Crit")) {
+      weaponattack.data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+    }
+    if (weapon.data.relatedprops && weapon.data.critprops) {
+      weaponattack.data.critcontent.push({"source": weapon.name + " Critical:", "criteffect": weapon.data.critprops})
     }
     weaponattack.json = JSON.stringify(weaponattack);
     return weaponattack

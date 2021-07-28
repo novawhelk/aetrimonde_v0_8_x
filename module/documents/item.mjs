@@ -131,6 +131,10 @@ export class AetrimondeItem extends Item {
       }
       if (data.relatedpower) {
         data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
+        data.power.critcontent = [];
+        if (data.power.crit) {
+          data.power.critcontent.push({"source": this.name + "Power Critical:", "criteffect": data.power.crit.text});
+        }
       }
     }
 
