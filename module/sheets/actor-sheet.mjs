@@ -276,7 +276,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     // Assign and return
     context.features = features;
-    actorData.quals = quals;
+    context.quals = quals;
     context.skills = skills.sort(function(a, b) {
       if(a.name > b.name) {return 1;}
       if(a.name < b.name) {return -1;}
