@@ -473,7 +473,7 @@ export class AetrimondeItem extends Item {
     let misc = 0;
 
     if (item) {
-      feat = item.attack.feat;
+      feat = item.attack.feat ? item.attack.feat : 0;
       itemb = item.attack.itemb;
       if (offitem) {
         feat = Math.max(feat, offitem.attack.feat ? offitem.attack.feat : 0);
@@ -484,10 +484,10 @@ export class AetrimondeItem extends Item {
 
     const disciplines = this.actor.data.items.filter(entry => entry.type === "discipline")
     for (let d of disciplines) {
-      if (power.data.powertype.includes(d.data.powertype) && power.data.keywords.includes(d.data.keyword)) {
-        feat = Math.max(feat, d.data.attack.feat);
-        itemb = Math.max(itemb, d.data.attack.itemb);
-        misc = Math.max(misc, d.data.attack.misc);
+      if (power.data.origin.includes(d.data.data.powertype) && power.data.keywords.includes(d.data.data.keyword)) {
+        feat = Math.max(feat, d.data.data.attack.feat);
+        itemb = Math.max(itemb, d.data.data.attack.itemb);
+        misc = Math.max(misc, d.data.data.attack.misc);
       }
     }
 
@@ -504,7 +504,7 @@ export class AetrimondeItem extends Item {
     let misc = 0;
 
     if (item) {
-      feat = item.damage.feat;
+      feat = item.damage.feat ? item.damage.feat : 0;
       itemb = item.damage.itemb;
       if (offitem) {
         feat = Math.max(feat, offitem.damage.feat ? offitem.attack.feat : 0);
@@ -515,10 +515,10 @@ export class AetrimondeItem extends Item {
 
     const disciplines = this.actor.data.items.filter(entry => entry.type === "discipline")
     for (let d of disciplines) {
-      if (power.data.powertype.includes(d.data.powertype) && power.data.keywords.includes(d.data.keyword)) {
-        feat = Math.max(feat, d.data.damage.feat);
-        itemb = Math.max(itemb, d.data.damage.itemb);
-        misc = Math.max(misc, d.data.damage.misc);
+      if (power.data.origin.includes(d.data.data.powertype) && power.data.keywords.includes(d.data.data.keyword)) {
+        feat = Math.max(feat, d.data.data.damage.feat);
+        itemb = Math.max(itemb, d.data.data.damage.itemb);
+        misc = Math.max(misc, d.data.data.damage.misc);
       }
     }
     return {"feat": feat,"itemb": itemb, "misc": misc};
