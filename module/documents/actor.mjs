@@ -190,8 +190,6 @@ export class AetrimondeActor extends Actor {
     const data = actorData.data;
     const flags = actorData.flags.aetrimonde || {};
 
-    data.gpower.max = 3 + (data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(data.class) ? 1 : 0);
-
     data.carrycap = data.abilities.str.value * 10;
     data.heavycap = data.abilities.str.value * 20;
     data.dragcap = data.abilities.str.value * 30;
@@ -294,6 +292,8 @@ export class AetrimondeActor extends Actor {
     if (actorData.type !== 'character') return;
 
     const data = actorData.data;
+
+    data.gpower.max = 3 + (data.race === "Human" ? 1 : 0) + (["Fighter", "Ranger", "Rogue", "Tactician"].includes(data.class) ? 1 : 0);
   }
 
   /**

@@ -29,9 +29,149 @@ Hooks.once('init', async function() {
    * Set an initiative formula for the system
    * @type {String}
    */
-  CONFIG.Combat.initiative = {
-    formula: "1d20 + @abilities.dex.mod",
-    decimals: 2
+   CONFIG.Combat.initiative = {
+     formula: "2d10 + @initiative.total",
+     decimals: 2
+   };
+   debugger
+   CONFIG.statusEffects = [
+     "systems/aetrimonde/icons/Dying.png",
+     "systems/aetrimonde/icons/Incapacitated.png",
+     "systems/aetrimonde/icons/Unconscious.png",
+     "systems/aetrimonde/icons/Helpless.png",
+
+     "systems/aetrimonde/icons/Held.png",
+     "systems/aetrimonde/icons/Acid.png",
+     "systems/aetrimonde/icons/Bleed.png",
+     "systems/aetrimonde/icons/Cold.png",
+
+     "systems/aetrimonde/icons/Entropy.png",
+     "systems/aetrimonde/icons/Fire.png",
+     "systems/aetrimonde/icons/Force.png",
+     "systems/aetrimonde/icons/Lightning.png",
+
+     "systems/aetrimonde/icons/Poison.png",
+     "systems/aetrimonde/icons/Psychic.png",
+     "systems/aetrimonde/icons/Radiant.png",
+     "systems/aetrimonde/icons/Thaumic.png",
+
+     "systems/aetrimonde/icons/Thunder.png",
+     "systems/aetrimonde/icons/Heal.png",
+     "systems/aetrimonde/icons/Regen.png",
+     "systems/aetrimonde/icons/TempHealth.png",
+
+     "systems/aetrimonde/icons/slowed.png",
+     "systems/aetrimonde/icons/snared.png",
+     "systems/aetrimonde/icons/immobilized.png",
+     "systems/aetrimonde/icons/restrained.png",
+
+     "systems/aetrimonde/icons/Rooted.png",
+     "systems/aetrimonde/icons/Grabbed.png",
+     "systems/aetrimonde/icons/Charmed.png",
+     "systems/aetrimonde/icons/Dominated.png",
+
+     "systems/aetrimonde/icons/Prone.png",
+     "systems/aetrimonde/icons/Hover.png",
+     "systems/aetrimonde/icons/Swim.png",
+     "systems/aetrimonde/icons/Fly.png",
+
+     "systems/aetrimonde/icons/Dazzled.png",
+     "systems/aetrimonde/icons/Blinded.png",
+     "systems/aetrimonde/icons/Deafened.png",
+     "systems/aetrimonde/icons/Invisible.png",
+
+     "systems/aetrimonde/icons/Surprised.png",
+     "systems/aetrimonde/icons/Staggered.png",
+     "systems/aetrimonde/icons/Dazed.png",
+     "systems/aetrimonde/icons/Stunned.png",
+
+     "systems/aetrimonde/icons/Challenged.png",
+     "systems/aetrimonde/icons/Intoxicated.png",
+     "systems/aetrimonde/icons/Weakened.png",
+     "systems/aetrimonde/icons/Hidden.png",
+
+     "systems/aetrimonde/icons/Insubstantial.png",
+     "systems/aetrimonde/icons/Armament.png",
+     "systems/aetrimonde/icons/Armor.png",
+     "systems/aetrimonde/icons/Talisman.png",
+
+     "systems/aetrimonde/icons/Ward.png",
+     "systems/aetrimonde/icons/Binding.png",
+     "systems/aetrimonde/icons/Seal.png",
+     "systems/aetrimonde/icons/Denounced.png",
+
+     "systems/aetrimonde/icons/Gadget.png",
+     "systems/aetrimonde/icons/Pursuit.png",
+     "systems/aetrimonde/icons/Hexed.png",
+     "systems/aetrimonde/icons/Vengeance.png",
+
+     "systems/aetrimonde/icons/AttackUp.png",
+     "systems/aetrimonde/icons/AttackDown.png",
+     "systems/aetrimonde/icons/DefUp.png",
+     "systems/aetrimonde/icons/DefDown.png"
+   ];
+
+   CONFIG.conditionTypes = {
+     "Dying" : "Dying",
+     "Incapacitated" : "Incapacitated",
+     "Unconscious" : "Unconscious",
+     "Helpless" : "Helpless",
+     "Held" : "Held",
+     "Acid" : "Acid",
+     "Bleed" : "Bleed",
+     "Cold" : "Cold",
+     "Entropy" : "Entropy",
+     "Fire" : "Fire",
+     "Force" : "Force",
+     "Lightning" : "Lightning",
+     "Poison" : "Poison",
+     "Psychic" : "Psychic",
+     "Radiant" : "Radiant",
+     "Thaumic" : "Thaumic",
+     "Thunder" : "Thunder",
+     "Heal" : "Heal",
+     "Regen" : "Regen",
+     "TempHealth" : "TempHealth",
+     "slowed" : "Slowed",
+     "snared" : "Snared",
+     "immobilized" : "Immobilized",
+     "restrained" : "Restrained",
+     "Rooted" : "Rooted",
+     "Grabbed" : "Grabbed",
+     "Charmed" : "Charmed",
+     "Dominated" : "Dominated",
+     "Prone" : "Prone",
+     "Hover" : "Hover",
+     "Swim" : "Swim",
+     "Fly" : "Fly",
+     "Dazzled" : "Dazzled",
+     "Blinded" : "Blinded",
+     "Deafened" : "Deafened",
+     "Invisible" : "Invisible",
+     "Surprised" : "Surprised",
+     "Staggered" : "Staggered",
+     "Dazed" : "Dazed",
+     "Stunned" : "Stunned",
+     "Challenged" : "Challenged",
+     "Intoxicated" : "Intoxicated",
+     "Weakened" : "Weakened",
+     "Hidden" : "Hidden",
+     "Insubstantial" : "Insubstantial",
+     "Armament" : "Armament",
+     "Armor" : "Armor",
+     "Talisman" : "Talisman",
+     "Ward" : "Ward",
+     "Binding" : "Binding",
+     "Seal" : "Seal",
+     "Denounced" : "Denounced",
+     "Gadget" : "Gadget",
+     "Pursuit" : "Pursuit",
+     "Hexed" : "Hexed",
+     "Vengeance" : "Vengeance",
+     "AttackUp" : "AttackUp",
+     "AttackDown" : "AttackDown",
+     "DefUp" : "DefUp",
+     "DefDown" : "DefDown"
   };
 
   // Define custom Document classes
