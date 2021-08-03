@@ -275,61 +275,27 @@ export class AetrimondeActorSheet extends ActorSheet {
     }
 
     // Assign and return
+    for (let section in features) {
+      features[section].entries = features[section].entries.sort(this.nameSort);
+    }
     context.features = features;
     context.quals = quals;
-    context.skills = skills.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.perks = perks.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
+    context.skills = skills.sort(this.nameSort);
+    context.perks = perks.sort(this.nameSort);
+    for (let section in powers) {
+      powers[section].entries = powers[section].entries.sort(this.nameSort);
+    }
     context.powers = powers;
-    context.languages = languages;
-    context.logentries = logentries;
-    context.gear = gear.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.weapons = weapons.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.imps = imps.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.disciplines = disciplines.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.armor = armor.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.consumables = consumables.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.rituals = rituals.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
-    context.resists = resists.sort(function(a, b) {
-      if(a.name > b.name) {return 1;}
-      if(a.name < b.name) {return -1;}
-      return 0;
-    });
+    context.languages = languages.sort(this.nameSort);
+    context.logentries = logentries.sort(this.nameSort);
+    context.gear = gear.sort(this.nameSort);
+    context.weapons = weapons.sort(this.nameSort);
+    context.imps = imps.sort(this.nameSort);
+    context.disciplines = disciplines.sort(this.nameSort);
+    context.armor = armor.sort(this.nameSort);
+    context.consumables = consumables.sort(this.nameSort);
+    context.rituals = rituals.sort(this.nameSort);
+    context.resists = resists.sort(this.nameSort);
   }
 
   weaponAttack(weapon, abil, ranged) {
@@ -442,6 +408,14 @@ export class AetrimondeActorSheet extends ActorSheet {
     weaponattack.json = JSON.stringify(weaponattack);
     return weaponattack
   }
+
+  nameSort(a, b) {
+    if(a.name.match(/New (Perk|Language|Resistance|Feature|Power|Equipment|Ritual)/g) && !b.name.match(/New (Perk|Language|Resistance|Feature|Power|Equipment|Ritual)/g)) {return 1};
+    if(b.name.match(/New (Perk|Language|Resistance|Feature|Power|Equipment|Ritual)/g) && !a.name.match(/New (Perk|Language|Resistance|Feature|Power|Equipment|Ritual)/g)) {return -1};
+    if(a.name > b.name) {return 1;}
+    if(a.name < b.name) {return -1;}
+    return 0;
+  };
 
   /* -------------------------------------------- */
 
