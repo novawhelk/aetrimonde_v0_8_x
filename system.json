@@ -11,6 +11,13 @@
   "scripts": [],
   "packs": [
       {
+          "name": "aetrimonde-setting",
+          "label": "Aetrimonde Setting Information ",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/aetrimonde-setting.db",
+          "entity": "JournalEntry"
+      },
+      {
           "name": "defaultskills",
           "label": "System Skills",
           "system": "aetrimonde_v0_8_x",
