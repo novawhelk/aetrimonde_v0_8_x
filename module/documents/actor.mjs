@@ -116,7 +116,6 @@ export class AetrimondeActor extends Actor {
   }
 
   _enchantItem(chooserData, oldhtml) {
-    debugger
     if (oldhtml[0].value === "brandnew") {
       delete chooserData.item._id;
       chooserData.item.type = "equipment";
@@ -276,6 +275,12 @@ export class AetrimondeActor extends Actor {
 
     data.initiative.total = data.abilities.dex.mod + data.initiative.feat + data.initiative.item + data.initiative.misc;
     data.speed.total = data.speed.base + data.speed.armor + data.speed.feat + data.speed.item + data.speed.misc;
+
+    const perceptionskill = this.items.filter(entry => entry.type === "skill" && entry.name === "Perception")[0];
+    data.perceptionpassive = perceptionskill ? 10 + perceptionskill.data.data.total : 10;
+
+    const insightskill = this.items.filter(entry => entry.type === "skill" && entry.name === "Insight")[0];
+    data.insightpassive = perceptionskill ? 10 + insightskill.data.data.total : 10;
 
     // data.perceptionpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Perception"))[0].data.data.total;
     // data.insightpassive = 10 + this.items.filter(entry => (entry.data.type === "skill" && entry.data.name === "Insight"))[0].data.data.total;
