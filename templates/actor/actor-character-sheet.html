@@ -179,19 +179,19 @@
                 <div class="flexrow gridrow">
                   <span class="flex2">AC</span>
                   <span class="centered">{{data.defenses.ac.total}}</span>
-                  <span class="centered">= 10 +</span>
-                  <span class="centered">{{data.defenses.ac.abil}}</span>
-                  <span class="centered">{{data.defenses.ac.armor}}</span>
+                  <span class="centered">= 10</span>
+                  <span class="centered">{{numberFormat data.defenses.ac.abil decimals=0 sign=true}}</span>
+                  <span class="centered">{{numberFormat data.defenses.ac.armor decimals=0 sign=true}}</span>
                   <span class="centered"><input type="checkbox" class="component" name="data.defenses.ac.heavy" disabled="true" {{checked data.defenses.ac.heavy}}/></span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.ac.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.feat" value="{{data.defenses.ac.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.ac.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.feat" value="{{numberFormat data.defenses.ac.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.ac.item}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.item" value="{{data.defenses.ac.item}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.ac.item decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ac.item" value="{{numberFormat data.defenses.ac.item decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
-                  <span class="centered"><input type="number" class="component" name="data.defenses.ac.misc" value="{{data.defenses.ac.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" class="component" name="data.defenses.ac.misc" value="{{numberFormat data.defenses.ac.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow header continued gridrow">
                   <span class="flex2"></span>
@@ -207,62 +207,62 @@
                 <div class="flexrow gridrow">
                   <span class="flex2">Fortitude</span>
                   <span class="centered">{{data.defenses.fort.total}}</span>
-                  <span class="centered">= 10 +</span>
-                  <span class="centered">{{data.defenses.fort.abil}}</span>
+                  <span class="centered">= 10</span>
+                  <span class="centered">{{numberFormat data.defenses.fort.abil decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#unless data.isnpc}}{{data.defenses.fort.class}}{{/unless}}
-                    {{#if data.isnpc}}<input type="text" name="data.defenses.fort.class" value="{{data.defenses.fort.class}}" data-dtype="Number"/>{{/if}}
+                    {{#unless data.isnpc}}{{numberFormat data.defenses.fort.class decimals=0 sign=true}}{{/unless}}
+                    {{#if data.isnpc}}<input type="text" name="data.defenses.fort.class" value="{{numberFormat data.defenses.fort.class decimals=0 sign=true}}" data-dtype="Number"/>{{/if}}
                   </span>
                   <span class="centered">&mdash;</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.fort.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.fort.feat" value="{{data.defenses.fort.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.fort.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.fort.feat" value="{{numberFormat data.defenses.fort.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.fort.item}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.fort.item" value="{{data.defenses.fort.item}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.fort.item decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.fort.item" value="{{numberFormat data.defenses.fort.item decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
-                  <span class="centered"><input type="text" name="data.defenses.fort.misc" value="{{data.defenses.fort.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.defenses.fort.misc" value="{{numberFormat data.defenses.fort.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Reflex</span>
                   <span class="centered">{{data.defenses.ref.total}}</span>
-                  <span class="centered">= 10 +</span>
-                  <span class="centered">{{data.defenses.ref.abil}}</span>
+                  <span class="centered">= 10</span>
+                  <span class="centered">{{numberFormat data.defenses.ref.abil decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#unless data.isnpc}}{{data.defenses.ref.class}}{{/unless}}
-                    {{#if data.isnpc}}<input type="text" name="data.defenses.ref.class" value="{{data.defenses.ref.class}}" data-dtype="Number"/>{{/if}}
+                    {{#unless data.isnpc}}{{numberFormat data.defenses.ref.class decimals=0 sign=true}}{{/unless}}
+                    {{#if data.isnpc}}<input type="text" name="data.defenses.ref.class" value="{{numberFormat data.defenses.ref.class decimals=0 sign=true}}" data-dtype="Number"/>{{/if}}
                   </span>
-                  <span class="centered">{{data.defenses.ref.shield}}</span>
+                  <span class="centered">{{numberFormat data.defenses.ref.shield decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.ref.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ref.feat" value="{{data.defenses.ref.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.ref.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ref.feat" value="{{numberFormat data.defenses.ref.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.ref.item}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ref.item" value="{{data.defenses.ref.item}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.ref.item decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.ref.item" value="{{numberFormat data.defenses.ref.item decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
-                  <span class="centered"><input type="text" name="data.defenses.ref.misc" value="{{data.defenses.ref.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.defenses.ref.misc" value="{{numberFormat data.defenses.ref.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Will</span>
                   <span class="centered">{{data.defenses.will.total}}</span>
-                  <span class="centered">= 10 +</span>
-                  <span class="centered">{{data.defenses.will.abil}}</span>
+                  <span class="centered">= 10</span>
+                  <span class="centered">{{numberFormat data.defenses.will.abil decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#unless data.isnpc}}{{data.defenses.will.class}}{{/unless}}
-                    {{#if data.isnpc}}<input type="text" name="data.defenses.will.class" value="{{data.defenses.will.class}}" data-dtype="Number"/>{{/if}}
+                    {{#unless data.isnpc}}{{numberFormat data.defenses.will.class decimals=0 sign=true}}{{/unless}}
+                    {{#if data.isnpc}}<input type="text" name="data.defenses.will.class" value="{{numberFormat data.defenses.will.class decimals=0 sign=true}}" data-dtype="Number"/>{{/if}}
                   </span>
                   <span class="centered">&mdash;</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.will.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.will.feat" value="{{data.defenses.will.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.will.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.will.feat" value="{{numberFormat data.defenses.will.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.defenses.will.item}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.defenses.will.item" value="{{data.defenses.will.item}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.defenses.will.item decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.defenses.will.item" value="{{numberFormat data.defenses.will.item decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
-                  <span class="centered"><input type="text" name="data.defenses.will.misc" value="{{data.defenses.will.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.defenses.will.misc" value="{{numberFormat data.defenses.will.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
               </div>
               <h2 class="flex0">Health and Healing</h2>
@@ -285,31 +285,31 @@
                   <span class="centered">=</span>
                   {{#unless data.isnpc}}<span class="centered">{{data.hp.class}}</span>{{/unless}}
                   {{#if data.isnpc}}<span class="centered"><input type="text" name="data.hp.class" value="{{data.hp.class}}" data-dtype="Number"/></span>{{/if}}
-                  <span class="centered">{{numberFormat data.hp.abil decimals=0}}</span>
+                  <span class="centered">{{numberFormat data.hp.abil  decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.hp.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.hp.feat" value="{{data.hp.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.hp.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.hp.feat" value="{{numberFormat data.hp.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.hp.item" value="{{data.hp.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.hp.item" value="{{numberFormat data.hp.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.hp.misc" value="{{data.hp.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.hp.misc" value="{{numberFormat data.hp.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Max Resurgences</span>
                   <span class="centered">{{numberFormat data.resurgs.max decimals=0}}</span>
                   <span class="centered">=</span>
-                  {{#unless data.isnpc}}<span class="centered">{{data.resurgs.class}}</span>{{/unless}}
-                  {{#if data.isnpc}}<span class="centered"><input type="text" name="data.resurgs.class" value="{{data.resurgs.class}}" data-dtype="Number"/></span>{{/if}}
-                  <span class="centered">{{numberFormat data.abilities.con.mod decimals=0}}</span>
+                  {{#unless data.isnpc}}<span class="centered">{{numberFormat data.resurgs.class decimals=0}}</span>{{/unless}}
+                  {{#if data.isnpc}}<span class="centered"><input type="text" name="data.resurgs.class" value="{{numberFormat data.resurgs.class decimals=0}}" data-dtype="Number"/></span>{{/if}}
+                  <span class="centered">{{numberFormat data.abilities.con.mod decimals=0 sign=true}}</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.resurgs.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.resurgs.feat" value="{{data.resurgs.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.resurgs.feat}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.resurgs.feat" value="{{numberFormat data.resurgs.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.resurgs.item" value="{{data.resurgs.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.resurgs.item" value="{{numberFormat data.resurgs.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.resurgs.misc" value="{{data.resurgs.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.resurgs.misc" value="{{numberFormat data.resurgs.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow header continued gridrow">
                   <span class="flex2"></span>
@@ -328,30 +328,30 @@
                   <span class="centered">{{numberFormat data.hp.bloodied.value decimals=0}}</span>
                   <span class="centered">=</span>
                   <span class="centered">{{numberFormat data.hp.max decimals=0}}</span>
-                  <span class="centered">&#xF7; 2 +</span>
+                  <span class="centered">&#xF7; 2</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.hp.bloodied.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.hp.bloodied.feat" value="{{data.hp.bloodied.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.hp.bloodied.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.hp.bloodied.feat" value="{{numberFormat data.hp.bloodied.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.hp.bloodied.item" value="{{data.hp.bloodied.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.hp.bloodied.item" value="{{numberFormat data.hp.bloodied.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.hp.bloodied.misc" value="{{data.hp.bloodied.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.hp.bloodied.misc" value="{{numberFormat data.hp.bloodied.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Resurgence Value</span>
                   <span class="centered">{{numberFormat data.resurgs.size.value decimals=0}}</span>
                   <span class="centered">=</span>
                   <span class="centered">{{numberFormat data.hp.max decimals=0}}</span>
-                  <span class="centered">&#xF7; 4 +</span>
+                  <span class="centered">&#xF7; 4</span>
                   <span class="centered">
-                    {{#if data.isnpc}}{{data.resurgs.size.feat}}{{/if}}
-                    {{#unless data.isnpc}}<input type="text" name="data.resurgs.size.feat" value="{{data.resurgs.size.feat}}" data-dtype="Number"/>{{/unless}}
+                    {{#if data.isnpc}}{{numberFormat data.resurgs.size.feat decimals=0 sign=true}}{{/if}}
+                    {{#unless data.isnpc}}<input type="text" name="data.resurgs.size.feat" value="{{numberFormat data.resurgs.size.feat decimals=0 sign=true}}" data-dtype="Number"/>{{/unless}}
                   </span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.resurgs.size.item" value="{{data.resurgs.size.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.resurgs.size.item" value="{{numberFormat data.resurgs.size.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.resurgs.size.misc" value="{{data.resurgs.size.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.resurgs.size.misc" value="{{numberFormat data.resurgs.size.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
               </div>
             </div>
@@ -398,27 +398,27 @@
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Initiative</span>
-                  <span class="centered">{{numberFormat data.initiative.total decimals=0}}</span>
+                  <span class="centered">{{numberFormat data.initiative.total decimals=0 sign=true}}</span>
                   <span class="centered">=</span>
-                  <span class="centered">{{numberFormat data.abilities.dex.mod decimals=0}}</span>
+                  <span class="centered">{{numberFormat data.abilities.dex.mod decimals=0 sign=true}}</span>
                   <span class="centered">&mdash;</span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.initiative.feat" value="{{data.initiative.feat}}" data-dtype="Number"/></span>
-                  <span class="centered"><input type="text" name="data.initiative.item" value="{{data.initiative.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.initiative.feat" value="{{numberFormat data.initiative.feat decimals=0 sign=true}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.initiative.item" value="{{numberFormat data.initiative.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.initiative.misc" value="{{data.initiative.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.initiative.misc" value="{{numberFormat data.initiative.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Encumbrance</span>
                   <span class="centered">{{data.encumbrance.total}}</span>
                   <span class="centered">=</span>
                   <span class="centered">&mdash;</span>
-                  <span class="centered">{{data.encumbrance.armor}}</span>
+                  <span class="centered">{{numberFormat data.encumbrance.armor decimals=0}}</span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.encumbrance.feat" value="{{data.encumbrance.feat}}" data-dtype="Number"/></span>
-                  <span class="centered"><input type="text" name="data.encumbrance.item" value="{{data.encumbrance.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.encumbrance.feat" value="{{numberFormat data.encumbrance.feat decimals=0 sign=true}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.encumbrance.item" value="{{numberFormat data.encumbrance.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.encumbrance.misc" value="{{data.encumbrance.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.encumbrance.misc" value="{{numberFormat data.encumbrance.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Normal Speed</span>
@@ -426,12 +426,12 @@
                   <span class="centered">=</span>
                   {{#unless data.isnpc}}<span class="centered">{{data.speed.base}}</span>{{/unless}}
                   {{#if data.isnpc}}<span class="centered"><input type="text" name="data.speed.base" value="{{data.speed.base}}" data-dtype="Number"/></span>{{/if}}
-                  <span class="centered">{{data.speed.armor}}</span>
+                  <span class="centered">{{numberFormat data.speed.armor decimals=0 sign=true}}</span>
                   {{#unless data.isnpc}}
-                  <span class="centered"><input type="text" name="data.speed.feat" value="{{data.speed.feat}}" data-dtype="Number"/></span>
-                  <span class="centered"><input type="text" name="data.speed.item" value="{{data.speed.item}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.speed.feat" value="{{numberFormat data.speed.feat decimals=0 sign=true}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.speed.item" value="{{numberFormat data.speed.item decimals=0 sign=true}}" data-dtype="Number"/></span>
                   {{/unless}}
-                  <span class="centered"><input type="text" name="data.speed.misc" value="{{data.speed.misc}}" data-dtype="Number"/></span>
+                  <span class="centered"><input type="text" name="data.speed.misc" value="{{numberFormat data.speed.misc decimals=0 sign=true}}" data-dtype="Number"/></span>
                 </div>
                 <div class="flexrow gridrow">
                   <span class="flex2">Other Movement</span>
