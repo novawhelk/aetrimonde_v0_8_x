@@ -33,7 +33,7 @@ Hooks.once('init', async function() {
      formula: "2d10 + @initiative.total",
      decimals: 2
    };
-   
+
    CONFIG.statusEffects = [
      "systems/aetrimonde/icons/Dying.png",
      "systems/aetrimonde/icons/Incapacitated.png",

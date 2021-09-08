@@ -306,7 +306,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       "name": weapon.name,
       "_id": weapon._id,
       "img": weapon.img,
-      "dependent": true,
+      "dependent": "weaponattack",
       "isweapon": true,
       "isheld": weapon.data.isheld,
       "slot": {
@@ -781,81 +781,86 @@ export class AetrimondeActorSheet extends ActorSheet {
   }
 
   async _RunEffect(event) {
-    const name = event.currentTarget.dataset.name;
-    const cont = !event.currentTarget.dataset.effectonly;
-    let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
-    if (event.currentTarget.dataset.dependent) {
-      power = JSON.parse(event.currentTarget.dataset.dependent);
-    }
-    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
-    power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
-    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
-    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
-    power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
-    power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
+    const item = this.actor.items.get(event.currentTarget.dataset.power);
+    const mode = event.currentTarget.dataset.dependent;
+    const onlythis = event.currentTarget.dataset.onlythis;
+    item.roll(mode, onlythis);
 
-    power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : ""
-
-    let targets = [];
-    let offtargets = [];
-    let targetnames = "";
-    if (game.user.targets.size > 0){
-      for (let target of game.user.targets) {
-        targets.push({"name": target.name,
-                      "id": target.actorId});
-        targetnames = targetnames + target.name + ", ";
-      }
-    }
-    else {
-      targets.push({"name": "Unknown Target",
-                    "id": ""});
-      targetnames = "Unknown Target, "
-    }
-    targetnames = targetnames.substring(0, targetnames.length - 2);
-
-    if (power.data.effect.text.includes("[[")) {
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
-      const templateData = {
-        "power": power,
-        "greater": power.data.powertype === "greater",
-        "targets": targets ? targets : [],
-        "targetnames": targetnames,
-        "cont": cont
-      };
-      const content = await renderTemplate(template, templateData);
-      let d = new Dialog({
-        title: "Effect Options",
-        content: content,
-        buttons: {
-          one: {
-            label: "Roll Effects",
-            callback: html => this._outputEffects(templateData, html.find('.target-line'), html.find('.expend-power'))
-          }
-        }
-      }).render(true);
-    }
-    else {
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
-      const templateData = {
-        "power": power,
-        "greater": power.data.powertype === "greater",
-        "targets": targets ? targets : [],
-        "targetnames": targetnames,
-        "cont": cont,
-        "noroll": true
-      };
-      const content = await renderTemplate(template, templateData);
-      let d = new Dialog({
-        title: "Effect Options",
-        content: content,
-        buttons: {
-          one: {
-            label: "Use Power",
-            callback: html => this._outputEffects(templateData, false, html.find('.expend-power'))
-          }
-        }
-      }).render(true);
-    }
+    // const name = event.currentTarget.dataset.name;
+    // const cont = !event.currentTarget.dataset.effectonly;
+    // let power = deepClone(this.actor.items.get(event.currentTarget.dataset.power)).data;
+    // if (event.currentTarget.dataset.dependent) {
+    //   power = JSON.parse(event.currentTarget.dataset.dependent);
+    // }
+    // power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
+    // power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
+    // power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
+    // power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    // power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
+    // power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
+    //
+    // power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : ""
+    //
+    // let targets = [];
+    // let offtargets = [];
+    // let targetnames = "";
+    // if (game.user.targets.size > 0){
+    //   for (let target of game.user.targets) {
+    //     targets.push({"name": target.name,
+    //                   "id": target.actorId});
+    //     targetnames = targetnames + target.name + ", ";
+    //   }
+    // }
+    // else {
+    //   targets.push({"name": "Unknown Target",
+    //                 "id": ""});
+    //   targetnames = "Unknown Target, "
+    // }
+    // targetnames = targetnames.substring(0, targetnames.length - 2);
+    //
+    // if (power.data.effect.text.includes("[[")) {
+    //   const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
+    //   const templateData = {
+    //     "power": power,
+    //     "greater": power.data.powertype === "greater",
+    //     "targets": targets ? targets : [],
+    //     "targetnames": targetnames,
+    //     "cont": cont
+    //   };
+    //   const content = await renderTemplate(template, templateData);
+    //   let d = new Dialog({
+    //     title: "Effect Options",
+    //     content: content,
+    //     buttons: {
+    //       one: {
+    //         label: "Roll Effects",
+    //         callback: html => this._outputEffects(templateData, html.find('.target-line'), html.find('.expend-power'))
+    //       }
+    //     }
+    //   }).render(true);
+    // }
+    // else {
+    //   const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
+    //   const templateData = {
+    //     "power": power,
+    //     "greater": power.data.powertype === "greater",
+    //     "targets": targets ? targets : [],
+    //     "targetnames": targetnames,
+    //     "cont": cont,
+    //     "noroll": true
+    //   };
+    //   const content = await renderTemplate(template, templateData);
+    //   let d = new Dialog({
+    //     title: "Effect Options",
+    //     content: content,
+    //     buttons: {
+    //       one: {
+    //         label: "Use Power",
+    //         callback: html => this._outputEffects(templateData, false, html.find('.expend-power'))
+    //       }
+    //     }
+    //   }).render(true);
+    // }
   }
 
   async _RunAttack(event) {

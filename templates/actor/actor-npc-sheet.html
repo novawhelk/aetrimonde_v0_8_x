@@ -609,7 +609,7 @@
                             </div>
 
                             <div class="centered flexcol flex3">
-                              <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item.json}}" data-effectonly="true">{{#if item.data.effect.exists}}Effect{{/if}}</a>
+                              <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item._id}}" data-onlythis="true">{{#if item.data.effect.exists}}Effect{{/if}}</a>
                               <span class="modes">
                                 {{#if item.data.attack.exists}}
                                 <a class="attack-rollable run-power" data-name="{{item.name}}", data-power="{{item.json}}">Attack:</a>
