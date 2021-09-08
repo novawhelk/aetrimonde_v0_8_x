@@ -46,6 +46,20 @@
           "entity": "Item"
       },
       {
+          "name": "defaultfeats",
+          "label": "Feats",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultfeats.db",
+          "entity": "Item"
+      },
+      {
+          "name": "defaultpowers",
+          "label": "Powers",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/defaultpowers.db",
+          "entity": "Item"
+      },
+      {
           "name": "languages",
           "label": "Languages",
           "system": "aetrimonde_v0_8_x",
@@ -60,199 +74,10 @@
           "entity": "Item"
       },
       {
-          "name": "arcane-school-feats",
-          "label": "Arcane School",
+          "name": "equipment",
+          "label": "Equipment",
           "system": "aetrimonde_v0_8_x",
-          "path": "./packs/arcane-school-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "class-feats",
-          "label": "Class",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/class-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "divine-doctrine-feats",
-          "label": "Divine Doctrine",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/divine-doctrine-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "divine-general-feats",
-          "label": "Divine General",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/divine-general-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "general-combat-feats",
-          "label": "General Combat",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/general-combat-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "item-creation-feats",
-          "label": "Item Creation",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/item-creation-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "martial-fighting-style-feats",
-          "label": "Martial Fighting Style",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/martial-fighting-style-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "martial-weapon-specialization-feats",
-          "label": "Martial Weapon Specialization",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/martial-weapon-specialization-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "multiclass-feats",
-          "label": "Multiclass",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/multiclass-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "proficiency-feats",
-          "label": "Proficiency",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/proficiency-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "racial-feats",
-          "label": "Racial",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/racial-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "ritual-feats",
-          "label": "Ritual",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/ritual-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "skill-feats",
-          "label": "Skill",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/skill-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "talent-feats",
-          "label": "Talent",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/talent-feats.db",
-          "entity": "Item"
-      },
-      {
-          "name": "arcane-powers",
-          "label": "Arcane",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/arcane-powers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "combat-maneuvers",
-          "label": "Combat Maneuvers",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/combat-maneuvers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "divine-doctrine-powers",
-          "label": "Divine Doctrine",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/divine-doctrine-powers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "divine-powers",
-          "label": "Divine",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/divine-powers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "martial-powers",
-          "label": "Martial",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/martial-powers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "martial-weapon-specialization-powers",
-          "label": "Martial Weapon Specialization",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/martial-weapon-specialization-powers.db",
-          "entity": "Item"
-      },
-      {
-          "name": "adventuring-gear",
-          "label": "Adventuring Gear",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/adventuring-gear.db",
-          "entity": "Item"
-      },
-      {
-          "name": "alchemical-volatiles",
-          "label": "Volatiles",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/alchemical-volatiles.db",
-          "entity": "Item"
-      },
-      {
-          "name": "ammunition",
-          "label": "Ammunition",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/ammunition.db",
-          "entity": "Item"
-      },
-      {
-          "name": "armor-and-shields",
-          "label": "Armor and Shields",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/armor-and-shields.db",
-          "entity": "Item"
-      },
-      {
-          "name": "elixirs",
-          "label": "Elixirs",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/elixirs.db",
-          "entity": "Item"
-      },
-      {
-          "name": "implements",
-          "label": "Implements",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/implements.db",
-          "entity": "Item"
-      },
-      {
-          "name": "potions",
-          "label": "Potions",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/potions.db",
-          "entity": "Item"
-      },
-      {
-          "name": "weapons",
-          "label": "Weapons",
-          "system": "aetrimonde_v0_8_x",
-          "path": "./packs/weapons.db",
+          "path": "./packs/equipment.db",
           "entity": "Item"
       },
       {

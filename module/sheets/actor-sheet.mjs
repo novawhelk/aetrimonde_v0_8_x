@@ -552,7 +552,7 @@ export class AetrimondeActorSheet extends ActorSheet {
     else if (["equipment"].includes(itemcopy.type)) {
       const item = itemcopy;
 
-      if (poweritem.data.isweapon) {
+      if (item.data.isweapon) {
         item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
         item.data.weapon.hands.value = item.data.weapon.hands.handses[`${item.data.weapon.hands.value}`];
         item.data.weapon.mvsr.value = item.data.weapon.mvsr.mvsrs[`${item.data.weapon.mvsr.value}`];
@@ -561,7 +561,7 @@ export class AetrimondeActorSheet extends ActorSheet {
       item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
       item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
       item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-      template = `systems/aetrimonde_v0_8_x/templates/chat/` + poweritem.type + `-card.html`;
+      template = `systems/aetrimonde_v0_8_x/templates/chat/` + item.type + `-card.html`;
       templateData = {
         "item": item
       };

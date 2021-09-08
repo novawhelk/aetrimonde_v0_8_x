@@ -719,7 +719,7 @@
               </div>
               <div class="flexcol borderbox">
                 <h3 class="centered">Other Assets (Land, Vehicles, etc.)</h3>
-                <span class="centered">Gear worth a total of {{data.gearvalue.gp}}g{{#if data.gearvalue.sp}} {{data.gearvalue.sp}}s{{/if}}{{#if data.gearvalue.cp}} {{data.gearvalue.cp}}c{{/if}}</span>
+                <span class="centered">Gear worth a total of {{data.gearvalue.gp}}gp{{#if data.gearvalue.sp}} {{data.gearvalue.sp}}sp{{/if}}{{#if data.gearvalue.cp}} {{data.gearvalue.cp}}cp{{/if}}</span>
                 <textarea name="data.assets" rows="6" placeholder="">{{data.assets}}</textarea>
               </div>
               <div class="flexcol borderbox">
@@ -771,7 +771,7 @@
                   <span class="growhalf">{{item.data.armor.encumbrance}}</span>
                   <span class="growhalf">{{item.data.armor.speed}}</span>
                   <span class="centered">{{item.data.armor.grouplabel}}</span>
-                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
+                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}gp{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}sp{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}cp{{/if}}</span>
                   <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                   {{#if item.data.slot.value}}
                   <span class="equip-controls">
@@ -804,7 +804,7 @@
                   <span class="growhalf">{{item.data.shield.encumbrance}}</span>
                   <span class="growhalf">{{item.data.shield.speed}}</span>
                   <span class="centered">{{item.data.shield.grouplabel}}</span>
-                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
+                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}gp{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}sp{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}cp{{/if}}</span>
                   <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                   <span class="equip-controls">
                     {{#if item.data.slot.value}}
@@ -863,7 +863,7 @@
                   <span class="growhalf">{{#if item.data.weapon.prof}}{{numberFormat item.data.weapon.prof decimals=0 sign=true}}{{/if}}</span>
                   <span class="growhalf">{{#if item.data.weapon.dice}}{{item.data.weapon.dice}}{{/if}}</span>
                   <span class="growhalf">{{#if item.data.weapon.range}}{{item.data.weapon.range}}{{/if}}</span>
-                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
+                  <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}gp{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}sp{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}cp{{/if}}</span>
                   <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                   <span class="equip-controls">
                     {{#if item.data.slot.value}}
@@ -909,7 +909,7 @@
                           <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                           {{/if}}
                         </div>
-                        <span class="centered growhalf">{{#if item.data.gp}}{{item.data.gp}}g{{/if}}{{#if item.data.sp}} {{item.data.sp}}s{{/if}}{{#if item.data.cp}} {{item.data.cp}}c{{/if}}</span>
+                        <span class="centered growhalf">{{#if item.data.gp}}{{item.data.gp}}gp{{/if}}{{#if item.data.sp}} {{item.data.sp}}sp{{/if}}{{#if item.data.cp}} {{item.data.cp}}cp{{/if}}</span>
                         <span class="centered growhalf">{{#if item.data.weight}}{{item.data.weight}}{{/if}}</span>
                         <span class="equip-controls">
                           {{#if item.data.slot.value}}
@@ -975,7 +975,7 @@
                     <li class="item flexrow {{#if item.data.magical}}magical{{/if}}" data-item-id="{{item._id}}">
                         <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <span class="item-name truncated-ellipsis" style="min-width: 100px;" title="{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}" data-name="{{item.name}}", data-id="{{item._id}}">{{item.name}}{{#if item.data.multiple}} (x{{item.data.quantity}}){{/if}}</span>
-                        <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
+                        <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}gp{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}sp{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}cp{{/if}}</span>
                         <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                         <span class="equip-controls">
                           {{#if item.data.slot.value}}
@@ -1018,7 +1018,7 @@
                           <i class="fas fa-exclamation-circle flex0" title="This is an item of multiple types. It shows up in multiple sections of your inventory."></i>
                           {{/if}}
                         </div>
-                        <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}g{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}s{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}c{{/if}}</span>
+                        <span class="centered growhalf">{{#if item.data.totalgp}}{{item.data.totalgp}}gp{{/if}}{{#if item.data.totalsp}} {{item.data.totalsp}}sp{{/if}}{{#if item.data.totalcp}} {{item.data.totalcp}}cp{{/if}}</span>
                         <span class="centered growhalf">{{#if item.data.totalweight}}{{item.data.totalweight}}{{/if}}</span>
                         <div class="item-controls">
                             <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>

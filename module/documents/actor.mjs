@@ -5,7 +5,14 @@
 export class AetrimondeActor extends Actor {
   async createEmbeddedDocuments(embeddedName, data, options={}) {
     let normaldocs = [];
-    for (let datum of data) {
+    let datarray = [];
+    if (!Array.isArray(data)) {
+      datarray = [data];
+    }
+    else {
+      datarray = data;
+    }
+    for (let datum of datarray) {
       if(datum.type === "class") {
         const compend = game.packs.get("aetrimonde_v0_8_x.defaultfeatures");
         await compend.getDocuments();
@@ -53,16 +60,16 @@ export class AetrimondeActor extends Actor {
       else if (datum.type === "enchantment") {
         let rightitems = [];
         if (datum.data.isweapon) {
-          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isweapon))
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.data.isweapon))
         }
         if (datum.data.isimplement) {
-          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isimplement))
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.data.isimplement))
         }
         if (datum.data.isarmor) {
-          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isarmor))
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.data.isarmor))
         }
         if (datum.data.isshield) {
-          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.isshield))
+          rightitems = rightitems.concat(this.data.items.filter(entry => entry.type === "equipment" && entry.data.data.isshield))
         }
 
         const chooserData = {
@@ -93,16 +100,19 @@ export class AetrimondeActor extends Actor {
   async _onCreate(data, options, userId) {
     super._onCreate(data, options, userId);
 
-    const allSkills = ["Acrobatics", "Arcana", "Athletics", "Deception", "Endurance", "Engineering", "History", "Insight", "Intimidate", "Medicine", "Nature", "Perception", "Persuasion", "Religion", "Society", "Stealth", "Subterfuge", "Warfare"];
-    const compend = game.packs.get("aetrimonde_v0_8_x.defaultskills");
-    await compend.getDocuments();
+    const extantSkills = this.data.items.filter(entry => entry.type === "skill");
+    if (extantSkills.length === 0){
+      const allSkills = ["Acrobatics", "Arcana", "Athletics", "Deception", "Endurance", "Engineering", "History", "Insight", "Intimidate", "Medicine", "Nature", "Perception", "Persuasion", "Religion", "Society", "Stealth", "Subterfuge", "Warfare"];
+      const compend = game.packs.get("aetrimonde_v0_8_x.defaultskills");
+      await compend.getDocuments();
 
-    const defaultSkills = [];
-    for (let skillname of allSkills) {
-      const skill = await compend.getName(skillname);
-      defaultSkills.push(skill.data)
+      const defaultSkills = [];
+      for (let skillname of allSkills) {
+        const skill = await compend.getName(skillname);
+        defaultSkills.push(skill.data)
+      }
+      this.createEmbeddedDocuments("Item", defaultSkills);
     }
-    this.createEmbeddedDocuments("Item", defaultSkills);
   }
 
   async deleteEmbeddedDocuments(embeddedName, data, options={}) {
@@ -119,7 +129,7 @@ export class AetrimondeActor extends Actor {
     if (oldhtml[0].value === "brandnew") {
       delete chooserData.item._id;
       chooserData.item.type = "equipment";
-      this.createEmbeddedDocuments("OwnedItem", chooserData.item);
+      super.createEmbeddedDocuments("OwnedItem", chooserData.item);
     }
     else {
       const chosenItem = chooserData.itemoptions.filter(entry => entry._id === oldhtml[0].value)[0];
@@ -134,7 +144,6 @@ export class AetrimondeActor extends Actor {
         "data.power": chooserData.item.data.power
       }
       this.updateEmbeddedDocuments("Item", updates)
-
     }
   }
 
@@ -198,24 +207,24 @@ export class AetrimondeActor extends Actor {
     const cash = data.cash;
     if (!isNaN(cash) && !isNaN(parseFloat(cash))) {
       const gp = Math.floor(cash);
-      const sp = Math.floor(cash * 10 % 10);
-      const cp = Math.floor(cash * 100 % 10);
+      const sp = Math.floor(parseFloat(cash * 10).toPrecision(12) % 10);
+      const cp = Math.floor(parseFloat(cash * 100).toPrecision(12) % 10);
       data.cash = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
     const credit = data.credit;
     if (!isNaN(credit) && !isNaN(parseFloat(credit))) {
       const gp = Math.floor(credit);
-      const sp = Math.floor(credit * 10 % 10);
-      const cp = Math.floor(credit * 100 % 10);
+      const sp = Math.floor(parseFloat(credit * 10).toPrecision(12) % 10);
+      const cp = Math.floor(parseFloat(credit * 100).toPrecision(12) % 10);
       data.credit = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
     const valuables = data.valuables;
     if (!isNaN(valuables) && !isNaN(parseFloat(valuables))) {
       const gp = Math.floor(valuables);
-      const sp = Math.floor(valuables * 10 % 10);
-      const cp = Math.floor(valuables * 100 % 10);
+      const sp = Math.floor(parseFloat(valuables * 10).toPrecision(12) % 10);
+      const cp = Math.floor(parseFloat(valuables * 100).toPrecision(12) % 10);
       data.valuables = cash != 0 ? ((gp > 0 ? " " + gp + "gp " : "") + (sp > 0 ? " " + sp + "sp " : "") + (cp > 0 ? " " + cp + "cp " : "")) : "0gp";
     }
 
@@ -245,11 +254,19 @@ export class AetrimondeActor extends Actor {
         armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? armorspeed + itemData.shield.speed : armorspeed;
       }
     }
+
+    const scrolls = this.items.filter(entry => entry.type === "ritual")
+
+    for (let i of scrolls) {
+      const itemData = i.data.data;
+      gearvalue = gearvalue + itemData.scost * itemData.scrollquantity;
+    }
+
     data.carryweight = carryweight;
     data.gearvalue = {
       "gp" : Math.floor(gearvalue),
-      "sp" : Math.floor(gearvalue * 10 % 10),
-      "cp" : Math.floor(gearvalue * 100 % 10)
+      "sp" : Math.floor(parseFloat(gearvalue * 10).toPrecision(12) % 10),
+      "cp" : Math.floor(parseFloat(gearvalue * 100).toPrecision(12) % 10)
     };
     data.defenses.ac.armor = armorbonus + shieldbonus;
     data.defenses.ac.heavy = armorheavy;
@@ -353,8 +370,8 @@ export class AetrimondeActor extends Actor {
     this.data.data.hp.bloodied.value = Math.floor(data.hp.max / 2) + data.hp.bloodied.feat + data.hp.bloodied.item  + data.hp.bloodied.misc;
     this.data.data.resurgs.size.value = Math.floor(data.hp.max / 4) + data.resurgs.size.feat + data.resurgs.size.item  + data.resurgs.size.misc;
 
-    this.data.token.height = this.data.data.sizes.medium.tokensize ? this.data.data.sizes[`${this.data.data.size}`].tokensize : 1;
-    this.data.token.width = this.data.data.sizes.medium.tokensize ? this.data.data.sizes[`${this.data.data.size}`].tokensize : 1;
+    const tsize = this.data.data.sizes.medium.tokensize ? this.data.data.sizes[`${this.data.data.size}`].tokensize : 1;
+    this.data.token.update({"height":tsize, "width":tsize});
   }
 
   /**
