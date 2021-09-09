@@ -28,78 +28,48 @@
         {{/each}}
       {{/if}}
       {{#if favor}}
-        {{#each singlehits as |section no|}}
-          {{#if section.pre}}
-            {{section.text}}
-            <a class="inline-roll inline-result" title="{{section.favor.formula}}" data-roll="{{section.favor.json}}"><i class="fas fa-dice-d20"></i>{{section.favor.result}}</a>
-          {{/if}}
-          {{#if section.post}}
-            {{section.post}}
-          {{/if}}
-        {{/each}}
-        {{#if singlemisses}}
-          </div>
-          <div class="underline">Miss against {{missnames}}</div>
+        {{#each entries as |entry no|}}
           <div class="card-content">
-            {{#each singlemisses as |section no|}}
-              {{#if section.pre}}
-                {{section.text}}
-                <a class="inline-roll inline-result" title="{{section.favor.formula}}" data-roll="{{section.favor.json}}"><i class="fas fa-dice-d20"></i>{{section.favor.result}}</a>
+            {{#each entry.content as |segment no|}}
+              {{#if segment.pre}}
+                {{segment.text}}
+                <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
               {{/if}}
-              {{#if section.post}}
-                {{section.post}}
+              {{#if segment.post}}
+                {{segment.post}}
               {{/if}}
             {{/each}}
-        {{/if}}
+          </div>
+        {{/each}}
       {{/if}}
       {{#if disfavor}}
-        {{#each singlehits as |section no|}}
-          {{#if section.pre}}
-            {{section.text}}
-            <a class="inline-roll inline-result" title="{{section.disfavor.formula}}" data-roll="{{section.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{section.disfavor.result}}</a>
-          {{/if}}
-          {{#if section.post}}
-            {{section.post}}
-          {{/if}}
-          {{#if singlemisses}}
-            </div>
-            <div class="underline">Miss against {{missnames}}</div>
-            <div class="card-content">
-              {{#each singlemisses as |section no|}}
-                {{#if section.pre}}
-                  {{section.text}}
-                  <a class="inline-roll inline-result" title="{{section.disfavor.formula}}" data-roll="{{section.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{section.disfavor.result}}</a>
-                {{/if}}
-                {{#if section.post}}
-                  {{section.post}}
-                {{/if}}
-              {{/each}}
-          {{/if}}
+        {{#each entries as |entry no|}}
+          <div class="card-content">
+            {{#each entry.content as |segment no|}}
+              {{#if segment.pre}}
+                {{segment.text}}
+                <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+              {{/if}}
+              {{#if segment.post}}
+                {{segment.post}}
+              {{/if}}
+            {{/each}}
+          </div>
         {{/each}}
       {{/if}}
       {{#if conflict}}
-        {{#each singlehits as |section no|}}
-          {{#if section.pre}}
-            {{section.text}}
-            <a class="inline-roll inline-result" title="{{section.conflict.formula}}" data-roll="{{section.conflict.json}}"><i class="fas fa-dice-d20"></i>{{section.conflict.result}}</a>
-          {{/if}}
-          {{#if section.post}}
-            {{section.post}}
-          {{/if}}
-          {{#if singlemisses}}
-            </div>
-            <div class="underline">Miss against {{missnames}}</div>
-            <div class="card-content">
-              {{#each singlemisses as |section no|}}
-                {{#if section.pre}}
-                  {{section.text}}
-                  <a class="inline-roll inline-result" title="{{section.conflict.formula}}" data-roll="{{section.conflict.json}}"><i class="fas fa-dice-d20"></i>{{section.conflict.result}}</a>
-                {{/if}}
-                {{#if section.post}}
-                  {{section.post}}
-                {{/if}}
-              {{/each}}
-          {{/if}}
+        {{#each entries as |entry no|}}
+          <div class="card-content">
+            {{#each entry.content as |segment no|}}
+              {{#if segment.pre}}
+                {{segment.text}}
+                <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+              {{/if}}
+              {{#if segment.post}}
+                {{segment.post}}
+              {{/if}}
+            {{/each}}
+          </div>
         {{/each}}
       {{/if}}
     {{/if}}

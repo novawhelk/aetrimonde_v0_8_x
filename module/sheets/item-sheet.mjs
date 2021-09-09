@@ -58,6 +58,12 @@ export class AetrimondeItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
+    html.find('.power-favorite').click(this.toggleFavorite.bind(this));
     // Roll handlers, click handlers, etc. would go here.
+  }
+
+  toggleFavorite(event) {
+    event.preventDefault();
+    this.item.update({"data.favorite": !this.item.data.data.favorite});
   }
 }

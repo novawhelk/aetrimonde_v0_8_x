@@ -555,18 +555,9 @@
   font-weight: bold;
 }
 
-.aetrimonde .star {
-  visibility:hidden;
-  font-size:18px;
-  cursor:pointer;
-  margin-top: 0px;
-}
-.aetrimonde .star:before {
-  content: "\2606";
-  visibility:visible;
-}
-.aetrimonde .star:checked:before {
-  content: "\2605";
+.aetrimonde .power-favorite {
+  flex-grow: 0;
+  margin: 4px
 }
 
 .aetrimonde .powerexpand {

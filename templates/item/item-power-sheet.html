@@ -13,7 +13,7 @@
                   {{/select}}
               </select>
               <input name="data.origin" type="text" value="{{data.origin}}" placeholder="Source"/>
-              <input class="star" name="data.favorite" type="checkbox" {{checked data.favorite}}/>
+              <a class="power-favorite" title="Favorite"><i class="{{#if data.favorite}}fas{{/if}}{{#unless data.favorite}}far{{/unless}} fa-star"></i></a>
             </div>
         </div>
     </header>
