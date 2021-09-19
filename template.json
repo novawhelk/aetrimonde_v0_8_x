@@ -380,18 +380,24 @@
          "min": 0
        },
        "attack": {
-         "abil": "",
          "feat": 0,
          "itemb": 0,
-         "misc": 0,
-         "vsdefense": "ac"
+         "misc": 0
        },
        "damage": {
-         "abil": "",
          "feat": 0,
          "itemb": 0,
-         "misc": 0,
-         "type": ""
+         "misc": 0
+       },
+       "normal": {
+         "attack": "",
+         "damage": "",
+         "vsdefense": "ac"
+       },
+       "thrown": {
+         "attack": "",
+         "damage": "",
+         "vsdefense": "ac"
        }
      },
      "isimplement": false,

@@ -102,7 +102,13 @@ export class AetrimondeItem extends Item {
         data.shield.grouplabel = (data.shield.group.value != "") ? data.shield.group.groups[`${data.shield.group.value}`] : "";
       }
       if (data.isweapon) {
-        data.weapon.attack.vslabel = (data.weapon.attack.vsdefense != "") ? data.defenses[`${data.weapon.attack.vsdefense}`].slabel : "";
+        data.weapon.normal.vslabel = (data.weapon.normal.vsdefense != "") ? data.defenses[`${data.weapon.normal.vsdefense}`].slabel : "";
+        data.weapon.thrown.vslabel = (data.weapon.thrown.vsdefense != "") ? data.defenses[`${data.weapon.thrown.vsdefense}`].slabel : "";
+
+        data.weapon.range = data.weapon.range ? data.weapon.range : "";
+        data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
+        data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
+
         if (this.actor) {
           if (this.actor.data.data.isnpc) {
             data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
@@ -112,19 +118,25 @@ export class AetrimondeItem extends Item {
               data.weapon.dice = data.weapon.dice.replaceAll(/(?<=d)\d+(r\d+)?/g, "1")
             }
           }
-          data.weapon.attack.mod = (data.weapon.attack.abil === "") ? 0 : actorData.abilities[`${data.weapon.attack.abil}`].mod;
-          data.weapon.attack.bonus = data.weapon.attack.mod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
-          data.weapon.damage.mod = (data.weapon.damage.abil === "") ? 0 : actorData.abilities[`${data.weapon.damage.abil}`].mod;
-          const dbonus = (data.weapon.damage.mod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc)
-          data.weapon.damage.total = data.weapon.dice + " + " + dbonus;
 
-          data.weapon.range = data.weapon.range ? data.weapon.range : "";
-          data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
-          data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
+          data.weapon.normal.amod = (data.weapon.normal.attack === "") ? 0 : actorData.abilities[`${data.weapon.normal.attack}`].mod;
+          data.weapon.normal.atotal = data.weapon.normal.amod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
+          data.weapon.normal.dmod = (data.weapon.normal.damage === "") ? 0 : actorData.abilities[`${data.weapon.normal.damage}`].mod;
+          data.weapon.normal.dtotal = data.weapon.dice + " + " + (data.weapon.normal.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
+
+          data.weapon.throwable = (data.weapon.quals.toLowerCase().includes("thrown"));
+          data.weapon.thrown.amod = (data.weapon.thrown.attack === "") ? 0 : actorData.abilities[`${data.weapon.thrown.attack}`].mod;
+          data.weapon.thrown.atotal = data.weapon.thrown.amod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
+          data.weapon.thrown.dmod = (data.weapon.thrown.damage === "") ? 0 : actorData.abilities[`${data.weapon.thrown.damage}`].mod;
+          data.weapon.thrown.dtotal = data.weapon.dice + " + " + (data.weapon.thrown.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
         }
         data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
         data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
-        data.weapon.attack.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
+        data.weapon.normal.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
+        data.weapon.thrown.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
+
+        data.weapon.normalaspower = this._weaponAttack();
+        data.weapon.thrownaspower = this._weaponAttack(true);
       }
       if (data.isimplement) {
 
@@ -425,7 +437,7 @@ export class AetrimondeItem extends Item {
         data.autoprof = true;
         data.mainequipped = imp;
       }
-      else if (["normal", "lesser", "greater", "feature"].includes(data.powertype) && !this.actor.data.data.isnpc){
+      else if (["normal", "lesser", "greater", "feature"].includes(data.powertype)){
         const attbonus = this._powerAttackBonus(this.data);
         data.attack.prof = 0;
         data.attack.bonus = mod + attbonus.feat + attbonus.itemb + attbonus.misc + data.attack.powermisc;
@@ -524,19 +536,20 @@ export class AetrimondeItem extends Item {
         misc = Math.max(misc, d.data.data.damage.misc);
       }
     }
+
+    feat = this.actor.data.data.isnpc ? Math.floor(this.actor.data.data.tier / 2) * 2 : feat;
     return {"feat": feat,"itemb": itemb, "misc": misc};
   }
 
-  _weaponAttack() {
+  _weaponAttack(thrown = false) {
     const actorData = this.actor.data;
-
     const weapon = this.data;
-    const abil = weapon.data.weapon.attack.abil;
+
+    const attack = thrown ? weapon.data.weapon.thrown : weapon.data.weapon.normal;
     const ranged = weapon.data.weapon.mvsr.value === "ranged"
 
-    const safeabil = abil === "" ? (ranged ? "dex" : "str") : abil;
     const weaponattack = {
-      "name": weapon.name,
+      "name": thrown ? "Thrown " + weapon.name : weapon.name,
       "_id": weapon._id,
       "img": weapon.img,
       "dependent": "weaponattack",
@@ -556,7 +569,7 @@ export class AetrimondeItem extends Item {
         "action": "Main",
         "frequency": "",
         "hasfrequency": false,
-        "range": weapon.data.weapon.mvsr.value === "ranged" ? "Ranged " + weapon.data.weapon.range : (weapon.data.weapon.quals ? (weapon.data.weapon.quals.match(/Reach/g) ? (weapon.data.weapon.quals.match(/Reach \d+/g) ? "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g) : "Melee 2") : "Melee 1") : "Melee 1"),
+        "range": ranged || thrown ? "Ranged " + weapon.data.weapon.range : (weapon.data.weapon.quals ? (weapon.data.weapon.quals.match(/Reach/g) ? (weapon.data.weapon.quals.match(/Reach \d+/g) ? "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g) : "Melee 2") : "Melee 1") : "Melee 1"),
         "targets": "One creature",
         "warning": weapon.data.warning,
         "warningmessage": weapon.data.warningmessage,
@@ -574,18 +587,18 @@ export class AetrimondeItem extends Item {
         },
         "attack": {
           "exists": true,
-          "abil": actorData.data.abilities[`${safeabil}`].mod,
-          "bonus": actorData.data.abilities[`${safeabil}`].mod + weapon.data.weapon.prof + weapon.data.weapon.attack.feat + weapon.data.weapon.attack.itemb + weapon.data.weapon.attack.misc,
+          "abil": attack.amod,
+          "bonus": attack.atotal,
           "prof": weapon.data.weapon.prof,
           "feat": weapon.data.weapon.attack.feat,
           "itemb": weapon.data.weapon.attack.itemb,
           "misc": weapon.data.weapon.attack.misc,
-          "vslabel": weapon.data.weapon.attack.vslabel,
-          "hasthreat": weapon.data.weapon.attack.hasthreat,
+          "vslabel": attack.vslabel,
+          "hasthreat": attack.hasthreat,
           "off": false
         },
         "hit": {
-          "text": "[[" + weapon.data.weapon.damage.total + "]] " + (weapon.data.weapon.damage.type ? weapon.data.weapon.damage.type + " " : "") + "damage."
+          "text": "[[" + attack.dtotal + "]]" + " damage."
         },
         "crit": {
           "text": ""
@@ -608,29 +621,9 @@ export class AetrimondeItem extends Item {
             "normal": {
                 "label": "Normal Attack"
             }
-        },
-        "useditems": [weapon.data]
+        }
       },
       "dependent": "weaponattack"
-    }
-    if (ranged) {
-      weaponattack.data.range = "Ranged " + weapon.data.weapon.range;
-    }
-    else {
-      if (weapon.data.weapon.quals) {
-        if (weapon.data.weapon.quals.match(/Reach \d+/g)) {
-          weaponattack.data.range = "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g);
-        }
-        else if (weapon.data.weapon.quals.match(/Reach/g)) {
-          weaponattack.data.range = "Melee 2";
-        }
-        else {
-          weaponattack.data.range = "Melee 1";
-        }
-      }
-      else {
-        weaponattack.data.range = "Melee 1";
-      }
     }
     if (weapon.data.weapon.quals.includes("High Crit")) {
       weaponattack.data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
@@ -638,7 +631,6 @@ export class AetrimondeItem extends Item {
     if (weapon.data.relatedprops && weapon.data.critprops) {
       weaponattack.data.critcontent.push({"source": weapon.name + " Critical:", "criteffect": weapon.data.critprops})
     }
-    weaponattack.json = JSON.stringify(weaponattack);
     return weaponattack
   }
 
@@ -653,6 +645,76 @@ export class AetrimondeItem extends Item {
     rollData.item = foundry.utils.deepClone(this.data.data);
 
     return rollData;
+  }
+
+  async post() {
+    this.prepareData();
+    const itemcopy = deepClone(this.data);
+    let template = "";
+    let templateData = [];
+    if (itemcopy.type === "power") {
+      const power = itemcopy;
+      power.data.powertype = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "";
+      const abilities = {
+        "str": "Strength",
+        "con": "Constitution",
+        "dex": "Dexterity",
+        "int": "Intelligence",
+        "wis": "Wisdom",
+        "cha": "Charisma"
+      };
+      power.data.attack.abil = power.data.attack.abil ? abilities[`${power.data.attack.abil}`] : "";
+      power.data.effect.text = power.data.effect.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.hit.text = power.data.hit.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.crit.text = power.data.crit.text.replaceAll("[[", "").replaceAll("]]", "");
+      power.data.miss.text = power.data.miss.text.replaceAll("[[", "").replaceAll("]]", "");
+      template = `systems/aetrimonde_v0_8_x/templates/chat/power-card.html`;
+      templateData = {
+        "power": power
+      }
+    }
+    else if (itemcopy.type === "feature") {
+      const feature = itemcopy;
+      feature.data.source = feature.data.source ? feature.data.sources[`${feature.data.source}`].label : "";
+      template = `systems/aetrimonde_v0_8_x/templates/chat/feature-card.html`;
+      templateData = {
+        "feature": feature
+      }
+    }
+    else if (["equipment"].includes(itemcopy.type)) {
+      const item = itemcopy;
+
+      if (item.data.isweapon) {
+        item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
+        item.data.weapon.hands.value = item.data.weapon.hands.handses[`${item.data.weapon.hands.value}`];
+        item.data.weapon.mvsr.value = item.data.weapon.mvsr.mvsrs[`${item.data.weapon.mvsr.value}`];
+      }
+      item.data.power.effect.text = item.data.power.effect.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
+      template = `systems/aetrimonde_v0_8_x/templates/chat/` + item.type + `-card.html`;
+      templateData = {
+        "item": item
+      };
+    }
+
+    const chatHtml = await renderTemplate(template, templateData);
+
+    const chatData = {
+      user: game.user.id,
+      content: chatHtml,
+      speaker: {
+        actor: this.actor.id,
+        token: this.actor.token,
+        alias: this.actor.name
+      }
+    };
+    const rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+    if (rollMode === "selfroll") chatData.whisper = [game.user.id];
+    if (rollMode === "blindroll") chatData.blind = true;
+    await ChatMessage.create(chatData);
   }
 
   /**
@@ -717,8 +779,12 @@ export class AetrimondeItem extends Item {
         content: content,
         buttons: {
           one: {
-            label: onlythis ? "Run Effect Only" : "Use Power",
+            label: "Use This Power",
             callback: html => this._outputEffects(templateData, html.find('.target-line'), html.find('.expend-power'))
+          },
+          two: {
+            label: "Show in Chat",
+            callback: html => this.post()
           }
         }
       }).render(true);
@@ -739,8 +805,12 @@ export class AetrimondeItem extends Item {
         content: content,
         buttons: {
           one: {
-            label: onlythis ? "Run Effect Only" : "Use Power",
+            label: "Use This Power",
             callback: html => this._outputEffects(templateData, false, html.find('.expend-power'))
+          },
+          two: {
+            label: "Show in Chat",
+            callback: html => this.post()
           }
         }
       }).render(true);

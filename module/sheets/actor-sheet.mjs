@@ -195,13 +195,9 @@ export class AetrimondeActorSheet extends ActorSheet {
       else if (i.type === 'equipment') {
         if (i.data.isweapon) {
           weapons.push(i);
-          const weaponattack = this.weaponAttack(i, i.data.weapon.attack.abil, i.data.weapon.mvsr.value === "ranged")
-          powers.normal.entries.push(weaponattack);
-          if (i.data.weapon.mvsr.value === "melee" && i.data.weapon.range) {
-            const throwabil = i.data.weapon.quals? (i.data.weapon.quals.includes("Heavy Thrown") ? "str" : "dex") : "dex";
-            const thrownattack = this.weaponAttack(i, throwabil, true);
-            thrownattack.name = "Thrown " + i.name;
-            powers.normal.entries.push(thrownattack);
+          powers.normal.entries.push(i.data.weapon.normalaspower);
+          if (i.data.weapon.throwable) {
+            powers.normal.entries.push(i.data.weapon.thrownaspower);
           }
         }
         if (i.data.isarmor) {
