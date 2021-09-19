@@ -86,6 +86,13 @@
           "system": "aetrimonde_v0_8_x",
           "path": "./packs/resistances.db",
           "entity": "Item"
+      },
+      {
+          "name": "rituals",
+          "label": "Rituals",
+          "system": "aetrimonde_v0_8_x",
+          "path": "./packs/rituals.db",
+          "entity": "Item"
       }
   ],
   "languages": [

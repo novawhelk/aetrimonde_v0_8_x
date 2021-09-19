@@ -245,13 +245,13 @@ export class AetrimondeActor extends Actor {
 
       if (itemData.isarmor) {
         armorbonus = itemData.equippedanywhere ? armorbonus + itemData.armor.acbonus : armorbonus;
-        armorresist = itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist;
+        armorresist = itemData.equippedanywhere ? (itemData.armor.resist > armorresist ? itemData.armor.resist : armorresist) : armorresist;
         armorheavy = armorheavy || (itemData.equippedanywhere ? itemData.armor.isheavy : false);
-        armorspeed = itemData.equippedanywhere ? armorspeed + itemData.armor.speed : armorspeed;
+        armorspeed = itemData.equippedanywhere ? armorspeed + parseInt(itemData.armor.speed ? itemData.armor.speed : 0) : armorspeed;
       }
       if (itemData.isshield) {
         shieldbonus = itemData.equippedanywhere ? shieldbonus + itemData.shield.defbonus : shieldbonus;
-        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? armorspeed + itemData.shield.speed : armorspeed;
+        armorspeed = (itemData.equippedanywhere && !itemData.isarmor) ? armorspeed + parseInt(itemData.shield.speed ? itemData.shield.speed : 0) : armorspeed;
       }
     }
 

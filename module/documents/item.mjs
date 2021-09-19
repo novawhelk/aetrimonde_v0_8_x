@@ -108,6 +108,9 @@ export class AetrimondeItem extends Item {
             data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
             data.weapon.attack.itemb = actorData.rank === "champion" ? 1 : 0;
             data.weapon.damage.feat = Math.floor(actorData.tier / 2) * 2;
+            if (this.actor.data.data.rank === "minion") {
+              data.weapon.dice = data.weapon.dice.replaceAll(/(?<=d)\d+(r\d+)?/g, "1")
+            }
           }
           data.weapon.attack.mod = (data.weapon.attack.abil === "") ? 0 : actorData.abilities[`${data.weapon.attack.abil}`].mod;
           data.weapon.attack.bonus = data.weapon.attack.mod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
@@ -306,7 +309,7 @@ export class AetrimondeItem extends Item {
         data.relevantitemtype = "Unarmed Attack";
         data.relevantitems = actor.data.items.filter(entry => (entry.type === "equipment" && entry.data.data.isweapon && entry.data.data.weapon.unarmed && entry.data.data.equippedanywhere));
 
-        const unarmedattack = mainselected ? mainselected : (mainequipped ? mainequipped : defaultweapon);
+        let unarmedattack = mainselected ? mainselected : (mainequipped ? mainequipped : defaultweapon);
         if (!unarmedattack.data.data.default){
             unarmedattack.prepareData();
         }
@@ -322,7 +325,7 @@ export class AetrimondeItem extends Item {
         data.warning = data.relevantitems && !data.mainitem;
         data.warningmessage = "You have alternate unarmed attacks; you might need to select one."
         const attbonus = this._powerAttackBonus(this.data, unarmedattack.data.weapon);
-        data.attack.prof = unarmedattack.data.prof;
+        data.attack.prof = unarmedattack.data.weapon.prof;
         data.attack.feat = attbonus.feat;
         data.attack.itemb = attbonus.itemb;
         data.attack.misc = attbonus.misc;
@@ -582,7 +585,7 @@ export class AetrimondeItem extends Item {
           "off": false
         },
         "hit": {
-          "text": "[[" + weapon.data.weapon.damage.total + "]]" + (weapon.data.weapon.damage.type ? weapon.data.weapon.damage.type: " ") + "damage."
+          "text": "[[" + weapon.data.weapon.damage.total + "]] " + (weapon.data.weapon.damage.type ? weapon.data.weapon.damage.type + " " : "") + "damage."
         },
         "crit": {
           "text": ""
@@ -688,7 +691,7 @@ export class AetrimondeItem extends Item {
     if (game.user.targets.size > 0){
       for (let target of game.user.targets) {
         targets.push({"name": target.name,
-                      "id": target.actorId});
+                      "id": target.data._id});
         targetnames = targetnames + target.name + ", ";
       }
     }

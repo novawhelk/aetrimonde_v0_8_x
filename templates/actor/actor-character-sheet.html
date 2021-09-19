@@ -11,17 +11,17 @@
           <span class="caption flex3 centered">Character Name</span>
         </div>
         <div class="flexrow">
-          <input name="data.shortname" type="text" value="{{data.shortname}}" placeholder="" />
+          <input class="centered" name="data.shortname" type="text" value="{{data.shortname}}" placeholder="" />
         </div>
         <div class="flexrow">
-          <span class="caption">Nickname</span>
+          <span class="caption">Full Name and Titles</span>
         </div>
       </div>
       <div class="flex3">
         <div class="flexrow">
-          <input type="text" name="data.race" value="{{data.race}}"/>
-          <input type="text" name="data.class" value="{{data.class}}"/>
-          <input type="number" name="data.level" value="{{data.level}}"/>
+          <input class="centered" type="text" name="data.race" value="{{data.race}}"/>
+          <input class="centered" type="text" name="data.class" value="{{data.class}}"/>
+          <input class="centered" type="number" name="data.level" value="{{data.level}}"/>
         </div>
         <div class="flexrow">
           <span class="caption">Race</span>
@@ -29,10 +29,10 @@
         	<span class="caption">Level</span>
         </div>
         <div class="flexrow ">
-          <input type="text" name="data.gender" value="{{data.gender}}"/>
-          <input type="text" name="data.bground" value="{{data.bground}}"/>
-          <input type="text" name="data.faith" value="{{data.faith}}"/>
-          <input type="number" name="data.age" value="{{data.age}}"/>
+          <input class="centered" type="text" name="data.gender" value="{{data.gender}}"/>
+          <input class="centered" type="text" name="data.bground" value="{{data.bground}}"/>
+          <input class="centered" type="text" name="data.faith" value="{{data.faith}}"/>
+          <input class="centered" type="number" name="data.age" value="{{data.age}}"/>
         </div>
         <div class="flexrow ">
         	<span class="caption">Gender</span>
@@ -1048,12 +1048,15 @@
                 {{#each rituals as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <span class="item-name">{{item.name}}</span>
+                    <span class="item-name">{{item.name}}
+                    {{#unless item.data.known}}
+                    <i class="fas fa-scroll flex0" title="You do not know this ritual, and can only use it via a scroll."></i>
+                    {{/unless}}</span>
                     <span class="centered">{{item.data.skilllabel}}</span>
-                    <span class="centered">{{item.data.ccost}}</span>
+                    <span class="centered">{{item.data.ccost}}gp</span>
                     <span class="centered">{{item.data.ctime}}</span>
                     <span class="centered">{{item.data.scrollquantity}}</span>
-                    <span class="centered">{{item.data.scost}}</span>
+                    <span class="centered">{{item.data.scost}}gp</span>
                     <span class="centered">{{item.data.stime}}</span>
                     <div class="item-controls">
                         <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>

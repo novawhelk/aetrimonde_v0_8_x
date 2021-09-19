@@ -3,7 +3,7 @@
     <span class="card-header">{{power.name}} Attack Result{{#if favor}} With Favor{{/if}}{{#if disfavor}} With Disfavor{{/if}}{{#if conflict}} With Conflict{{/if}}</span>
   </header>
 
-  <div class="underline">{{type}} against {{#if target}}{{target.name}}{{#if target.main}} (Main-Hand){{/if}}{{#if target.off}} (Off-Hand){{/if}}{{/if}}{{#unless target}}{{hitnames}}{{/unless}}</div>
+  <div class="underline">{{type}} against {{#if target}}{{target.name}}{{#if target.main}}{{#if target.off}} (Main-Hand){{/if}}{{/if}}{{#if target.off}} (Off-Hand){{/if}}{{/if}}{{#unless target}}{{hitnames}}{{/unless}}</div>
   <div class="card-content">
     {{#if content}}{{content}}{{/if}}
     {{#each critcontent as |content no|}}
