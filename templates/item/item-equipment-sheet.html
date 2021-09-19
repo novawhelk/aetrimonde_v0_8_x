@@ -200,73 +200,114 @@
             <span class="caption">Groups</span>
             <span class="caption">Weapon Qualities</span>
           </div>
+          <div class="flexrow">
+            <div class="flex-group-center flexcol">
+              <h3>Attack Bonuses</h3>
+              <div class="flexrow">
+                <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
+                <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
+                <span class="caption">Misc.</span>
+              </div>
+              <div class="flexrow">
+                <span><input type="number" name="data.weapon.attack.feat" value="{{data.weapon.attack.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+                <span><input type="number" name="data.weapon.attack.itemb" value="{{data.weapon.attack.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+                <span><input type="number" name="data.weapon.attack.misc" value="{{data.weapon.attack.misc}}" data-dtype="Number"/></span>
+              </div>
+            </div>
+            <div class="flex-group-center flexcol">
+              <h3>Damage Bonuses</h3>
+              <div class="flexrow">
+                <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
+                <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
+                <span class="caption">Misc.</span>
+              </div>
+              <div class="flexrow">
+                <span><input type="number" name="data.weapon.damage.feat" value="{{data.weapon.damage.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+                <span><input type="number" name="data.weapon.damage.itemb" value="{{data.weapon.damage.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
+                <span><input type="number" name="data.weapon.damage.misc" value="{{data.weapon.damage.misc}}" data-dtype="Number"/></span>
+              </div>
+            </div>
+          </div>
           <div class="flex-group-center flexcol">
-            <h3>Attack Roll</h3>
+            <h3>Normal Attack</h3>
+            <div class="flexrow continued">
+              <span class="caption">Attack Ability</span>
+              <span class="caption">vs. Defense</span>
+              <span class="caption">Threat</span>
+              <span class="caption">Damage Ability</span>
+            </div>
             <div class="flexrow flex-spread">
-              <select name="data.weapon.attack.abil" data-type="String">
-                  {{#select data.weapon.attack.abil}}
+              <select name="data.weapon.normal.attack" data-type="String">
+                  {{#select data.weapon.normal.attack}}
                   <option value=""></option>
                   {{#each data.abilities as |abl a|}}
                   <option value="{{a}}">{{abl.label}}</option>
                   {{/each}}
                   {{/select}}
               </select>
-              <span>{{numberFormat data.weapon.attack.bonus decimals=0 sign=true}}{{#if data.weapon.attack.hasthreat}}T{{/if}} vs. </span>
-              <select name="data.weapon.attack.vsdefense" data-type="String">
-                  {{#select data.weapon.attack.vsdefense}}
+              <select name="data.weapon.normal.vsdefense" data-type="String">
+                  {{#select data.weapon.normal.vsdefense}}
                   <option value=""></option>
                   {{#each data.defenses as |def d|}}
                   <option value="{{d}}">{{def.label}}</option>
                   {{/each}}
                   {{/select}}
               </select>
-            </div>
-            <div class="flexrow continued">
-              <span class="caption">Mod</span>
-              <span class="caption">Prof.</span>
-              <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
-              <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
-              <span class="caption">Misc.</span>
-              <span class="caption">Threat</span>
-            </div>
-            <div class="flexrow">
-              <span>{{numberFormat data.weapon.attack.mod decimals=0 sign=true}}</span>
-              <span>{{numberFormat data.weapon.prof decimals=0 sign=true}}</span>
-              <span><input type="number" name="data.weapon.attack.feat" value="{{data.weapon.attack.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
-              <span><input type="number" name="data.weapon.attack.itemb" value="{{data.weapon.attack.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
-              <span><input type="number" name="data.weapon.attack.misc" value="{{data.weapon.attack.misc}}" data-dtype="Number"/></span>
-              <span><input name="data.weapon.attack.hasthreat" type="checkbox" {{checked data.weapon.attack.hasthreat}} {{#if data.weapon.weaponthreat}}disabled="true"{{/if}}/></span>
-            </div>
-          </div>
-          <div class="flex-group-center flexcol">
-            <h3>Damage Roll</h3>
-            <div class="flexrow flex-spread">
-              <select name="data.weapon.damage.abil" data-type="String">
-                  {{#select data.weapon.damage.abil}}
+              <span><input name="data.weapon.normal.hasthreat" type="checkbox" {{checked data.weapon.normal.hasthreat}} {{#if data.weapon.weaponthreat}}disabled="true"{{/if}}/></span>
+              <select name="data.weapon.normal.damage" data-type="String">
+                  {{#select data.weapon.normal.damage}}
                   <option value=""></option>
                   {{#each data.abilities as |abl a|}}
                   <option value="{{a}}">{{abl.label}}</option>
                   {{/each}}
                   {{/select}}
               </select>
-              <span>{{data.weapon.damage.total}}</span>
-              <input type="text" name="data.weapon.damage.type" value="{{data.weapon.damage.type}}" data-dtype="Text" placeholder="Type"/>
             </div>
-            <div class="flexrow continued">
-              <span class="caption">Dice</span>
-              <span class="caption">Mod</span>
-              <span class="caption">{{#unless data.npcowner}}Feat{{/unless}}{{#if data.npcowner}}Tier{{/if}}</span>
-              <span class="caption">{{#unless data.npcowner}}Item{{/unless}}{{#if data.npcowner}}Rank{{/if}}</span>
-              <span class="caption">Misc.</span>
-            </div>
-            <div class="flexrow">
-              <span>{{data.weapon.dice}}</span>
-              <span>{{numberFormat data.weapon.damage.mod decimals=0 sign=true}}</span>
-              <span><input type="number" name="data.weapon.damage.feat" value="{{data.weapon.damage.feat}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
-              <span><input type="number" name="data.weapon.damage.itemb" value="{{data.weapon.damage.itemb}}" data-dtype="Number" {{#if data.npcowner}}disabled="true"{{/if}}/></span>
-              <span><input type="number" name="data.weapon.damage.misc" value="{{data.weapon.damage.misc}}" data-dtype="Number"/></span>
+            <div class="flexrow flex-spread">
+              <span>{{numberFormat data.weapon.normal.atotal decimals=0 sign=true}} vs. {{data.weapon.normal.vslabel}}: {{data.weapon.normal.dtotal}} damage</span>
             </div>
           </div>
+          {{#if data.weapon.throwable}}
+          <div class="flex-group-center flexcol">
+            <h3>Thrown Attack</h3>
+            <div class="flexrow continued">
+              <span class="caption">Attack Ability</span>
+              <span class="caption">vs. Defense</span>
+              <span class="caption">Threat</span>
+              <span class="caption">Damage Ability</span>
+            </div>
+            <div class="flexrow flex-spread">
+              <select name="data.weapon.thrown.attack" data-type="String">
+                  {{#select data.weapon.thrown.attack}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <select name="data.weapon.thrown.vsdefense" data-type="String">
+                  {{#select data.weapon.thrown.vsdefense}}
+                  <option value=""></option>
+                  {{#each data.defenses as |def d|}}
+                  <option value="{{d}}">{{def.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+              <span><input name="data.weapon.thrown.hasthreat" type="checkbox" {{checked data.weapon.thrown.hasthreat}} {{#if data.weapon.weaponthreat}}disabled="true"{{/if}}/></span>
+              <select name="data.weapon.thrown.damage" data-type="String">
+                  {{#select data.weapon.thrown.damage}}
+                  <option value=""></option>
+                  {{#each data.abilities as |abl a|}}
+                  <option value="{{a}}">{{abl.label}}</option>
+                  {{/each}}
+                  {{/select}}
+              </select>
+            </div>
+            <div class="flexrow flex-spread">
+              <span>{{numberFormat data.weapon.thrown.atotal decimals=0 sign=true}} vs. {{data.weapon.thrown.vslabel}}: {{data.weapon.thrown.dtotal}} damage</span>
+            </div>
+          </div>
+          {{/if}}
         </div>
       </div>
 
