@@ -194,12 +194,33 @@
           </div>
           <div class="flexrow">
             <input type="text" class="centered" name="data.weapon.groups" value="{{data.weapon.groups}}" data-dtype="string"/>
-            <input type="text" class="centered" name="data.weapon.quals" value="{{data.weapon.quals}}" data-dtype="string"/>
           </div>
           <div class="flexrow">
             <span class="caption">Groups</span>
-            <span class="caption">Weapon Qualities</span>
           </div>
+          <div class="flex-group-left flexcol">
+            <h3 class="centered">Weapon Qualities</h3>
+            <div class="flexrow">
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.bayonet" type="checkbox" {{checked data.weapon.quals.bayonet}}/><span class="checklabel">Bayonet</span></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.bulky" type="checkbox" {{checked data.weapon.quals.bulky}}/><span class="checklabel">Bulky</span></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.critpotential" type="checkbox" {{checked data.weapon.quals.critpotential}}/><span class="checklabel">Critical Potential</span></div>
+            </div>
+            <div class="flexrow">
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.critthreat" type="checkbox" {{checked data.weapon.quals.critthreat}}/><span class="checklabel">Critical Threat</span></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.heavythrown" type="checkbox" {{checked data.weapon.quals.heavythrown}}/><span class="checklabel">Heavy Thrown</span></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.lightthrown" type="checkbox" {{checked data.weapon.quals.lightthrown}}/><span class="checklabel">Light Thrown</span></div>
+            </div>
+            <div class="flexrow">
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.load" type="checkbox" class="section-select" {{checked data.weapon.quals.load}}/><span class="checklabel flex0">Load&nbsp;</span><input type="text" class="flex1" name="data.weapon.quals.loadaction" value="{{data.weapon.quals.loadaction}}" placeholder="Action" data-dtype="string"/></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.magazine" type="checkbox" class="section-select" {{checked data.weapon.quals.magazine}}/><span class="checklabel">Magazine&nbsp;</span><input type="number" class="flex1" name="data.weapon.quals.magsize" value="{{data.weapon.quals.magsize}}"/></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.reach" type="checkbox" {{checked data.weapon.quals.reach}}/><span class="checklabel">Reach</span></div>
+            </div>
+            <div class="flexrow">
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.solid" type="checkbox" {{checked data.weapon.quals.solid}}/><span class="checklabel">Solid</span></div>
+              <div class="flexrow flex-middle"><input name="data.weapon.quals.other" type="checkbox" class="section-select" {{checked data.weapon.quals.other}}/><span class="checklabel flex0">Other&nbsp;</span><input type="text" class="flex1" name="data.weapon.quals.otherdet" value="{{data.weapon.quals.otherdet}}" placeholder="Other Qualities" data-dtype="string"/></div>
+            </div>
+          </div>
+          {{#if data.isowned}}
           <div class="flexrow">
             <div class="flex-group-center flexcol">
               <h3>Attack Bonuses</h3>
@@ -307,6 +328,7 @@
               <span>{{numberFormat data.weapon.thrown.atotal decimals=0 sign=true}} vs. {{data.weapon.thrown.vslabel}}: {{data.weapon.thrown.dtotal}} damage</span>
             </div>
           </div>
+          {{/if}}
           {{/if}}
         </div>
       </div>

@@ -16,6 +16,8 @@ export class AetrimondeItem extends Item {
     const actorData = this.actor ? this.actor.data : this.data;
     const data = itemData.data;
 
+    data.isowned = this.actor ? true : false;
+
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (itemData.type === 'skill') this._prepareSkillData(itemData);
@@ -109,29 +111,34 @@ export class AetrimondeItem extends Item {
         data.weapon.mvsr = data.weapon.mvsr ? data.weapon.mvsr : "";
         data.weapon.quals = data.weapon.quals ? data.weapon.quals : "";
 
+        data.weapon.effectivedice = data.weapon.dice;
         if (this.actor) {
           if (this.actor.data.data.isnpc) {
             data.weapon.attack.feat = Math.floor(actorData.tier / 2 + 0.5);
             data.weapon.attack.itemb = actorData.rank === "champion" ? 1 : 0;
             data.weapon.damage.feat = Math.floor(actorData.tier / 2) * 2;
             if (this.actor.data.data.rank === "minion") {
-              data.weapon.dice = data.weapon.dice.replaceAll(/(?<=d)\d+(r\d+)?/g, "1")
+              data.weapon.effectivedice = data.weapon.dice.replaceAll(/(?<=d)\d+(r\d+)?/g, "1")
+            } else if (data.weapon.quals.solid && data.equippedmh && data.equippedoh) {
+              data.weapon.effectivedice = data.weapon.dice.replaceAll(/$/g, "r2").replaceAll(/r\d*(?=r\d)/g, "")
             }
+          } else if (data.weapon.quals.solid && data.equippedmh && data.equippedoh) {
+            data.weapon.effectivedice = data.weapon.dice.replaceAll(/$/g, "r2").replaceAll(/r\d*(?=r\d)/g, "")
           }
 
           data.weapon.normal.amod = (data.weapon.normal.attack === "") ? 0 : actorData.abilities[`${data.weapon.normal.attack}`].mod;
           data.weapon.normal.atotal = data.weapon.normal.amod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
           data.weapon.normal.dmod = (data.weapon.normal.damage === "") ? 0 : actorData.abilities[`${data.weapon.normal.damage}`].mod;
-          data.weapon.normal.dtotal = data.weapon.dice + " + " + (data.weapon.normal.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
+          data.weapon.normal.dtotal = data.weapon.effectivedice + " + " + (data.weapon.normal.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
 
-          data.weapon.throwable = (data.weapon.quals.toLowerCase().includes("thrown"));
+          data.weapon.throwable = data.weapon.quals.heavythrown || data.weapon.quals.lightthrown;
           data.weapon.thrown.amod = (data.weapon.thrown.attack === "") ? 0 : actorData.abilities[`${data.weapon.thrown.attack}`].mod;
           data.weapon.thrown.atotal = data.weapon.thrown.amod + data.weapon.prof + data.weapon.attack.feat + data.weapon.attack.itemb + data.weapon.attack.misc;
           data.weapon.thrown.dmod = (data.weapon.thrown.damage === "") ? 0 : actorData.abilities[`${data.weapon.thrown.damage}`].mod;
-          data.weapon.thrown.dtotal = data.weapon.dice + " + " + (data.weapon.thrown.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
+          data.weapon.thrown.dtotal = data.weapon.effectivedice + " + " + (data.weapon.thrown.dmod + data.weapon.damage.feat + data.weapon.damage.itemb + data.weapon.damage.misc);
         }
         data.weapon.unarmed = data.weapon.groups ? data.weapon.groups.includes("Unarmed") : false;
-        data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.includes("Critical Threat") : false;
+        data.weapon.weaponthreat = data.weapon.quals ? data.weapon.quals.critthreat : false;
         data.weapon.normal.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
         data.weapon.thrown.hasthreat = data.weapon.weaponthreat ? true : data.weapon.attack.hasthreat;
 
@@ -272,14 +279,14 @@ export class AetrimondeItem extends Item {
         offweapon = offweapon.data;
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
-        if (mainweapon.data.weapon.quals.includes("High Crit")) {
-          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+        if (mainweapon.data.weapon.quals.critpotential) {
+          data.critcontent.push({"source": "Critical Potential:", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (mainweapon.data.relatedprops && mainweapon.data.critprops) {
           data.critcontent.push({"source": mainweapon.name + " Critical:", "criteffect": mainweapon.data.critprops})
         }
-        if (data.attack.off && offweapon.data.weapon.quals.includes("High Crit")) {
-          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+        if (data.attack.off && offweapon.data.weapon.quals.critpotential) {
+          data.critcontent.push({"source": "Critical Potential:", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (data.attack.off && offweapon.data.relatedprops && offweapon.data.critprops) {
           data.critcontent.push({"source": offweapon.name + " Critical:", "criteffect": offweapon.data.critprops})
@@ -287,7 +294,7 @@ export class AetrimondeItem extends Item {
 
         // Issue a warning if it doesn't look like the right items are equipped.
         const missingmelee = data.range.includes("Melee") && (mainweapon.data.weapon.mvsr.value != "melee" || (data.attack.off && offweapon.data.weapon.mvsr.value != "melee"));
-        const missingranged = data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.quals.includes("Thrown")) || (data.attack.off && offweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.quals.includes("Thrown")));
+        const missingranged = data.range.includes("Ranged") && ((mainweapon.data.weapon.mvsr.value != "ranged" && !mainweapon.data.weapon.throwable) || (data.attack.off && offweapon.data.weapon.mvsr.value != "ranged" && offweapon.data.weapon.throwable));
         data.warning = missingmelee || missingranged || !mainweapon.data.equippedanywhere || (data.attack.off && !offweapon.data.equippedanywhere);
         data.warningmessage = "You might not have the right item(s) equipped.";
 
@@ -327,7 +334,7 @@ export class AetrimondeItem extends Item {
         }
         unarmedattack = unarmedattack.data;
 
-        if (unarmedattack.data.weapon.quals.includes("High Crit")) {
+        if (unarmedattack.data.weapon.quals.critpotential) {
           data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (unarmedattack.data.relatedprops && unarmedattack.data.critprops) {
@@ -569,7 +576,7 @@ export class AetrimondeItem extends Item {
         "action": "Main",
         "frequency": "",
         "hasfrequency": false,
-        "range": ranged || thrown ? "Ranged " + weapon.data.weapon.range : (weapon.data.weapon.quals ? (weapon.data.weapon.quals.match(/Reach/g) ? (weapon.data.weapon.quals.match(/Reach \d+/g) ? "Melee " + weapon.data.weapon.quals.match(/(?<=Reach )\d+/g) : "Melee 2") : "Melee 1") : "Melee 1"),
+        "range": ranged || thrown ? "Ranged " + weapon.data.weapon.range : (weapon.data.weapon.quals.reach ? "Melee " + weapon.data.weapon.quals.reachdist : "Melee 1"),
         "targets": "One creature",
         "warning": weapon.data.warning,
         "warningmessage": weapon.data.warningmessage,
@@ -625,7 +632,7 @@ export class AetrimondeItem extends Item {
       },
       "dependent": "weaponattack"
     }
-    if (weapon.data.weapon.quals.includes("High Crit")) {
+    if (weapon.data.weapon.quals.critpotential) {
       weaponattack.data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
     }
     if (weapon.data.relatedprops && weapon.data.critprops) {
@@ -1396,8 +1403,8 @@ export class AetrimondeItem extends Item {
         let dstringdambonus = power.data.damagebonus;
         let subcontent = dstring.match(/\[\[[^\[\]]*?<(Weapon|Main-Weapon)>[^\[\]]*?\]\]/g);
         if (subcontent) {
-          let equippedCount = mainweapon.weapon.dice.match(/\d+(?=d)/g);
-          let equippedDice = mainweapon.weapon.dice.match(/(?<=d).+/g);
+          let equippedCount = mainweapon.weapon.effectivedice.match(/\d+(?=d)/g);
+          let equippedDice = mainweapon.weapon.effectivedice.match(/(?<=d).+/g);
           for (let string of subcontent) {
             const weapon = string.match(/\d<(Weapon|Main-Weapon)>/g)[0];
             const count = weapon.match(/\d+(?=<)/g);
@@ -1409,8 +1416,8 @@ export class AetrimondeItem extends Item {
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Off-Weapon>[^\[\]]*?\]\]/g);
         if (subcontent) {
-          let equippedCount = offweapon.weapon.dice.match(/\d+(?=d)/g);
-          let equippedDice = offweapon.weapon.dice.match(/(?<=d).+/g);
+          let equippedCount = offweapon.weapon.effectivedice.match(/\d+(?=d)/g);
+          let equippedDice = offweapon.weapon.effectivedice.match(/(?<=d).+/g);
           for (let string of subcontent) {
             const weapon = string.match(/\d<(Off-Weapon)>/g)[0];
             const count = weapon.match(/\d+(?=<)/g);
@@ -1435,8 +1442,8 @@ export class AetrimondeItem extends Item {
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Unarmed>[^\[\]]*?\]\]/g);
         if (subcontent) {
-          let equippedCount = unarmattack.weapon.dice.match(/\d+(?=d)/g);
-          let equippedDice = unarmattack.weapon.dice.match(/(?<=d).+/g);
+          let equippedCount = unarmattack.weapon.effectivedice.match(/\d+(?=d)/g);
+          let equippedDice = unarmattack.weapon.effectivedice.match(/(?<=d).+/g);
           for (let string of subcontent) {
             const weapon = string.match(/\d<(Unarmed)>/g)[0];
             const count = weapon.match(/\d+(?=<)/g);
