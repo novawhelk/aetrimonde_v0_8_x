@@ -870,7 +870,7 @@ export class AetrimondeItem extends Item {
   async _RunEffect(power) {
     power.data.effect.rolls = power.data.effect.text.includes("[[");
 
-    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
+    power.data.tempeffect = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -889,7 +889,7 @@ export class AetrimondeItem extends Item {
     }
     targetnames = targetnames.substring(0, targetnames.length - 2);
 
-    const effect = this._RollOnce(power.data.effect.text);
+    const effect = this._RollOnce(power.data.tempeffect);
 
     const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-output-card.html`;
     const templateData = {
@@ -920,8 +920,8 @@ export class AetrimondeItem extends Item {
     power.data.miss.rolls = power.data.miss.text.includes("[[");
 
     power.data.mainhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "main"), power.data.damagebonus) : "";
-    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
-    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    power.data.maincrit = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
+    power.data.mainmiss = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -954,7 +954,7 @@ export class AetrimondeItem extends Item {
         "power": power,
         "targets": targets,
         "hit": this._RollOnce(power.data.mainhit),
-        "miss": this._RollOnce(power.data.miss.text),
+        "miss": this._RollOnce(power.data.mainmiss),
         "crit": critcontent
       };
       const content = await renderTemplate(template, templateData);
@@ -985,7 +985,7 @@ export class AetrimondeItem extends Item {
           "power": power,
           "targets": [target],
           "hit": this._RollOnce(power.data.mainhit),
-          "miss": this._RollOnce(power.data.miss.text),
+          "miss": this._RollOnce(power.data.mainmiss),
           "crit": critcontent
         };
         const content = await renderTemplate(template, templateData);
@@ -1014,8 +1014,8 @@ export class AetrimondeItem extends Item {
     power.data.miss.rolls = power.data.miss.text.includes("[[");
 
     power.data.offhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "off"), power.data.damagebonus) : "";
-    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
-    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    power.data.offcrit = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
+    power.data.offmiss = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -1048,7 +1048,7 @@ export class AetrimondeItem extends Item {
         "power": power,
         "targets": targets,
         "hit": this._RollOnce(power.data.offhit),
-        "miss": this._RollOnce(power.data.miss.text),
+        "miss": this._RollOnce(power.data.offmiss),
         "crit": critcontent
       };
       const content = await renderTemplate(template, templateData);
@@ -1079,7 +1079,7 @@ export class AetrimondeItem extends Item {
           "power": power,
           "targets": [target],
           "hit": this._RollOnce(power.data.offhit),
-          "miss": this._RollOnce(power.data.miss.text),
+          "miss": this._RollOnce(power.data.offmiss),
           "crit": critcontent
         };
         const content = await renderTemplate(template, templateData);

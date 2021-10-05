@@ -512,73 +512,7 @@ export class AetrimondeActorSheet extends ActorSheet {
 
   async _onItemPost(event) {
     const posted = this.actor.items.get(event.currentTarget.dataset.power);
-    posted.prepareData();
-    const itemcopy = deepClone(posted).data;
-    let template = "";
-    let templateData = [];
-    if (itemcopy.type === "power") {
-      const power = itemcopy;
-      power.data.powertype = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "";
-      const abilities = {
-        "str": "Strength",
-        "con": "Constitution",
-        "dex": "Dexterity",
-        "int": "Intelligence",
-        "wis": "Wisdom",
-        "cha": "Charisma"
-      };
-      power.data.attack.abil = power.data.attack.abil ? abilities[`${power.data.attack.abil}`] : "";
-      power.data.effect.text = power.data.effect.text.replaceAll("[[", "").replaceAll("]]", "");
-      power.data.hit.text = power.data.hit.text.replaceAll("[[", "").replaceAll("]]", "");
-      power.data.crit.text = power.data.crit.text.replaceAll("[[", "").replaceAll("]]", "");
-      power.data.miss.text = power.data.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-      template = `systems/aetrimonde_v0_8_x/templates/chat/power-card.html`;
-      templateData = {
-        "power": power
-      }
-    }
-    else if (itemcopy.type === "feature") {
-      const feature = itemcopy;
-      feature.data.source = feature.data.source ? feature.data.sources[`${feature.data.source}`].label : "";
-      template = `systems/aetrimonde_v0_8_x/templates/chat/feature-card.html`;
-      templateData = {
-        "feature": feature
-      }
-    }
-    else if (["equipment"].includes(itemcopy.type)) {
-      const item = itemcopy;
-
-      if (item.data.isweapon) {
-        item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
-        item.data.weapon.hands.value = item.data.weapon.hands.handses[`${item.data.weapon.hands.value}`];
-        item.data.weapon.mvsr.value = item.data.weapon.mvsr.mvsrs[`${item.data.weapon.mvsr.value}`];
-      }
-      item.data.power.effect.text = item.data.power.effect.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-      template = `systems/aetrimonde_v0_8_x/templates/chat/` + item.type + `-card.html`;
-      templateData = {
-        "item": item
-      };
-    }
-
-    const chatHtml = await renderTemplate(template, templateData);
-
-    const chatData = {
-      user: game.user.id,
-      content: chatHtml,
-      speaker: {
-        actor: this.actor.id,
-        token: this.actor.token,
-        alias: this.actor.name
-      }
-    };
-    const rollMode = game.settings.get("core", "rollMode");
-    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-    if (rollMode === "selfroll") chatData.whisper = [game.user.id];
-    if (rollMode === "blindroll") chatData.blind = true;
-    await ChatMessage.create(chatData);
+    posted.post();
   }
 
   /**
