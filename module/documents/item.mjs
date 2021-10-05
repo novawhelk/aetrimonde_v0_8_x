@@ -731,7 +731,8 @@ export class AetrimondeItem extends Item {
   */
   async roll(mode, onlythis) {
     if (this.type === "power") {
-      this._RunEffect(deepClone(this.data), onlythis);
+      this._RunEffect(deepClone(this.data));
+      this._RunAttack(deepClone(this.data));
     }
     else if (this.type === "equipment") {
       if (mode === "weaponattack" && this.data.data.isweapon) {
@@ -748,6 +749,10 @@ export class AetrimondeItem extends Item {
     html.on('click', '.chat-card .favor-option', this._onChatCardOption.bind(this));
     html.on('click', '.chat-card .conflict-option', this._onChatCardOption.bind(this));
     html.on('click', '.chat-card .disfavor-option', this._onChatCardOption.bind(this));
+    html.on('click', '.chat-card .mode-blocker.core', this._onAttackOption.bind(this));
+    html.on('click', '.chat-card .mode-blocker.favor', this._onAttackOption.bind(this));
+    html.on('click', '.chat-card .mode-blocker.conflict', this._onAttackOption.bind(this));
+    html.on('click', '.chat-card .mode-blocker.disfavor', this._onAttackOption.bind(this));
   }
 
   static async _onChatCardOption(event) {
@@ -772,7 +777,28 @@ export class AetrimondeItem extends Item {
     await message.update({"content": newContent})
   }
 
-  async _RunEffect(power, onlythis) {
+  static async _onAttackOption(event) {
+    event.preventDefault();
+
+    // Extract card data
+    const button = event.currentTarget;
+    const mode = button.classList[2].match(/(core|favor|conflict|disfavor)/g)[0];
+
+    const card = button.closest(".chat-card");
+    const messageId = card.closest(".message").dataset.messageId;
+    const message =  game.messages.get(messageId);
+
+    const id = button.dataset.id;
+
+    const modeRegex = new RegExp("mode-select " + id + " (core|favor|conflict|disfavor)", 'g');
+    const modeString = "mode-select " + id + " " + mode;
+
+    const newContent = message.data.content.replaceAll(modeRegex, modeString);
+
+    await message.update({"content": newContent})
+  }
+
+  async _RunEffect(power) {
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
     power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
@@ -825,9 +851,7 @@ export class AetrimondeItem extends Item {
     await ChatMessage.create(chatData);
   }
 
-  async _RunAttack(event) {
-    let power = JSON.parse(event.currentTarget.dataset.power);
-
+  async _RunAttack(power) {
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
     power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
@@ -841,42 +865,39 @@ export class AetrimondeItem extends Item {
     if (game.user.targets.size > 0){
       for (let target of game.user.targets) {
         targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
-                      "id": target.data._id});
+                      "id": target.data._id,
+                      "rolls": this._RollOnceCore(power.data.attack.bonus)});
         targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
       }
     }
     else {
       targets.push({"name": "Unknown Target",
-                    "id": ""});
+                    "id": "",
+                    "rolls": this._RollOnceCore(power.data.attack.bonus)});
       targetnames = "Unknown Target, ";
     }
-    if (power.data.attack.off && !event.currentTarget.dataset.nooff) {
-      offtargets = JSON.parse(JSON.stringify(targets));
-    }
-    if (event.currentTarget.dataset.nomain) {
-      targets = [];
-    }
-    targetnames = targetnames.substring(0, targetnames.length - 2);
 
-    const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-option-card.html`;
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-output-card.html`;
     const templateData = {
       "power": power,
-      "greater": power.data.powertype === "greater",
-      "targets": targets ? targets : [],
-      "offtargets": offtargets ? offtargets : [],
-      "targetnames": targetnames
+      "targets": targets
     };
     const content = await renderTemplate(template, templateData);
-    let d = new Dialog({
-      title: "Attack Options",
+
+    const chatData = {
+      user: game.user._id,
       content: content,
-      buttons: {
-        one: {
-          label: "Roll Attacks",
-          callback: html => this._runHitMiss(templateData, html.find('.target-line'), html.find('.expend-power'))
-        }
+      speaker: {
+        actor: this.actor._id,
+        token: this.actor.token,
+        alias: this.actor.name
       }
-    }).render(true);
+    };
+    const rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "blindroll") chatData.blind = true;
+    await ChatMessage.create(chatData);
   }
 
   async _outputEffects(data, html, expendPower) {
@@ -1632,7 +1653,7 @@ export class AetrimondeItem extends Item {
       "number": 2,
       "faces": 10,
       "modifiers": [],
-      "results": allRolls.terms[0].results.slice(0, 2)
+      "results": deepClone(allRolls.terms[0].results.slice(0, 2))
     };
     const nroll = {
       "class":"Roll",

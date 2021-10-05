@@ -641,37 +641,97 @@
   margin: 1px
 }
 
+.aetrimonde.chat-card .mode-blocker {
+  flex-basis: 6%;
+  border: 1px solid grey;
+  margin: 1px;
+  text-align: center;
+}
+
+.aetrimonde.chat-card .mode-select.core ~ .mode-blocker.core,
+.aetrimonde.chat-card .mode-select.favor ~ .mode-blocker.favor,
+.aetrimonde.chat-card .mode-select.conflict ~ .mode-blocker.conflict,
+.aetrimonde.chat-card .mode-select.disfavor ~ .mode-blocker.disfavor {
+  display: none
+}
+
 .aetrimonde.chat-card .favor-box.false,
 .aetrimonde.chat-card .conflict-box.false,
 .aetrimonde.chat-card .disfavor-box.false {
   display: none;
 }
 
+.aetrimonde.chat-card .mode-blocker.core {
+  border: 1px solid grey
+}
+
 .aetrimonde.chat-card .favor-option,
-.aetrimonde.chat-card .favor-box {
+.aetrimonde.chat-card .favor-box,
+.aetrimonde.chat-card .mode-blocker.favor {
   background-color: #80b280;
 }
 
 .aetrimonde.chat-card .conflict-option,
-.aetrimonde.chat-card .conflict-box {
+.aetrimonde.chat-card .conflict-box,
+.aetrimonde.chat-card .mode-blocker.conflict {
   background-color: #dcc285;
 }
 
 .aetrimonde.chat-card .disfavor-option,
-.aetrimonde.chat-card .disfavor-box {
+.aetrimonde.chat-card .disfavor-box,
+.aetrimonde.chat-card .mode-blocker.disfavor {
   background-color: #c58080;
 }
 
-.aetrimonde.chat-card .favor-option.shown {
-  background-color: DarkGreen;
+.aetrimonde.chat-card .inline-result.core,
+.aetrimonde.chat-card .inline-result.favor,
+.aetrimonde.chat-card .inline-result.conflict,
+.aetrimonde.chat-card .inline-result.disfavor {
+  flex-basis: 15%;
+  display: none;
+  border: 1px solid black;
+  margin: 1px;
+  text-align: center;
 }
 
-.aetrimonde.chat-card .conflict-option.shown {
-  background-color: DarkGoldenRod;
+.aetrimonde.chat-card .mode-select.core ~ .inline-result.core {
+  display: flex;
 }
 
-.aetrimonde.chat-card .disfavor-option.shown {
-  background-color: DarkRed;
+.aetrimonde.chat-card .favor-option.shown,
+.aetrimonde.chat-card .mode-select.favor ~ .inline-result.favor {
+  display: flex;
+  background-color: DarkGreen
+}
+
+.aetrimonde.chat-card .conflict-option.shown,
+.aetrimonde.chat-card .mode-select.conflict ~ .inline-result.conflict {
+  display: flex;
+  background-color: DarkGoldenRod
+}
+
+.aetrimonde.chat-card .disfavor-option.shown,
+.aetrimonde.chat-card .mode-select.disfavor ~ .inline-result.disfavor {
+  display: flex;
+  background-color: DarkRed
+}
+
+.aetrimonde.chat-card .mode-select ~ .inline-result .grey {
+  color: LightGray
+}
+
+.aetrimonde.chat-card .inline-result .fas {
+  margin-right: 2px;
+}
+
+.aetrimonde.chat-card .inline-result.favor .fas,
+.aetrimonde.chat-card .inline-result.conflict .fas,
+.aetrimonde.chat-card .inline-result.disfavor .fas {
+  color: LightGray
+}
+
+.aetrimonde.chat-card .mode-select {
+  display: none
 }
 
 a.inline-result {

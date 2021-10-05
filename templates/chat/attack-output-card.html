@@ -1,0 +1,27 @@
+<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
+
+  <header class="card-header flexrow">
+    <span class="card-header">{{power.name}} Attacks</span>
+  </header>
+  {{#if targets}}
+  <div class="card-content underline">
+    <span class="boldface">Attack:</span> {{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}} vs. {{power.data.attack.vslabel}}
+  </div>
+  {{/if}}
+  {{#each targets as |target id|}}
+  <div class="card-content flexrow mode-set">
+    <span>{{target.name}}:</span>
+    <span class="mode-select {{id}} core"></span>
+    <a class="mode-blocker {{id}} core flex0" data-id="{{id}}">N</a>
+    <a class="inline-roll inline-result {{id}} core flex0 flex-center" title="{{target.rolls.core.formula}}" data-roll="{{target.rolls.core.json}}"><i class="fas fa-dice-d20"></i><span>&nbsp;{{target.rolls.core.result}}</span></a>
+    <a class="mode-blocker {{id}} favor flex0" data-id="{{id}}" >F</a>
+    <a class="inline-roll inline-result {{id}} favor flex0 flex-center" title="{{target.rolls.favor.formula}}" data-roll="{{target.rolls.favor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{target.rolls.favor.result}}</span></a>
+    <a class="mode-blocker {{id}} conflict flex0" data-id="{{id}}" >C</a>
+    <a class="inline-roll inline-result {{id}} conflict flex0 flex-center" title="{{target.rolls.conflict.formula}}" data-roll="{{target.rolls.conflict.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{target.rolls.conflict.result}}</span></a>
+    <a class="mode-blocker {{id}} disfavor flex0" data-id="{{id}}" >D</a>
+    <a class="inline-roll inline-result {{id}} disfavor flex0 flex-center" title="{{target.rolls.disfavor.formula}}" data-roll="{{target.rolls.disfavor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{target.rolls.disfavor.result}}</span></a>
+  </div>
+  {{/each}}
+
+
+</div>
