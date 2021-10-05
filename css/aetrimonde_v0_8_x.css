@@ -758,6 +758,10 @@ a.inline-result {
   border: none;
 }
 
+.aetrimonde.chat-card .card-content.flexrow.splitline span ~ span {
+  text-align: right;
+}
+
 .aetrimonde.chat-card .card-content span.inset {
   margin-left: 20px;
 }

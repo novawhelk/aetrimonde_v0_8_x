@@ -98,9 +98,9 @@
       <span><span class="boldface">Groups: </span>{{item.data.weapon.groups}}</span>
     </div>
     {{/if}}
-    {{#if item.data.weapon.quals}}
+    {{#if item.data.weapon.textquals}}
     <div class="card-content">
-      <span><span class="boldface">Qualities: </span>{{item.data.weapon.quals}}</span>
+      <span><span class="boldface">Qualities: </span>{{item.data.weapon.textquals}}</span>
     </div>
     {{/if}}
   {{/if}}
@@ -118,11 +118,11 @@
   <div class="card-content flexrow overline underline">
     <span class="card-header">Power</span>
   </div>
-  <div class="card-content flexrow">
+  <div class="card-content flexrow splitline">
     <span class="boldface">{{item.data.power.frequency}}</span>
     <span class="boldface">{{item.data.power.keywords}}</span>
   </div>
-  <div class="card-content flexrow">
+  <div class="card-content flexrow splitline">
     <span class="boldface">{{item.data.power.action}}</span>
     <span class="boldface">{{item.data.power.range}}</span>
   </div>
@@ -143,19 +143,19 @@
   {{/if}}
   {{#if item.data.power.effect.exists}}
   <div class="card-content">
-    <span><span class="boldface">Effect: </span>{{item.data.power.effect.text}}</span>
+    <span><span class="boldface">Effect: </span>{{item.data.power.effect.temp}}</span>
   </div>
   {{/if}}
   {{#if item.data.power.attack.exists}}
   <div class="card-content">
-    <span><span class="boldface">Attack: </span>{{item.data.power.attack.abil}} vs. {{item.data.power.attack.vslabel}}</span>
+    <span><span class="boldface">Attack: </span>{{numberFormat item.data.power.attack.bonus decimals=0 sign=true }} vs. {{item.data.power.attack.vslabel}}</span>
   </div>
   <div class="card-content">
-    <span><span class="boldface">Hit: </span>{{item.data.power.hit.text}}</span>
+    <span><span class="boldface">Hit: </span>{{item.data.power.hit.temp}}</span>
   </div>
   {{#if item.data.power.miss.text}}
   <div class="card-content">
-    <span><span class="boldface">Miss: </span>{{item.data.power.miss.text}}</span>
+    <span><span class="boldface">Miss: </span>{{item.data.power.miss.temp}}</span>
   </div>
   {{/if}}
   {{/if}}
