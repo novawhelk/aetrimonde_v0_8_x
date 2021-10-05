@@ -45,7 +45,7 @@
   {{/if}}
   {{#if power.data.attack.exists}}
   <div class="card-content">
-    <span><span class="boldface">Attack: </span>{{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}}{{#if power.data.attack.off}}/{{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasoffthreat}}T{{/if}}{{/if}} vs. {{power.data.attack.vslabel}}</span>
+    <span><span class="boldface">Attack: </span>{{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}}{{#if power.data.attack.off}}/{{numberFormat power.data.attack.offbonus decimals=0 sign=true}}{{#if power.data.attack.hasoffthreat}}T{{/if}}{{/if}} vs. {{power.data.attack.vslabel}}</span>
   </div>
   <div class="card-content">
     <span><span class="boldface">Hit: </span>{{power.data.hit.text}}</span>

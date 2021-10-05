@@ -860,20 +860,17 @@ export class AetrimondeItem extends Item {
 
   async _RunPower(power) {
     if (power.data.effect.exists)
-      this._RunEffect(power);
+      this._RunEffect(deepClone(power));
     if (power.data.attack.exists)
-      this._RunAttack(power);
+      this._RunAttack(deepClone(power));
+      if (power.data.attack.off)
+        this._RunOffAttack(deepClone(power));
   }
 
   async _RunEffect(power) {
-    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
-    power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
-    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
-    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
-    power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
-    power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
+    power.data.effect.rolls = power.data.effect.text.includes("[[");
 
-    power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : ""
+    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -919,12 +916,12 @@ export class AetrimondeItem extends Item {
   }
 
   async _RunAttack(power) {
-    power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
-    power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
+    power.data.hit.rolls = power.data.hit.text.includes("[[");
+    power.data.miss.rolls = power.data.miss.text.includes("[[");
+
+    power.data.mainhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "main"), power.data.damagebonus) : "";
     power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
     power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
-    power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
-    power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -948,7 +945,7 @@ export class AetrimondeItem extends Item {
     const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-output-card.html`;
 
     if (power.data.range.includes("Area") || power.data.range.includes("Close")) {
-      const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
+      const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.mainhit))}];
       for (let content of power.data.critcontent) {
         critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
       }
@@ -956,7 +953,7 @@ export class AetrimondeItem extends Item {
       const templateData = {
         "power": power,
         "targets": targets,
-        "hit": this._RollOnce(power.data.hit.text),
+        "hit": this._RollOnce(power.data.mainhit),
         "miss": this._RollOnce(power.data.miss.text),
         "crit": critcontent
       };
@@ -979,7 +976,7 @@ export class AetrimondeItem extends Item {
     }
     else {
       for (let target of targets) {
-        const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
+        const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.mainhit))}];
         for (let content of power.data.critcontent) {
           critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
         }
@@ -987,7 +984,7 @@ export class AetrimondeItem extends Item {
         const templateData = {
           "power": power,
           "targets": [target],
-          "hit": this._RollOnce(power.data.hit.text),
+          "hit": this._RollOnce(power.data.mainhit),
           "miss": this._RollOnce(power.data.miss.text),
           "crit": critcontent
         };
@@ -1012,46 +1009,53 @@ export class AetrimondeItem extends Item {
 
   }
 
-  async _outputEffects(data, html, expendPower) {
-    if (expendPower.length === 1) {
-      if (expendPower[0].checked) {
-        if (data.power.data.powertype === "greater") {
-          this.actor.update({"data.gpower.value": Math.max(this.actor.data.data.gpower.value - 1, 0)});
-        }
+  async _RunOffAttack(power) {
+    power.data.hit.rolls = power.data.hit.text.includes("[[");
+    power.data.miss.rolls = power.data.miss.text.includes("[[");
+
+    power.data.offhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "off"), power.data.damagebonus) : "";
+    power.data.crit.text = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
+    power.data.miss.text = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+
+    let targets = [];
+    let offtargets = [];
+    let targetnames = "";
+    if (game.user.targets.size > 0){
+      for (let target of game.user.targets) {
+        targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
+                      "id": target.data._id,
+                      "rolls": this._RollOnceCore(power.data.attack.offbonus)});
+        targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
       }
     }
-    let mode = "core";
-    if (html) {
-      const target = html[0].children;
-      if (target[1].children[0].checked) {
-        mode = "core";
-      }
-      else if (target[2].children[0].checked) {
-        mode = "favor";
-      }
-      else if (target[3].children[0].checked) {
-        mode = "conflict";
-      }
-      else {
-        mode = "disfavor";
-      }
+    else {
+      targets.push({"name": "Unknown Target",
+                    "id": "",
+                    "rolls": this._RollOnceCore(power.data.attack.offbonus)});
+      targetnames = "Unknown Target, ";
     }
+    targetnames = targetnames.substring(0, targetnames.length - 2);
 
-    data.power.data.effect.text = this._ApplyFavorDisfavor(data.power.data.effect.text, mode);
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-off-output-card.html`;
 
-    if (!data.cont) {
-      data.power.data.hit.text = data.power.data.hit.text.replaceAll("[[", "").replaceAll("]]", "");
-      data.power.data.crit.text = data.power.data.crit.text.replaceAll("[[", "").replaceAll("]]", "");
-      data.power.data.miss.text = data.power.data.miss.text.replaceAll("[[", "").replaceAll("]]", "");
-    }
+    if (power.data.range.includes("Area") || power.data.range.includes("Close")) {
+      const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.offhit))}];
+      for (let content of power.data.critcontent) {
+        critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
+      }
 
-    if (!data.power.data.attack.exists || !data.cont) {
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-card.html`;
-      const chatHtml = await renderTemplate(template, data);
+      const templateData = {
+        "power": power,
+        "targets": targets,
+        "hit": this._RollOnce(power.data.offhit),
+        "miss": this._RollOnce(power.data.miss.text),
+        "crit": critcontent
+      };
+      const content = await renderTemplate(template, templateData);
 
       const chatData = {
         user: game.user._id,
-        content: chatHtml,
+        content: content,
         speaker: {
           actor: this.actor._id,
           token: this.actor.token,
@@ -1065,194 +1069,24 @@ export class AetrimondeItem extends Item {
       await ChatMessage.create(chatData);
     }
     else {
-      if (data.power.data.attack.off && !data.nooff) {
-        data.offtargets = JSON.parse(JSON.stringify(data.targets));
-      }
-      if (data.nomain) {
-        data.targets = [];
-      }
-      data.showeffect = data.power.data.effect.text;
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-option-card.html`
-      const content = await renderTemplate(template, data);
-      let d = new Dialog({
-        title: "Attack Options",
-        content: content,
-        buttons: {
-          one: {
-            label: "Roll Attacks",
-            callback: html => this._runHitMiss(data, html.find('.target-line'), html.find('.expend-power'))
-          }
+      for (let target of targets) {
+        const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.offhit))}];
+        for (let content of power.data.critcontent) {
+          critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
         }
-      }).render(true);
-    }
-  }
 
-  async _runHitMiss(data, oldhtml, expendPower) {
-    if (expendPower.length === 1) {
-      if (expendPower[0].checked) {
-        if (data.power.data.powertype === "greater") {
-          this.actor.update({"data.gpower.value": Math.max(this.actor.data.data.gpower.value - 1, 0)});
-        }
-      }
-    }
-    let i = 0;
-    const nummain = data.targets.length;
-    while (i < oldhtml.length) {
-      const target = oldhtml[i].children;
-
-      const relevanttarget = (!oldhtml[i].className.includes("off-hand") ? data.targets[i] : data.offtargets[i - nummain]);
-      const relevantbonus = (!oldhtml[i].className.includes("off-hand") ? data.power.data.attack.bonus : data.power.data.attack.offbonus);
-      const relevantthreat = (!oldhtml[i].className.includes("off-hand") ? data.power.data.attack.hasthreat : data.power.data.attack.offthreat);
-      if (target[1].children[0].checked) {
-        relevanttarget.mode = "core";
-        relevanttarget.roll = new Roll("2d10 + " + relevantbonus).evaluate();
-      }
-      else if (target[2].children[0].checked) {
-        relevanttarget.mode = "favor";
-        relevanttarget.roll = new Roll("3d10dl1 + " + relevantbonus).evaluate();
-      }
-      else if (target[3].children[0].checked) {
-        relevanttarget.mode = "conflict";
-        relevanttarget.roll = new Roll("4d10dl1dh1 + " + relevantbonus).evaluate();
-      }
-      else {
-        relevanttarget.mode = "disfavor";
-        relevanttarget.roll = new Roll("3d10dh1 + " + relevantbonus).evaluate()
-      }
-      relevanttarget.rolltotal = relevanttarget.roll._total;
-      relevanttarget.rolljson = escape(JSON.stringify(relevanttarget.roll));
-      if (relevanttarget.roll._total - relevantbonus >= (relevantthreat ? 16 : 18)) {
-        relevanttarget.crithit = true;
-      }
-      else if (relevanttarget - relevantbonus <= 4) {
-        relevanttarget.critmiss = false;
-      }
-      relevanttarget.vs = data.power.data.attack.vslabel;
-      i = i + 1;
-    }
-
-    const chattemplate = `systems/aetrimonde_v0_8_x/templates/chat/attack-card.html`;
-    const chathtml = await renderTemplate(chattemplate, data);
-    const chatData = {
-      user: game.user._id,
-      content: chathtml,
-      speaker: {
-        actor: this.actor._id,
-        token: this.actor.token,
-        alias: this.actor.name
-      }
-    };
-    const rollMode = game.settings.get("core", "rollMode");
-    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-    if (rollMode === "blindroll") chatData.blind = true;
-    await ChatMessage.create(chatData);
-
-    const template = `systems/aetrimonde_v0_8_x/templates/chat/hitmiss-option-card.html`;
-    const dialoghtml = await renderTemplate(template, data)
-    let d = new Dialog({
-      title: "Assign Hits, Favor and Disfavor",
-      content: dialoghtml,
-      buttons: {
-        one: {
-          label: "Roll Hits and Misses",
-          callback: html => this._outputHitMiss(data, html.find('.target-line'))
-        }
-      }
-    }).render(true);
-  }
-
-  async _outputHitMiss(data, html) {
-    let i = 0;
-    const nummain = data.targets.length;
-    const numoff = data.offtargets ? data.offtargets.length : 0;
-    const crithits = [];
-    const critmisses = [];
-    const hits = [];
-    const misses = [];
-
-    while (i < html.length) {
-      const target = html[i].children;
-      const relevanttarget = (!html[i].className.includes("off-hand") ? data.targets[i] : data.offtargets[i - nummain]);
-      relevanttarget.main = (i < nummain);
-      relevanttarget.off = (i >= nummain);
-      if (!data.power.data.attack.exists) {
-        if (target[1].children[0].checked) {
-          relevanttarget.mode = "core";
-        }
-        else if (target[2].children[0].checked) {
-          relevanttarget.mode = "favor";
-        }
-        else if (target[3].children[0].checked) {
-          relevanttarget.mode = "conflict";
-        }
-        else {
-          relevanttarget.mode = "disfavor";
-        }
-      }
-      else if (!relevanttarget.crithit && !relevanttarget.critmiss) {
-        if (target[4].children[0].checked) {
-          relevanttarget.mode = "core";
-        }
-        else if (target[5].children[0].checked) {
-          relevanttarget.mode = "favor";
-        }
-        else if (target[6].children[0].checked) {
-          relevanttarget.mode = "conflict";
-        }
-        else {
-          relevanttarget.mode = "disfavor";
-        }
-        if (target[1].children[0].checked) {
-          relevanttarget.hit = "true";
-          hits.push(relevanttarget);
-        }
-        else if (target[2].children[0].checked) {
-          relevanttarget.miss = "true";
-          misses.push(relevanttarget);
-        }
-      }
-      else {
-        if (target[4].children[0].checked) {
-          relevanttarget.mode = "core";
-        }
-        else if (target[5].children[0].checked) {
-          relevanttarget.mode = "favor";
-        }
-        else if (target[6].children[0].checked) {
-          relevanttarget.mode = "conflict";
-        }
-        else {
-          relevanttarget.mode = "disfavor";
-        }
-        if (relevanttarget.crithit) {
-          crithits.push(relevanttarget)
-        }
-        if (relevanttarget.critmiss) {
-          critmisses.push(relevanttarget)
-        }
-      }
-      i = i + 1;
-    }
-
-    const template = `systems/aetrimonde_v0_8_x/templates/chat/hitmiss-card.html`;
-
-    if (!data.power.data.range.includes("Close") && !data.power.data.range.includes("Area")) {
-      for (let content of data.power.data.critcontent) {
-        content.criteffect = this._PrepareInlineRolls(data.power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0})
-      }
-      for (let t of crithits) {
         const templateData = {
-          "type": "Critical Hit",
-          "power": data.power,
-          "target": t,
-          "content": "Critical Hit: " + this._ApplyFavorDisfavor(data.power.data.hit.text, "crit", t.main, t.off),
-          "critcontent": data.power.data.critcontent
-        }
-        const chathtml = await renderTemplate(template, templateData);
+          "power": power,
+          "targets": [target],
+          "hit": this._RollOnce(power.data.offhit),
+          "miss": this._RollOnce(power.data.miss.text),
+          "crit": critcontent
+        };
+        const content = await renderTemplate(template, templateData);
+
         const chatData = {
           user: game.user._id,
-          content: chathtml,
+          content: content,
           speaker: {
             actor: this.actor._id,
             token: this.actor.token,
@@ -1265,232 +1099,8 @@ export class AetrimondeItem extends Item {
         if (rollMode === "blindroll") chatData.blind = true;
         await ChatMessage.create(chatData);
       }
-      for (let t of hits) {
-        const templateData = {
-          "type": "Hit",
-          "power": data.power,
-          "target": t,
-          "content": "Hit: " + this._ApplyFavorDisfavor(data.power.data.hit.text, t.mode, t.main, t.off)
-        }
-        const chathtml = await renderTemplate(template, templateData);
-        const chatData = {
-          user: game.user._id,
-          content: chathtml,
-          speaker: {
-            actor: this.actor._id,
-            token: this.actor.token,
-            alias: this.actor.name
-          }
-        };
-        const rollMode = game.settings.get("core", "rollMode");
-        if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-        if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-        if (rollMode === "blindroll") chatData.blind = true;
-        await ChatMessage.create(chatData);
-      }
-      if (data.power.data.miss.text) {
-        for (let t of misses) {
-          const templateData = {
-            "type": "Miss",
-            "power": data.power,
-            "target": t,
-            "content": "Miss: " + this._ApplyFavorDisfavor(data.power.data.miss.text, t.mode, t.main, t.off)
-          }
-          const chathtml = await renderTemplate(template, templateData);
-          const chatData = {
-            user: game.user._id,
-            content: chathtml,
-            speaker: {
-              actor: this.actor._id,
-              token: this.actor.token,
-              alias: this.actor.name
-            }
-          };
-          const rollMode = game.settings.get("core", "rollMode");
-          if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-          if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-          if (rollMode === "blindroll") chatData.blind = true;
-          await ChatMessage.create(chatData);
-        }
-      }
     }
-    else {
-      const allHits = [{"content": this._RollOnce(data.power.data.hit.text)}];
-      const allMisses = [{"content": this._RollOnce(data.power.data.miss.text)}];
 
-      const critcontent = [];
-      for (let content of data.power.data.critcontent) {
-        critcontent.push({"content": this._RollOnce(this._PrepareInlineRolls(data.power, content.source + content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
-      }
-
-      const sortedCrits = {
-        "core": "",
-        "favor": "",
-        "disfavor": "",
-        "conflict": ""
-      }
-      for (let t of crithits) {
-        if (t.mode === "core") {
-          sortedCrits.core = sortedCrits.core + t.name + ", ";
-        }
-        else if (t.mode === "favor") {
-          sortedCrits.favor = sortedCrits.favor + t.name + ", ";
-        }
-        else if (t.mode === "disfavor") {
-          sortedCrits.disfavor = sortedCrits.disfavor + t.name + ", ";
-        }
-        else {
-          sortedCrits.conflict = sortedCrits.conflict + t.name + ", ";
-        }
-      }
-      sortedCrits.core = sortedCrits.core.slice(0, -2);
-      sortedCrits.favor = sortedCrits.favor.slice(0, -2);
-      sortedCrits.disfavor = sortedCrits.disfavor.slice(0, -2);
-      sortedCrits.conflict = sortedCrits.conflict.slice(0, -2);
-
-      for (let mode in sortedCrits) {
-        if (sortedCrits[mode]){
-          const templateData = {
-            "type": "Critical Hit",
-            "power": data.power,
-            "hitnames": sortedCrits[mode],
-            "content": "Critical Hit: " + this._ApplyFavorDisfavor(data.power.data.hit.text, "crit"),
-            "entries": critcontent,
-            "core": mode === "core",
-            "favor": mode === "favor",
-            "disfavor": mode === "disfavor",
-            "conflict": mode === "conflict"
-          }
-          const chathtml = await renderTemplate(template, templateData);
-          const chatData = {
-            user: game.user._id,
-            content: chathtml,
-            speaker: {
-              actor: this.actor._id,
-              token: this.actor.token,
-              alias: this.actor.name
-            }
-          };
-          const rollMode = game.settings.get("core", "rollMode");
-          if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-          if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-          if (rollMode === "blindroll") chatData.blind = true;
-          await ChatMessage.create(chatData);
-        }
-      }
-
-      const sortedHits = {
-        "core": "",
-        "favor": "",
-        "disfavor": "",
-        "conflict": ""
-      }
-      for (let t of hits) {
-        if (t.mode === "core") {
-          sortedHits.core = sortedHits.core + t.name + ", ";
-        }
-        else if (t.mode === "favor") {
-          sortedHits.favor = sortedHits.favor + t.name + ", ";
-        }
-        else if (t.mode === "disfavor") {
-          sortedHits.disfavor = sortedHits.disfavor + t.name + ", ";
-        }
-        else {
-          sortedHits.conflict = sortedHits.conflict + t.name + ", ";
-        }
-      }
-      sortedHits.core = sortedHits.core.slice(0, -2);
-      sortedHits.favor = sortedHits.favor.slice(0, -2);
-      sortedHits.disfavor = sortedHits.disfavor.slice(0, -2);
-      sortedHits.conflict = sortedHits.conflict.slice(0, -2);
-
-      for (let mode in sortedHits) {
-        if (sortedHits[mode]){
-          const templateData = {
-            "type": "Hit",
-            "power": data.power,
-            "hitnames": sortedHits[mode],
-            "entries": allHits,
-            "core": mode === "core",
-            "favor": mode === "favor",
-            "disfavor": mode === "disfavor",
-            "conflict": mode === "conflict"
-          }
-          const chathtml = await renderTemplate(template, templateData);
-          const chatData = {
-            user: game.user._id,
-            content: chathtml,
-            speaker: {
-              actor: this.actor._id,
-              token: this.actor.token,
-              alias: this.actor.name
-            }
-          };
-          const rollMode = game.settings.get("core", "rollMode");
-          if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-          if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-          if (rollMode === "blindroll") chatData.blind = true;
-          await ChatMessage.create(chatData);
-        }
-      }
-
-      if (data.power.data.miss.text) {
-        const sortedMisses = {
-          "core": "",
-          "favor": "",
-          "disfavor": "",
-          "conflict": ""
-        }
-        for (let t of misses) {
-          if (t.mode === "core") {
-            sortedMisses.core = sortedMisses.core + t.name + ", ";
-          }
-          else if (t.mode === "favor") {
-            sortedMisses.favor = sortedMisses.favor + t.name + ", ";
-          }
-          else if (t.mode === "disfavor") {
-            sortedMisses.disfavor = sortedMisses.disfavor + t.name + ", ";
-          }
-          else {
-            sortedMisses.conflict = sortedMisses.conflict + t.name + ", ";
-          }
-        }
-        sortedMisses.core = sortedMisses.core.slice(0, -2);
-        sortedMisses.favor = sortedMisses.favor.slice(0, -2);
-        sortedMisses.disfavor = sortedMisses.disfavor.slice(0, -2);
-        sortedMisses.conflict = sortedMisses.conflict.slice(0, -2);
-
-        for (let mode in sortedMisses) {
-          if (sortedMisses[mode]){
-            const templateData = {
-              "type": "Miss",
-              "power": data.power,
-              "hitnames": sortedMisses[mode],
-              "entries": allMisses,
-              "core": mode === "core",
-              "favor": mode === "favor",
-              "disfavor": mode === "disfavor",
-              "conflict": mode === "conflict"
-            }
-            const chathtml = await renderTemplate(template, templateData);
-            const chatData = {
-              user: game.user._id,
-              content: chathtml,
-              speaker: {
-                actor: this.actor._id,
-                token: this.actor.token,
-                alias: this.actor.name
-              }
-            };
-            const rollMode = game.settings.get("core", "rollMode");
-            if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-            if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-            if (rollMode === "blindroll") chatData.blind = true;
-            await ChatMessage.create(chatData);
-          }
-        }
-      }
-    }
   }
 
   _PrepareInlineRolls(power, content, dambonus) {
@@ -1882,8 +1492,6 @@ export class AetrimondeItem extends Item {
   }
 
   _MakeCrit(content, mode, main = false, off = false) {
-    event.preventDefault();
-
     content = content ? content : "";
 
     const actorData = this.actor.data.data;
@@ -1913,5 +1521,15 @@ export class AetrimondeItem extends Item {
     }
 
     return content;
+  }
+
+  _SingleWeapon(content, mode) {
+    if (content.match(/\[\[.*\]\].*and\/or.*\[\[.*\]\]/g)) {
+      if (mode === "off") {
+        return(content.replace(/\[\[.*\]\].*and\/or.*(?=\[\[)/g, "").replace(", depending on which attack(s) hit", ""));
+      } else {
+        return(content.replace(/(?<=\]\]).*and\/or.*\[\[.*\]\]/g, "").replace(", depending on which attack(s) hit", ""));
+      }
+    }
   }
 }

@@ -1,11 +1,11 @@
 <div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
 
   <header class="card-header flexrow">
-    <span class="card-header">{{power.name}} Attack</span>
+    <span class="card-header">{{power.name}} Off-Hand Attack</span>
   </header>
   {{#if targets}}
   <div class="card-content underline">
-    <span class="boldface">Attack:</span> {{numberFormat power.data.attack.bonus decimals=0 sign=true}}{{#if power.data.attack.hasthreat}}T{{/if}} vs. {{power.data.attack.vslabel}}
+    <span class="boldface">Attack:</span> {{numberFormat power.data.attack.offbonus decimals=0 sign=true}}{{#if power.data.attack.hasoffthreat}}T{{/if}} vs. {{power.data.attack.vslabel}}
   </div>
   {{/if}}
   {{#each targets as |target id|}}
