@@ -152,7 +152,7 @@ export class AetrimondeItem extends Item {
 
       }
       if (data.relatedpower) {
-        data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
+        data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].label : "";
         data.power.critcontent = [];
         if (data.power.crit.text) {
           data.power.critcontent.push({"source": this.name + " Power Critical:", "criteffect": data.power.crit.text});
@@ -695,11 +695,39 @@ export class AetrimondeItem extends Item {
         item.data.weapon.complexity.value = item.data.weapon.complexity.complexities[`${item.data.weapon.complexity.value}`];
         item.data.weapon.hands.value = item.data.weapon.hands.handses[`${item.data.weapon.hands.value}`];
         item.data.weapon.mvsr.value = item.data.weapon.mvsr.mvsrs[`${item.data.weapon.mvsr.value}`];
+        item.data.weapon.textquals = "";
+
+        const quallabels = {
+          "bayonet": "Bayonet",
+          "bulky": "Bulky",
+          "critpotential": "Critical Potential",
+          "critthreat": "Critical Threat",
+          "heavythrown": "Heavy Thrown",
+          "lightthrown": "Light Thrown",
+          "magazine": "Magazine",
+          "reach": "Reach",
+          "solid": "Solid",
+          "other": "Other"
+        }
+
+        for (let qual in item.data.weapon.quals) {
+          if (["reachdist", "loadaction", "magsize", "otherdet"].includes(qual))
+            continue
+
+          if (item.data.weapon.quals[qual]) {
+            if (qual === "load") {
+              item.data.weapon.textquals = item.data.weapon.textquals + "Load " + item.data.weapon.quals.loadaction + ", "
+              continue;
+            }
+            item.data.weapon.textquals = item.data.weapon.textquals + quallabels[qual] + ", "
+          }
+        }
+        item.data.weapon.textquals = item.data.weapon.textquals.slice(0, -2);
       }
-      item.data.power.effect.text = item.data.power.effect.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.hit.text = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.crit.text = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
-      item.data.power.miss.text = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.effect.temp = item.data.power.effect.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.hit.temp = item.data.power.hit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.crit.temp = item.data.power.crit.text.replaceAll("[[", "").replaceAll("]]", "");
+      item.data.power.miss.temp = item.data.power.miss.text.replaceAll("[[", "").replaceAll("]]", "");
       template = `systems/aetrimonde_v0_8_x/templates/chat/` + item.type + `-card.html`;
       templateData = {
         "item": item
