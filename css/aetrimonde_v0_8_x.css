@@ -739,6 +739,14 @@
   color: LightGray
 }
 
+.aetrimonde.chat-card .inline-result.crithit .fas {
+  color: gold;
+}
+
+.aetrimonde.chat-card .inline-result.critmiss .fas {
+  color: red;
+}
+
 .aetrimonde.chat-card .mode-select {
   display: none
 }

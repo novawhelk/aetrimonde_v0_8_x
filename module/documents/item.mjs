@@ -154,8 +154,8 @@ export class AetrimondeItem extends Item {
       if (data.relatedpower) {
         data.power.attack.vslabel = (data.power.attack.vsdefense != "") ? data.defenses[`${data.power.attack.vsdefense}`].slabel : "";
         data.power.critcontent = [];
-        if (data.power.crit) {
-          data.power.critcontent.push({"source": this.name + "Power Critical:", "criteffect": data.power.crit.text});
+        if (data.power.crit.text) {
+          data.power.critcontent.push({"source": this.name + " Power Critical:", "criteffect": data.power.crit.text});
         }
       }
     }
@@ -661,7 +661,7 @@ export class AetrimondeItem extends Item {
     let templateData = [];
     if (itemcopy.type === "power") {
       const power = itemcopy;
-      power.data.powertype = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "";
+      power.data.powerlabel = power.data.powertype ? power.data.powertypes[`${power.data.powertype}`].label : "";
       const abilities = {
         "str": "Strength",
         "con": "Constitution",
@@ -758,11 +758,11 @@ export class AetrimondeItem extends Item {
     }
     else if (this.type === "equipment") {
       if (mode === "weaponattack" && this.data.data.isweapon) {
-        this._RunEffect(this._weaponAttack(), onlythis);
+        this._RunPower(this._weaponAttack(), onlythis);
       }
       else if (mode === "itempower" && this.data.data.relatedpower) {
         const itempower = {"name": this.name + " Power", "data": deepClone(this.data.data.power)};
-        this._RunEffect(itempower, onlythis);
+        this._RunPower(itempower, onlythis);
       }
     }
   }
@@ -930,14 +930,14 @@ export class AetrimondeItem extends Item {
       for (let target of game.user.targets) {
         targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
                       "id": target.data._id,
-                      "rolls": this._RollOnceCore(power.data.attack.bonus)});
+                      "rolls": this._RollOnceCore(power.data.attack.bonus, power.data.attack.hasthreat)});
         targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
       }
     }
     else {
       targets.push({"name": "Unknown Target",
                     "id": "",
-                    "rolls": this._RollOnceCore(power.data.attack.bonus)});
+                    "rolls": this._RollOnceCore(power.data.attack.bonus, power.data.attack.hasthreat)});
       targetnames = "Unknown Target, ";
     }
     targetnames = targetnames.substring(0, targetnames.length - 2);
@@ -1024,14 +1024,14 @@ export class AetrimondeItem extends Item {
       for (let target of game.user.targets) {
         targets.push({"name": target.actor.data.shortname ? target.actor.data.shortname : target.actor.name,
                       "id": target.data._id,
-                      "rolls": this._RollOnceCore(power.data.attack.offbonus)});
+                      "rolls": this._RollOnceCore(power.data.attack.offbonus, power.data.attack.hasoffthreat)});
         targetnames = targetnames + (target.actor.data.shortname ? target.actor.data.shortname : target.actor.name) + ", ";
       }
     }
     else {
       targets.push({"name": "Unknown Target",
                     "id": "",
-                    "rolls": this._RollOnceCore(power.data.attack.offbonus)});
+                    "rolls": this._RollOnceCore(power.data.attack.offbonus, power.data.attack.hasoffthreat)});
       targetnames = "Unknown Target, ";
     }
     targetnames = targetnames.substring(0, targetnames.length - 2);
@@ -1365,7 +1365,9 @@ export class AetrimondeItem extends Item {
     return singleRolls;
   }
 
-  _RollOnceCore(bonus) {
+  _RollOnceCore(bonus, threat = false) {
+    bonus = parseInt(bonus);
+    const threatmod = threat ? -3 : 0;
     const allRolls = new Roll("4d10 + " + bonus).evaluate();
 
     const nDie = {
@@ -1384,7 +1386,9 @@ export class AetrimondeItem extends Item {
       "formula":"2d10 + " + bonus,
       "terms": [nDie].concat(allRolls.terms.slice(1, 3)),
       "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + bonus,
-      "evaluated": true
+      "evaluated": true,
+      "crithit": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result >= 18 + threatmod,
+      "critmiss": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result <= 4
     };
 
     const fdfDie = {
@@ -1420,7 +1424,9 @@ export class AetrimondeItem extends Item {
       "formula":"3d10dl1 + " + bonus,
       "terms": [fDie].concat(allRolls.terms.slice(1, 3)),
       "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[min].result + bonus,
-      "evaluated": true
+      "evaluated": true,
+      "crithit": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[min].result >= 18 + threatmod,
+      "critmiss": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[min].result <= 4
     }
     const dfroll = {
       "class":"Roll",
@@ -1429,7 +1435,9 @@ export class AetrimondeItem extends Item {
       "formula":"3d10dh1 + " + bonus,
       "terms": [dfDie].concat(allRolls.terms.slice(1, 3)),
       "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[max].result + bonus,
-      "evaluated": true
+      "evaluated": true,
+      "crithit": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[max].result >= 18 + threatmod,
+      "critmiss": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[max].result <= 4
     }
 
     const cDie = {
@@ -1462,28 +1470,38 @@ export class AetrimondeItem extends Item {
       "formula":"4d10dl1dh1 + " + bonus,
       "terms": [cDie].concat(allRolls.terms.slice(1, 3)),
       "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result + allRolls.terms[0].results[3].result - allRolls.terms[0].results[min].result - allRolls.terms[0].results[max].result + bonus,
-      "evaluated": true
+      "evaluated": true,
+      "crithit": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result + allRolls.terms[0].results[3].result - allRolls.terms[0].results[min].result - allRolls.terms[0].results[max].result >= 18 + threatmod,
+      "critmiss": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result + allRolls.terms[0].results[3].result - allRolls.terms[0].results[min].result - allRolls.terms[0].results[max].result <= 4
     }
 
     const rolls = {
       "core": {
         "result": nroll.total,
         "formula": nroll.formula,
+        "crithit": nroll.crithit,
+        "critmiss": nroll.critmiss,
         "json": encodeURIComponent(JSON.stringify(nroll))
       },
       "favor": {
         "result": froll.total,
         "formula": froll.formula,
+        "crithit": froll.crithit,
+        "critmiss": froll.critmiss,
         "json": encodeURIComponent(JSON.stringify(froll))
       },
       "disfavor": {
         "result": dfroll.total,
         "formula": dfroll.formula,
+        "crithit": dfroll.crithit,
+        "critmiss": dfroll.critmiss,
         "json": encodeURIComponent(JSON.stringify(dfroll))
       },
       "conflict": {
         "result": croll.total,
         "formula": croll.formula,
+        "crithit": croll.crithit,
+        "critmiss": croll.critmiss,
         "json": encodeURIComponent(JSON.stringify(croll))
       }
     }
@@ -1531,5 +1549,6 @@ export class AetrimondeItem extends Item {
         return(content.replace(/(?<=\]\]).*and\/or.*\[\[.*\]\]/g, "").replace(", depending on which attack(s) hit", ""));
       }
     }
+    return(content);
   }
 }
