@@ -741,10 +741,12 @@
 
 .aetrimonde.chat-card .inline-result.crithit .fas {
   color: gold;
+  text-shadow: 0 0 10px #00ff00;
 }
 
 .aetrimonde.chat-card .inline-result.critmiss .fas {
   color: red;
+  text-shadow: 0 0 10px #000000;
 }
 
 .aetrimonde.chat-card .mode-select {

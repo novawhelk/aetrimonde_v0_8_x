@@ -9,7 +9,7 @@
   </div>
   {{/if}}
   {{#each targets as |target id|}}
-  <div class="card-content flexrow mode-set">
+  <div class="card-content flexrow mode-set underline">
     <span>{{target.name}}:</span>
     <span class="mode-select {{id}} core"></span>
     <a class="mode-blocker {{id}} core flex0" data-id="{{id}}">N</a>
@@ -22,7 +22,7 @@
     <a class="inline-roll inline-result {{id}} disfavor flex0 flex-center {{#if target.rolls.disfavor.crithit}}crithit{{/if}}{{#if target.rolls.disfavor.critmiss}}critmiss{{/if}}" title="{{target.rolls.disfavor.formula}}" data-roll="{{target.rolls.disfavor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{target.rolls.disfavor.result}}</span></a>
   </div>
   {{/each}}
-  <div class="card-content result flexrow flex-middle">
+  <div class="card-content result flexrow flex-middle underline">
     <a class="boldface hit normal-option false flex2">Hit</a>
     {{#if power.data.hit.rolls}}
     <a class="boldface hit favor-option false">Favor</a>
@@ -81,7 +81,7 @@
     {{/if}}
   </div>
   {{#if power.data.miss.text}}
-  <div class="card-content result flexrow flex-middle">
+  <div class="card-content result flexrow flex-middle underline">
     <a class="boldface miss normal-option false flex2">Miss</a>
     {{#if power.data.miss.rolls}}
     <a class="boldface miss favor-option false">Favor</a>
@@ -140,7 +140,7 @@
     {{/if}}
   </div>
   {{/if}}
-  <div class="card-content result flexrow flex-middle">
+  <div class="card-content result flexrow flex-middle underline">
     <a class="boldface crit normal-option false flex2">Critical Hit</a>
     <a class="boldface crit favor-option false">Favor</a>
     <a class="boldface crit conflict-option false">Conflict</a>
