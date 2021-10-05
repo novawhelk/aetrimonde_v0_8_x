@@ -731,10 +731,30 @@ export class AetrimondeItem extends Item {
   */
   async roll(mode, onlythis) {
     if (this.type === "power") {
-      if (this.data.data.effect.exists)
-        this._RunEffect(deepClone(this.data));
-      if (this.data.data.attack.exists)
-        this._RunAttack(deepClone(this.data));
+      const power = deepClone(this.data);
+      power.data.powerlabel = power.data.powertypes[power.data.powertype].label;
+
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
+      const templateData = {
+        "power": power,
+        "greater": power.data.powertype === "greater",
+        "cont": !onlythis
+      };
+      const content = await renderTemplate(template, templateData);
+      let d = new Dialog({
+        title: "Effect Options",
+        content: content,
+        buttons: {
+          one: {
+            label: "Use This Power",
+            callback: html => this._RunPower(power)
+          },
+          two: {
+            label: "Show in Chat",
+            callback: html => this.post()
+          }
+        }
+      }).render(true);
     }
     else if (this.type === "equipment") {
       if (mode === "weaponattack" && this.data.data.isweapon) {
@@ -836,6 +856,13 @@ export class AetrimondeItem extends Item {
     const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString)
 
     await message.update({"content": newContent})
+  }
+
+  async _RunPower(power) {
+    if (power.data.effect.exists)
+      this._RunEffect(power);
+    if (power.data.attack.exists)
+      this._RunAttack(power);
   }
 
   async _RunEffect(power) {

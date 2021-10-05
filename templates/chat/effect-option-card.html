@@ -10,7 +10,7 @@
     <span>{{power.data.flavortext}}</span>
   </div>
   <div class="card-content flexrow">
-    <span class="boldface">{{powergroup}}</span>
+    <span class="boldface">{{power.data.powerlabel}}</span>
     <span class="boldface">{{power.data.keywords}}</span>
   </div>
   <div class="card-content flexrow">
@@ -66,25 +66,7 @@
     <span><span class="boldface">Special: </span>{{power.data.special.text}}</span>
   </div>
   {{/if}}
-  <div class="underline">
-
-  </div>
-  {{#unless noroll}}
-  <div class="card-content flexrow underline">
-    <span class="flex4"></span>
-    <span class="radiocol">N</span>
-    <span class="radiocol">F</span>
-    <span class="radiocol">C</span>
-    <span class="radiocol">D</span>
-  </div>
-  <div class="card-content target-line flexrow">
-    <span class="flex4">Select Favor/Disfavor:</span>
-    <span class="radiocol"><input type="radio" id="n" name="damage-{{target.id}}" value="n" title="Roll Normally" checked="true"></span>
-    <span class="radiocol"><input type="radio" id="f" name="damage-{{target.id}}" value="f" title="Roll with Favor"></span>
-    <span class="radiocol"><input type="radio" id="c" name="damage-{{target.id}}" value="c" title="Roll with Conflict"></span>
-    <span class="radiocol"><input type="radio" id="d" name="damage-{{target.id}}" value="d" title="Roll with Disfavor"></span>
-  </div>
-  {{/unless}}
+  <div class="underline"></div>
 
 
 </div>
