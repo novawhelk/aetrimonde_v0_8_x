@@ -758,11 +758,11 @@ export class AetrimondeItem extends Item {
     }
     else if (this.type === "equipment") {
       if (mode === "weaponattack" && this.data.data.isweapon) {
-        this._RunPower(this._weaponAttack(), onlythis);
+        this._RunPower(this._weaponAttack());
       }
       else if (mode === "itempower" && this.data.data.relatedpower) {
         const itempower = {"name": this.name + " Power", "data": deepClone(this.data.data.power)};
-        this._RunPower(itempower, onlythis);
+        this._RunPower(itempower);
       }
     }
   }
