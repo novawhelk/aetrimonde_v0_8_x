@@ -709,7 +709,7 @@
 
 .aetrimonde.chat-card .favor-option.shown,
 .aetrimonde.chat-card .mode-select.favor ~ .inline-result.favor {
-  display: flex;
+  display: inline;
   background-color: DarkGreen
 }
 

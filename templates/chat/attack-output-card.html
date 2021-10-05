@@ -23,7 +23,7 @@ conflict<div class="aetrimonde chat-card result-card item-card" data-actor-id="{
   </div>
   {{/each}}
   <div class="card-content result flexrow flex-middle">
-    <a class="boldface hit normal-option false">Hit</a>
+    <a class="boldface hit normal-option false flex2">Hit</a>
     <a class="boldface hit favor-option false">Favor</a>
     <a class="boldface hit conflict-option false">Conflict</a>
     <a class="boldface hit disfavor-option false">Disfavor</a>
@@ -76,9 +76,9 @@ conflict<div class="aetrimonde chat-card result-card item-card" data-actor-id="{
       {{/each}}
     </div>
   </div>
-  {{#if power.data.miss}}
+  {{#if power.data.miss.text}}
   <div class="card-content result flexrow flex-middle">
-    <a class="boldface miss normal-option false">Miss</a>
+    <a class="boldface miss normal-option false flex2">Miss</a>
     <a class="boldface miss favor-option false">Favor</a>
     <a class="boldface miss conflict-option false">Conflict</a>
     <a class="boldface miss disfavor-option false">Disfavor</a>

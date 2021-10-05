@@ -819,17 +819,19 @@ export class AetrimondeItem extends Item {
     // Extract card data
     const button = event.currentTarget;
     const result = button.classList[1];
-    const mode = button.classList[2].split("-")[0]
+    const mode = button.classList[2].split("-")[0];
+    const current = button.classList[3];
+    const replace = current === "false" ? "shown" : "false";
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
 
-    const modeRegex = new RegExp(' ' + result + ' ' + mode + "-box false", 'g');
-    const modeString = " " + result + ' ' + mode + "-box";
+    const modeRegex = new RegExp(' ' + result + ' ' + mode + "-box " + current, 'g');
+    const modeString = " " + result + ' ' + mode + "-box " + replace;
 
-    const optionRegex = new RegExp(' ' + result + ' ' + mode + "-option false", 'g');
-    const optionString = " " + result + ' ' + mode + "-option shown";
+    const optionRegex = new RegExp(' ' + result + ' ' + mode + "-option " + current, 'g');
+    const optionString = " " + result + ' ' + mode + "-option " + replace;
 
     const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString)
 
@@ -897,13 +899,6 @@ export class AetrimondeItem extends Item {
     power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
     power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
-    const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
-    for (let content of power.data.critcontent) {
-      critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
-    }
-
-    debugger
-
     let targets = [];
     let offtargets = [];
     let targetnames = "";
@@ -921,31 +916,73 @@ export class AetrimondeItem extends Item {
                     "rolls": this._RollOnceCore(power.data.attack.bonus)});
       targetnames = "Unknown Target, ";
     }
+    targetnames = targetnames.substring(0, targetnames.length - 2);
 
     const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-output-card.html`;
-    const templateData = {
-      "power": power,
-      "targets": targets,
-      "hit": this._RollOnce(power.data.hit.text),
-      "miss": this._RollOnce(power.data.miss.text),
-      "crit": critcontent
-    };
-    const content = await renderTemplate(template, templateData);
 
-    const chatData = {
-      user: game.user._id,
-      content: content,
-      speaker: {
-        actor: this.actor._id,
-        token: this.actor.token,
-        alias: this.actor.name
+    if (power.data.range.includes("Area") || power.data.range.includes("Close")) {
+      const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
+      for (let content of power.data.critcontent) {
+        critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
       }
-    };
-    const rollMode = game.settings.get("core", "rollMode");
-    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
-    if (rollMode === "blindroll") chatData.blind = true;
-    await ChatMessage.create(chatData);
+
+      const templateData = {
+        "power": power,
+        "targets": targets,
+        "hit": this._RollOnce(power.data.hit.text),
+        "miss": this._RollOnce(power.data.miss.text),
+        "crit": critcontent
+      };
+      const content = await renderTemplate(template, templateData);
+
+      const chatData = {
+        user: game.user._id,
+        content: content,
+        speaker: {
+          actor: this.actor._id,
+          token: this.actor.token,
+          alias: this.actor.name
+        }
+      };
+      const rollMode = game.settings.get("core", "rollMode");
+      if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+      if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+      if (rollMode === "blindroll") chatData.blind = true;
+      await ChatMessage.create(chatData);
+    }
+    else {
+      for (let target of targets) {
+        const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
+        for (let content of power.data.critcontent) {
+          critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
+        }
+
+        const templateData = {
+          "power": power,
+          "targets": [target],
+          "hit": this._RollOnce(power.data.hit.text),
+          "miss": this._RollOnce(power.data.miss.text),
+          "crit": critcontent
+        };
+        const content = await renderTemplate(template, templateData);
+
+        const chatData = {
+          user: game.user._id,
+          content: content,
+          speaker: {
+            actor: this.actor._id,
+            token: this.actor.token,
+            alias: this.actor.name
+          }
+        };
+        const rollMode = game.settings.get("core", "rollMode");
+        if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+        if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+        if (rollMode === "blindroll") chatData.blind = true;
+        await ChatMessage.create(chatData);
+      }
+    }
+
   }
 
   async _outputEffects(data, html, expendPower) {
