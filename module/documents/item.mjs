@@ -800,7 +800,6 @@ export class AetrimondeItem extends Item {
     targetnames = targetnames.substring(0, targetnames.length - 2);
 
     const effect = this._RollOnce(power.data.effect.text);
-    debugger;
 
     const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-output-card.html`;
     const templateData = {
@@ -1467,88 +1466,6 @@ export class AetrimondeItem extends Item {
     return content;
   }
 
-  _ApplyFavorDisfavor(content, mode, main = false, off = false) {
-    event.preventDefault();
-
-    content = content ? content : "";
-
-    const actorData = this.actor.data.data;
-
-    if (content.match(/\[\[.*\]\].*and\/or.*\[\[.*\]\]/g)) {
-      if (off) {
-        content = content.replace(/\[\[.*\]\].*and\/or.*(?=\[\[)/g, "").replace(", depending on which attack(s) hit", "");
-      } else if (main) {
-        content = content.replace(/(?<=\]\]).*and\/or.*\[\[.*\]\]/g, "").replace(", depending on which attack(s) hit", "");
-      }
-    }
-
-    const rolls = content.match(/(?<=\[\[).*?(?=\]\])/g)
-    if (mode === "favor") {
-      if (rolls != null) {
-        let uniqueRolls = rolls.filter(function (value, index, self) {return self.indexOf(value) === index; });
-        let prefix = "";
-        uniqueRolls.forEach(function(roll, index) {
-
-          if (roll.includes("/r ")) {
-            roll = roll.replace("/r ", "");
-            prefix = "/r ";
-          }
-          let rollMatch = "[[" + prefix + roll + "]]";
-          let fRoll = "[[" + prefix + "{" + roll + "," + roll + "}dl1]]";
-          content = content.replaceAll(rollMatch, fRoll);
-        });
-      }
-    }
-    else if (mode === "disfavor") {
-      if (rolls != null) {
-        let uniqueRolls = rolls.filter(function (value, index, self) {return self.indexOf(value) === index; });
-        let prefix = "";
-        uniqueRolls.forEach(function(roll, index) {
-
-          if (roll.includes("/r ")) {
-            roll = roll.replace("/r ", "");
-            prefix = "/r ";
-          }
-          let rollMatch = "[[" + prefix + roll + "]]";
-          let fRoll = "[[" + prefix + "{" + roll + "," + roll + "}dh1]]";
-          content = content.replaceAll(rollMatch, fRoll);
-        });
-      }
-    }
-    else if (mode === "conflict") {
-      if (rolls != null) {
-        let uniqueRolls = rolls.filter(function (value, index, self) {return self.indexOf(value) === index; });
-        let prefix = "";
-        uniqueRolls.forEach(function(roll, index) {
-
-          if (roll.includes("/r ")) {
-            roll = roll.replace("/r ", "");
-            prefix = "/r ";
-          }
-          let rollMatch = "[[" + prefix + roll + "]]";
-          let fRoll = "[[" + prefix + "{" + roll + "," + roll +  "," + roll + "}dl1dh1]]";
-          content = content.replaceAll(rollMatch, fRoll);
-        });
-      }
-    }
-    else if (mode === "crit") {
-      if (rolls != null) {
-        let uniqueRolls = rolls.filter(function (value, index, self) {return self.indexOf(value) === index; });
-        let prefix = "";
-        uniqueRolls.forEach(function(roll, index) {
-          if (roll.includes("/r ")) {
-            roll = roll.replace("/r ", "");
-            prefix = "/r ";
-          }
-          let rollMatch = "[[" + prefix + roll + "]]";
-          let fRoll = "[[" + prefix + roll.replaceAll(/(?<=\d)d(?=\d)/g, "*").replaceAll(/r\d*/g, "") + "]]";
-          content = content.replaceAll(rollMatch, fRoll);
-        });
-      }
-    }
-    return content;
-  }
-
   _RollOnce(content) {
     let fContent = content;
     let dContent = content;
@@ -1579,7 +1496,6 @@ export class AetrimondeItem extends Item {
         else {
           croll = 3;
         }
-        debugger;
         const frollobj = {
           "class":"Roll",
           "options": {},
@@ -1704,5 +1620,131 @@ export class AetrimondeItem extends Item {
     singleRolls.push({"post": content});
 
     return singleRolls;
+  }
+
+  _RollOnceCore(bonus) {
+    const allRolls = new Roll("4d10 + " + bonus).evaluate();
+
+    const nDie = {
+      "class": "Die",
+      "options": {},
+      "evaluate": true,
+      "number": 2,
+      "faces": 10,
+      "modifiers": [],
+      "results": allRolls.terms[0].results.slice(0, 2)
+    };
+    const nroll = {
+      "class":"Roll",
+      "options": {},
+      "dice":[],
+      "formula":"2d10 + " + bonus,
+      "terms": [nDie].concat(allRolls.terms.slice(1, 3)),
+      "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + bonus,
+      "evaluated": true
+    };
+
+    const fdfDie = {
+      "class": "Die",
+      "options": {},
+      "evaluate": true,
+      "number": 3,
+      "faces": 10,
+      "modifiers": [],
+      "results": allRolls.terms[0].results.slice(0, 3)
+    };
+    let min = 0;
+    let max = 0;
+    for (let i = 0; i < 3; i++) {
+      min = fdfDie.results[i].result < fdfDie.results[min].result ? i : min;
+      max = fdfDie.results[i].result > fdfDie.results[max].result ? i : max;
+      fdfDie.results[i].active = true;
+      fdfDie.results[i].discarded = false;
+    }
+    const fDie = deepClone(fdfDie);
+    const dfDie = deepClone(fdfDie);
+    fDie.results[min].active = false;
+    fDie.results[min].discarded = true;
+    fDie.modifiers = ["dl1"];
+    dfDie.results[max].active = false;
+    dfDie.results[max].discarded = true;
+    dfDie.modifiers = ["dh1"];
+
+    const froll = {
+      "class":"Roll",
+      "options": {},
+      "dice":[],
+      "formula":"3d10dl1 + " + bonus,
+      "terms": [fDie].concat(allRolls.terms.slice(1, 3)),
+      "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[min].result + bonus,
+      "evaluated": true
+    }
+    const dfroll = {
+      "class":"Roll",
+      "options": {},
+      "dice":[],
+      "formula":"3d10dh1 + " + bonus,
+      "terms": [dfDie].concat(allRolls.terms.slice(1, 3)),
+      "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result - allRolls.terms[0].results[max].result + bonus,
+      "evaluated": true
+    }
+
+    const cDie = {
+      "class": "Die",
+      "options": {},
+      "evaluate": true,
+      "number": 4,
+      "faces": 10,
+      "modifiers": ["dl1", "dh1"],
+      "results": allRolls.terms[0].results
+    };
+    min = 0;
+    max = 0;
+    for (let i = 0; i < 4; i++) {
+      min = cDie.results[i].result < cDie.results[min].result ? i : min;
+      max = cDie.results[i].result > cDie.results[max].result ? i : max;
+      cDie.results[i].active = true;
+      cDie.results[i].discarded = false;
+    }
+    cDie.results[min].active = false;
+    cDie.results[min].discarded = true;
+    cDie.results[max].active = false;
+    cDie.results[max].discarded = true;
+    cDie.modifiers = ["dl1", "dh1"];
+
+    const croll = {
+      "class":"Roll",
+      "options": {},
+      "dice":[],
+      "formula":"4d10dl1dh1 + " + bonus,
+      "terms": [cDie].concat(allRolls.terms.slice(1, 3)),
+      "total": allRolls.terms[0].results[0].result + allRolls.terms[0].results[1].result + allRolls.terms[0].results[2].result + allRolls.terms[0].results[3].result - allRolls.terms[0].results[min].result - allRolls.terms[0].results[max].result + bonus,
+      "evaluated": true
+    }
+
+    const rolls = {
+      "core": {
+        "result": nroll.total,
+        "formula": nroll.formula,
+        "json": encodeURIComponent(JSON.stringify(nroll))
+      },
+      "favor": {
+        "result": froll.total,
+        "formula": froll.formula,
+        "json": encodeURIComponent(JSON.stringify(froll))
+      },
+      "disfavor": {
+        "result": dfroll.total,
+        "formula": dfroll.formula,
+        "json": encodeURIComponent(JSON.stringify(dfroll))
+      },
+      "conflict": {
+        "result": croll.total,
+        "formula": croll.formula,
+        "json": encodeURIComponent(JSON.stringify(croll))
+      }
+    }
+
+    return rolls;
   }
 }
