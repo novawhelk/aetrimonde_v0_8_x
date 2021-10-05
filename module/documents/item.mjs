@@ -233,8 +233,8 @@ export class AetrimondeItem extends Item {
       data.relevantoffitemtype = "Off-Weapon";
 
       data.critcontent = [];
-      if (data.crit) {
-        data.critcontent.push({"source": this.name + " Critical:", "criteffect": data.crit.text});
+      if (data.crit.text) {
+        data.critcontent.push({"source": this.name + " Critical", "criteffect": data.crit.text});
       }
 
       if ( data.keywords.includes("Weapon") && ["normal", "lesser", "greater", "feature"].includes( data.powertype)) {
@@ -280,16 +280,16 @@ export class AetrimondeItem extends Item {
 
         // Save list of used weapons. REPLACE THIS ASAP: Try constructing an array of critical effects based on the power's crit effect and those of the chosen items.
         if (mainweapon.data.weapon.quals.critpotential) {
-          data.critcontent.push({"source": "Critical Potential:", "criteffect": "[[1<Weapon>]] extra damage."})
+          data.critcontent.push({"source": "Critical Potential", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (mainweapon.data.relatedprops && mainweapon.data.critprops) {
-          data.critcontent.push({"source": mainweapon.name + " Critical:", "criteffect": mainweapon.data.critprops})
+          data.critcontent.push({"source": mainweapon.name, "criteffect": mainweapon.data.critprops})
         }
         if (data.attack.off && offweapon.data.weapon.quals.critpotential) {
-          data.critcontent.push({"source": "Critical Potential:", "criteffect": "[[1<Weapon>]] extra damage."})
+          data.critcontent.push({"source": "Critical Potential", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (data.attack.off && offweapon.data.relatedprops && offweapon.data.critprops) {
-          data.critcontent.push({"source": offweapon.name + " Critical:", "criteffect": offweapon.data.critprops})
+          data.critcontent.push({"source": offweapon.name, "criteffect": offweapon.data.critprops})
         }
 
         // Issue a warning if it doesn't look like the right items are equipped.
@@ -335,10 +335,10 @@ export class AetrimondeItem extends Item {
         unarmedattack = unarmedattack.data;
 
         if (unarmedattack.data.weapon.quals.critpotential) {
-          data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+          data.critcontent.push({"source": "High Crit Weapon", "criteffect": "[[1<Weapon>]] extra damage."})
         }
         if (unarmedattack.data.relatedprops && unarmedattack.data.critprops) {
-          data.critcontent.push({"source": unarmedattack.name + " Critical:", "criteffect": unarmedattack.data.critprops})
+          data.critcontent.push({"source": unarmedattack.name, "criteffect": unarmedattack.data.critprops})
         }
 
         data.warning = data.relevantitems && !data.mainitem;
@@ -387,7 +387,7 @@ export class AetrimondeItem extends Item {
         shield = shield.data;
 
         if (shield.data.relatedprops && shield.data.critprops) {
-          data.critcontent.push({"source": shield.name + " Critical:", "criteffect": shield.data.critprops})
+          data.critcontent.push({"source": shield.name, "criteffect": shield.data.critprops})
         }
 
         data.warning = !shield.data.isshield || !shield.data.shield.dice || !shield.data.equippedanywhere;
@@ -430,7 +430,7 @@ export class AetrimondeItem extends Item {
         imp = imp.data;
 
         if (imp.data.relatedprops && imp.data.critprops) {
-          data.critcontent.push({"source": imp.name + " Critical:", "criteffect": imp.data.critprops})
+          data.critcontent.push({"source": imp.name, "criteffect": imp.data.critprops})
         }
 
         const attbonus = this._powerAttackBonus(this.data, imp.data.implement);
@@ -633,10 +633,10 @@ export class AetrimondeItem extends Item {
       "dependent": "weaponattack"
     }
     if (weapon.data.weapon.quals.critpotential) {
-      weaponattack.data.critcontent.push({"source": "High Crit Weapon:", "criteffect": "[[1<Weapon>]] extra damage."})
+      weaponattack.data.critcontent.push({"source": "High Crit Weapon", "criteffect": "[[1<Weapon>]] extra damage."})
     }
     if (weapon.data.relatedprops && weapon.data.critprops) {
-      weaponattack.data.critcontent.push({"source": weapon.name + " Critical:", "criteffect": weapon.data.critprops})
+      weaponattack.data.critcontent.push({"source": weapon.name, "criteffect": weapon.data.critprops})
     }
     return weaponattack
   }
@@ -748,16 +748,20 @@ export class AetrimondeItem extends Item {
   }
 
   static chatListeners(html) {
-    html.on('click', '.chat-card .favor-option', this._onChatCardOption.bind(this));
-    html.on('click', '.chat-card .conflict-option', this._onChatCardOption.bind(this));
-    html.on('click', '.chat-card .disfavor-option', this._onChatCardOption.bind(this));
+    html.on('click', '.chat-card .favor-option', this._onEffectOption.bind(this));
+    html.on('click', '.chat-card .conflict-option', this._onEffectOption.bind(this));
+    html.on('click', '.chat-card .disfavor-option', this._onEffectOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.core', this._onAttackOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.favor', this._onAttackOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.conflict', this._onAttackOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.disfavor', this._onAttackOption.bind(this));
+    html.on('click', '.chat-card .result .normal-option', this._onResultOption.bind(this));
+    html.on('click', '.chat-card .result .favor-option', this._onResultOption.bind(this));
+    html.on('click', '.chat-card .result .conflict-option', this._onResultOption.bind(this));
+    html.on('click', '.chat-card .result .disfavor-option', this._onResultOption.bind(this));
   }
 
-  static async _onChatCardOption(event) {
+  static async _onEffectOption(event) {
     event.preventDefault();
 
     if (game.user.role < 2)
@@ -802,6 +806,32 @@ export class AetrimondeItem extends Item {
     const modeString = "mode-select " + id + " " + mode;
 
     const newContent = message.data.content.replaceAll(modeRegex, modeString);
+
+    await message.update({"content": newContent})
+  }
+
+  static async _onResultOption(event) {
+    event.preventDefault();
+
+    if (game.user.role < 2)
+      return;
+
+    // Extract card data
+    const button = event.currentTarget;
+    const result = button.classList[1];
+    const mode = button.classList[2].split("-")[0]
+
+    const card = button.closest(".chat-card");
+    const messageId = card.closest(".message").dataset.messageId;
+    const message =  game.messages.get(messageId);
+
+    const modeRegex = new RegExp(' ' + result + ' ' + mode + "-box false", 'g');
+    const modeString = " " + result + ' ' + mode + "-box";
+
+    const optionRegex = new RegExp(' ' + result + ' ' + mode + "-option false", 'g');
+    const optionString = " " + result + ' ' + mode + "-option shown";
+
+    const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString)
 
     await message.update({"content": newContent})
   }
@@ -867,6 +897,13 @@ export class AetrimondeItem extends Item {
     power.data.maintain.text = power.data.maintain.text ? this._PrepareInlineRolls(power, power.data.maintain.text, power.data.damagebonus) : "";
     power.data.special.text = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
+    const critcontent = [{"source": "Critical Hit", "content": this._RollOnce(this._MakeCrit(power.data.hit.text))}];
+    for (let content of power.data.critcontent) {
+      critcontent.push({"source": content.source, "content": this._RollOnce(this._PrepareInlineRolls(power, content.criteffect, {"feat": 0, "itemb": 0, "misc": 0}))});
+    }
+
+    debugger
+
     let targets = [];
     let offtargets = [];
     let targetnames = "";
@@ -888,7 +925,10 @@ export class AetrimondeItem extends Item {
     const template = `systems/aetrimonde_v0_8_x/templates/chat/attack-output-card.html`;
     const templateData = {
       "power": power,
-      "targets": targets
+      "targets": targets,
+      "hit": this._RollOnce(power.data.hit.text),
+      "miss": this._RollOnce(power.data.miss.text),
+      "crit": critcontent
     };
     const content = await renderTemplate(template, templateData);
 
@@ -1775,5 +1815,39 @@ export class AetrimondeItem extends Item {
     }
 
     return rolls;
+  }
+
+  _MakeCrit(content, mode, main = false, off = false) {
+    event.preventDefault();
+
+    content = content ? content : "";
+
+    const actorData = this.actor.data.data;
+
+    if (content.match(/\[\[.*\]\].*and\/or.*\[\[.*\]\]/g)) {
+      if (off) {
+        content = content.replace(/\[\[.*\]\].*and\/or.*(?=\[\[)/g, "").replace(", depending on which attack(s) hit", "");
+      } else if (main) {
+        content = content.replace(/(?<=\]\]).*and\/or.*\[\[.*\]\]/g, "").replace(", depending on which attack(s) hit", "");
+      }
+    }
+
+    const rolls = content.match(/(?<=\[\[).*?(?=\]\])/g)
+
+    if (rolls != null) {
+      let uniqueRolls = rolls.filter(function (value, index, self) {return self.indexOf(value) === index; });
+      let prefix = "";
+      uniqueRolls.forEach(function(roll, index) {
+        if (roll.includes("/r ")) {
+          roll = roll.replace("/r ", "");
+          prefix = "/r ";
+        }
+        let rollMatch = "[[" + prefix + roll + "]]";
+        let fRoll = "[[" + prefix + roll.replaceAll(/(?<=\d)d(?=\d)/g, "*").replaceAll(/r\d*/g, "") + "]]";
+        content = content.replaceAll(rollMatch, fRoll);
+      });
+    }
+
+    return content;
   }
 }

@@ -1,4 +1,4 @@
-<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
+conflict<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
 
   <header class="card-header flexrow">
     <span class="card-header">{{power.name}} Attacks</span>
@@ -22,6 +22,185 @@
     <a class="inline-roll inline-result {{id}} disfavor flex0 flex-center" title="{{target.rolls.disfavor.formula}}" data-roll="{{target.rolls.disfavor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{target.rolls.disfavor.result}}</span></a>
   </div>
   {{/each}}
-
+  <div class="card-content result flexrow flex-middle">
+    <a class="boldface hit normal-option false">Hit</a>
+    <a class="boldface hit favor-option false">Favor</a>
+    <a class="boldface hit conflict-option false">Conflict</a>
+    <a class="boldface hit disfavor-option false">Disfavor</a>
+    <div class="card-content hit normal-box false">
+      <span class="boldface">Hit:</span>
+      {{#each hit as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content hit favor-box false">
+      <span class="boldface">Hit with Favor:</span>
+      {{#each hit as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content hit conflict-box false">
+      <span class="boldface">Hit with Conflict:</span>
+      {{#each hit as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content hit disfavor-box false">
+      <span class="boldface">Hit with Disfavor:</span>
+      {{#each hit as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+  </div>
+  {{#if power.data.miss}}
+  <div class="card-content result flexrow flex-middle">
+    <a class="boldface miss normal-option false">Miss</a>
+    <a class="boldface miss favor-option false">Favor</a>
+    <a class="boldface miss conflict-option false">Conflict</a>
+    <a class="boldface miss disfavor-option false">Disfavor</a>
+    <div class="card-content miss normal-box false">
+      <span class="boldface">Miss:</span>
+      {{#each miss as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content miss favor-box false">
+      <span class="boldface">Miss with Favor:</span>
+      {{#each miss as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content miss conflict-box false">
+      <span class="boldface">Miss with Conflict:</span>
+      {{#each miss as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content miss disfavor-box false">
+      <span class="boldface">Miss with Disfavor:</span>
+      {{#each miss as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+  <div class="card-content result flexrow flex-middle">
+    <a class="boldface crit normal-option false flex2">Critical Hit</a>
+    <a class="boldface crit favor-option false">Favor</a>
+    <a class="boldface crit conflict-option false">Conflict</a>
+    <a class="boldface crit disfavor-option false">Disfavor</a>
+    <div class="card-content crit normal-box false">
+      {{#each crit as |critcontent no|}}
+      <div>
+        <span class="boldface">{{critcontent.source}}: </span>
+        {{#each critcontent.content as |segment no|}}
+          {{#if segment.pre}}
+            {{segment.text}}
+            <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+          {{/if}}
+          {{#if segment.post}}
+            {{segment.post}}
+          {{/if}}
+        {{/each}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="card-content crit favor-box false">
+      {{#each crit as |critcontent no|}}
+      <div>
+        <span class="boldface">{{critcontent.source}} with Favor: </span>
+        {{#each critcontent.content as |segment no|}}
+          {{#if segment.pre}}
+            {{segment.text}}
+            <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+          {{/if}}
+          {{#if segment.post}}
+            {{segment.post}}
+          {{/if}}
+        {{/each}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="card-content crit conflict-box false">
+      {{#each crit as |critcontent no|}}
+      <div>
+        <span class="boldface">{{critcontent.source}} with Conflict:  </span>
+        {{#each critcontent.content as |segment no|}}
+          {{#if segment.pre}}
+            {{segment.text}}
+            <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+          {{/if}}
+          {{#if segment.post}}
+            {{segment.post}}
+          {{/if}}
+        {{/each}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="card-content crit disfavor-box false">
+      {{#each crit as |critcontent no|}}
+      <div>
+        <span class="boldface">{{critcontent.source}} with Disfavor:</span>
+        {{#each critcontent.content as |segment no|}}
+          {{#if segment.pre}}
+            {{segment.text}}
+            <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+          {{/if}}
+          {{#if segment.post}}
+            {{segment.post}}
+          {{/if}}
+        {{/each}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
 
 </div>
