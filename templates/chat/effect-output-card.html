@@ -1,0 +1,64 @@
+<div class="aetrimonde chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}"
+  <header class="card-header flexrow">
+    <span class="card-header">{{power.name}}</span>
+  </header>
+
+  <div class="card-content underline flexrow">
+    <span class="italic">Against {{targetnames}}</span>
+  </div>
+  <div class="card-content flexrow flex-middle">
+    <div class="card-content normal-box">
+      <span class="boldface">Effect:</span>
+      {{#each effect as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <a class="boldface favor-option false">Favor</a>
+    <a class="boldface conflict-option false">Conflict</a>
+    <a class="boldface disfavor-option false">Disfavor</a>
+    <div class="card-content favor-box false">
+      <span class="boldface">Effect with Favor:</span>
+      {{#each effect as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content conflict-box false">
+      <span class="boldface">Effect with Conflict:</span>
+      {{#each effect as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content disfavor-box false">
+      <span class="boldface">Effect with Disfavor:</span>
+      {{#each effect as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+  </div>
+
+
+</div>

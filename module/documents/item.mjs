@@ -744,6 +744,34 @@ export class AetrimondeItem extends Item {
     }
   }
 
+  static chatListeners(html) {
+    html.on('click', '.chat-card .favor-option', this._onChatCardOption.bind(this));
+    html.on('click', '.chat-card .conflict-option', this._onChatCardOption.bind(this));
+    html.on('click', '.chat-card .disfavor-option', this._onChatCardOption.bind(this));
+  }
+
+  static async _onChatCardOption(event) {
+    event.preventDefault();
+
+    // Extract card data
+    const button = event.currentTarget;
+    const mode = button.classList[1].split("-")[0]
+
+    const card = button.closest(".chat-card");
+    const messageId = card.closest(".message").dataset.messageId;
+    const message =  game.messages.get(messageId);
+
+    const modeRegex = new RegExp(' ' + mode + "-box false", 'g');
+    const modeString = " " + mode + "-box";
+
+    const optionRegex = new RegExp(' ' + mode + "-option false", 'g');
+    const optionString = " " + mode + "-option shown";
+
+    const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString);
+
+    await message.update({"content": newContent})
+  }
+
   async _RunEffect(power, onlythis) {
     power.data.effect.text = power.data.effect.text ? this._PrepareInlineRolls(power, power.data.effect.text, power.data.damagebonus) : "";
     power.data.hit.text = power.data.hit.text ? this._PrepareInlineRolls(power, power.data.hit.text, power.data.damagebonus) : "";
@@ -771,57 +799,31 @@ export class AetrimondeItem extends Item {
     }
     targetnames = targetnames.substring(0, targetnames.length - 2);
 
-    if (power.data.effect.text.includes("[[")) {
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
-      const templateData = {
-        "power": power,
-        "greater": power.data.powertype === "greater",
-        "targets": targets ? targets : [],
-        "targetnames": targetnames,
-        "cont": !onlythis
-      };
-      const content = await renderTemplate(template, templateData);
-      let d = new Dialog({
-        title: "Effect Options",
-        content: content,
-        buttons: {
-          one: {
-            label: "Use This Power",
-            callback: html => this._outputEffects(templateData, html.find('.target-line'), html.find('.expend-power'))
-          },
-          two: {
-            label: "Show in Chat",
-            callback: html => this.post()
-          }
-        }
-      }).render(true);
-    }
-    else {
-      const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-option-card.html`;
-      const templateData = {
-        "power": power,
-        "greater": power.data.powertype === "greater",
-        "targets": targets ? targets : [],
-        "targetnames": targetnames,
-        "cont": !onlythis,
-        "noroll": true
-      };
-      const content = await renderTemplate(template, templateData);
-      let d = new Dialog({
-        title: "Effect Options",
-        content: content,
-        buttons: {
-          one: {
-            label: "Use This Power",
-            callback: html => this._outputEffects(templateData, false, html.find('.expend-power'))
-          },
-          two: {
-            label: "Show in Chat",
-            callback: html => this.post()
-          }
-        }
-      }).render(true);
-    }
+    const effect = this._RollOnce(power.data.effect.text);
+    debugger;
+
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/effect-output-card.html`;
+    const templateData = {
+      "power": power,
+      "effect": effect,
+      "targetnames": targetnames
+    };
+    const content = await renderTemplate(template, templateData);
+
+    const chatData = {
+      user: game.user._id,
+      content: content,
+      speaker: {
+        actor: this.actor._id,
+        token: this.actor.token,
+        alias: this.actor.name
+      }
+    };
+    const rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "blindroll") chatData.blind = true;
+    await ChatMessage.create(chatData);
   }
 
   async _RunAttack(event) {
@@ -1560,6 +1562,7 @@ export class AetrimondeItem extends Item {
         const roll1 = new Roll(roll).evaluate();
         const roll2 = new Roll(roll).evaluate();
         const roll3 = new Roll(roll).evaluate();
+
         const result1 = roll1._total;
         const result2 = roll2._total;
         const result3 = roll3._total;
@@ -1576,18 +1579,20 @@ export class AetrimondeItem extends Item {
         else {
           croll = 3;
         }
+        debugger;
         const frollobj = {
           "class":"Roll",
+          "options": {},
           "dice":[],
           "formula":"{" + roll + "," + roll + "}dl1",
           "terms":[{
-            "class":"DicePool",
-            "rolls":[
-              roll1,
-              roll2
-            ],
-            "modifiers":[],
+            "class":"PoolTerm",
             "options":{},
+            "evaluated": true,
+            "terms": [roll, roll],
+            "modifiers": ["dl1"],
+            "rolls": [roll1, roll2],
+            "total": Math.max(roll1._total, roll2._total),
             "results":[{
               "result":roll1._total,
               "active":roll1._total >= roll2._total,
@@ -1599,21 +1604,22 @@ export class AetrimondeItem extends Item {
               "discarded":roll1._total >= roll2._total
             }]
           }],
-          "results":[Math.max(roll1._total, roll2._total)],
-          "total":Math.max(roll1._total, roll2._total)
+          "total": Math.max(roll1._total, roll2._total),
+          "evaluated": true
         }
         const drollobj = {
           "class":"Roll",
+          "options": {},
           "dice":[],
           "formula":"{" + roll + "," + roll + "}dh1",
           "terms":[{
-            "class":"DicePool",
-            "rolls":[
-              roll1,
-              roll2
-            ],
-            "modifiers":[],
+            "class":"PoolTerm",
             "options":{},
+            "evaluated": true,
+            "terms": [roll, roll],
+            "modifiers": ["dl1"],
+            "rolls": [roll1, roll2],
+            "total": Math.min(roll1._total, roll2._total),
             "results":[{
               "result":roll1._total,
               "active":roll1._total <= roll2._total,
@@ -1625,22 +1631,22 @@ export class AetrimondeItem extends Item {
               "discarded":roll1._total <= roll2._total
             }]
           }],
-          "results":[Math.min(roll1._total, roll2._total)],
-          "total":Math.min(roll1._total, roll2._total)
+          "total": Math.min(roll1._total, roll2._total),
+          "evaluated": true
         }
         const crollobj = {
           "class":"Roll",
+          "options": {},
           "dice":[],
           "formula":"{" + roll + "," + roll + "," + roll + "}dl1dh1",
           "terms":[{
-            "class":"DicePool",
-            "rolls":[
-              roll1,
-              roll2,
-              roll3
-            ],
-            "modifiers":[],
+            "class":"PoolTerm",
             "options":{},
+            "evaluated": true,
+            "terms": [roll, roll, roll],
+            "modifiers": ["dl1dh1"],
+            "rolls": [roll1, roll2, roll3],
+            "total":allrolls[croll-1]._total,
             "results":[{
               "result":roll1._total,
               "active":croll === 1,
@@ -1657,12 +1663,13 @@ export class AetrimondeItem extends Item {
               "discarded":croll != 3
             }]
           }],
-          "results":[allrolls[croll-1]._total],
-          "total":allrolls[croll-1]._total
+          "total":allrolls[croll-1]._total,
+          "evaluated": true
         }
         const fresult = Math.max(result1, result2);
         const dresult = Math.min(result1, result2);
         const cresult = (result1 + result2 + result3 - Math.max(result1, result2, result3) - Math.min(result1, result2, result3));
+
         const singleRoll = {
           "pre": true,
           "text": content.split(rollMatch, 1)[0],

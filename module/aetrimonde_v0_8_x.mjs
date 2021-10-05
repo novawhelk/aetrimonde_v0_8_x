@@ -216,6 +216,9 @@ Hooks.once("ready", async function() {
   Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
 });
 
+
+Hooks.on("renderChatLog", (app, html, data) => AetrimondeItem.chatListeners(html));
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
