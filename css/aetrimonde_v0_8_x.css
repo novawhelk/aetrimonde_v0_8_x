@@ -687,7 +687,7 @@
 .aetrimonde.chat-card .inline-result.favor,
 .aetrimonde.chat-card .inline-result.conflict,
 .aetrimonde.chat-card .inline-result.disfavor {
-  flex-basis: 15%;
+  flex-basis: 18%;
   display: none;
   border: 1px solid black;
   margin: 1px;

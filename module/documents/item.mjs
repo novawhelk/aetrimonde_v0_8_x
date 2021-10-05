@@ -731,8 +731,10 @@ export class AetrimondeItem extends Item {
   */
   async roll(mode, onlythis) {
     if (this.type === "power") {
-      this._RunEffect(deepClone(this.data));
-      this._RunAttack(deepClone(this.data));
+      if (this.data.data.effect.exists)
+        this._RunEffect(deepClone(this.data));
+      if (this.data.data.attack.exists)
+        this._RunAttack(deepClone(this.data));
     }
     else if (this.type === "equipment") {
       if (mode === "weaponattack" && this.data.data.isweapon) {
@@ -758,6 +760,9 @@ export class AetrimondeItem extends Item {
   static async _onChatCardOption(event) {
     event.preventDefault();
 
+    if (game.user.role < 2)
+      return;
+
     // Extract card data
     const button = event.currentTarget;
     const mode = button.classList[1].split("-")[0]
@@ -779,6 +784,9 @@ export class AetrimondeItem extends Item {
 
   static async _onAttackOption(event) {
     event.preventDefault();
+
+    if (game.user.role < 2)
+      return;
 
     // Extract card data
     const button = event.currentTarget;
