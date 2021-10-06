@@ -513,7 +513,7 @@
                             <span class="truncated-ellipsis rowend flex3">{{item.data.benefit}}</span>
                             <div class="item-controls">
                                 <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a class="item-control item-post" title="Post Item" data-power="{{item.id}}"><i class="fas fa-share-square"></i></a>
+                                <a class="item-control item-post" title="Post Item" data-power="{{item._id}}"><i class="fas fa-share-square"></i></a>
                                 <a class="item-control item-{{#if item.dependent}}no{{/if}}delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                             </div>
                         </li>
@@ -576,7 +576,7 @@
                     {{#each powers.entries as |item id|}}
                         <li class="item power flexrow {{group}} " data-item-id="{{item._id}}">
                             <div class="item-image" style="background-image: url('{{item.img}}');" >
-                              <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item._id}}", data-dependent="{{item.dependent}}"><img src="systems/aetrimonde/icons/go.png"title="{{item.name}}" width="42" height="42"/></a>
+                              <a class="item-rollable" data-name="{{item.name}}", data-power="{{item._id}}", data-mode="{{item.dependent}}"><img src="systems/aetrimonde/icons/go.png"title="{{item.name}}" width="42" height="42"/></a>
                             </div>
                             <div class="flexcol item-name flex4">
                               <div class="flexrow">
@@ -609,13 +609,13 @@
                             </div>
 
                             <div class="centered flexcol flex3">
-                              <a class="effect-rollable" data-name="{{item.name}}", data-power="{{item._id}}" data-onlythis="true">{{#if item.data.effect.exists}}Effect{{/if}}</a>
+                              <a class="effect-rollable run-effect" data-name="{{item.name}}", data-power="{{item._id}}" data-mode="{{item.dependent}}">{{#if item.data.effect.exists}}Effect{{/if}}</a>
                               <span class="modes">
                                 {{#if item.data.attack.exists}}
-                                <a class="attack-rollable run-power" data-name="{{item.name}}", data-power="{{item.json}}">Attack:</a>
-                                <a class="attack-rollable run-power" data-name="{{item.name}}", data-power="{{item.json}}", data-nooff="true">{{numberFormat item.data.attack.bonus decimals=0 sign=true}}{{#if item.data.attack.hasthreat}}T{{/if}}</a>
+                                <a class="attack-rollable run-attack" data-name="{{item.name}}", data-power="{{item._id}}", data-mode="{{item.dependent}}">Attack:</a>
+                                <a class="attack-rollable run-attack" data-name="{{item.name}}", data-power="{{item._id}}", data-mode="{{item.dependent}}", data-main="true">{{numberFormat item.data.attack.bonus decimals=0 sign=true}}{{#if item.data.attack.hasthreat}}T{{/if}}</a>
                                 {{#if item.data.attack.off}}/
-                                <a class="attack-rollable run-power" data-name="{{item.name}}", data-power="{{item.json}}", data-nomain="true">{{numberFormat item.data.attack.offbonus decimals=0 sign=true}}{{#if item.data.attack.hasoffthreat}}T{{/if}}</a>
+                                <a class="attack-rollable run-attack" data-name="{{item.name}}", data-power="{{item._id}}", data-mode="{{item.dependent}}", data-off="true">{{numberFormat item.data.attack.offbonus decimals=0 sign=true}}{{#if item.data.attack.hasoffthreat}}T{{/if}}</a>
                                 {{/if}}
                                 <span> vs. {{item.data.attack.vslabel}}</span>
                                 {{/if}}

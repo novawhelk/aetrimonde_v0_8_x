@@ -635,7 +635,10 @@
 
 .aetrimonde.chat-card .normal-option.false ~ .favor-option,
 .aetrimonde.chat-card .normal-option.false ~ .conflict-option,
-.aetrimonde.chat-card .normal-option.false ~ .disfavor-option {
+.aetrimonde.chat-card .normal-option.false ~ .disfavor-option,
+.aetrimonde.chat-card .normal-option.false ~ .favor-box,
+.aetrimonde.chat-card .normal-option.false ~ .conflict-box,
+.aetrimonde.chat-card .normal-option.false ~ .disfavor-box {
   display: none;
 }
 
@@ -715,13 +718,13 @@
 
 .aetrimonde.chat-card .conflict-option.shown,
 .aetrimonde.chat-card .mode-select.conflict ~ .inline-result.conflict {
-  display: flex;
+  display: inline;
   background-color: DarkGoldenRod
 }
 
 .aetrimonde.chat-card .disfavor-option.shown,
 .aetrimonde.chat-card .mode-select.disfavor ~ .inline-result.disfavor {
-  display: flex;
+  display: inline;
   background-color: DarkRed
 }
 
