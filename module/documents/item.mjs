@@ -947,10 +947,12 @@ export class AetrimondeItem extends Item {
   async _RunAttack(power) {
     power.data.hit.rolls = power.data.hit.text.includes("[[");
     power.data.miss.rolls = power.data.miss.text.includes("[[");
+    power.data.special.rolls = power.data.special.text.includes("[[");
 
     power.data.mainhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "main"), power.data.damagebonus) : "";
     power.data.maincrit = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
     power.data.mainmiss = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    power.data.mainspecial = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -984,7 +986,8 @@ export class AetrimondeItem extends Item {
         "targets": targets,
         "hit": this._RollOnce(power.data.mainhit),
         "miss": this._RollOnce(power.data.mainmiss),
-        "crit": critcontent
+        "crit": critcontent,
+        "special": this._RollOnce(power.data.mainspecial)
       };
       const content = await renderTemplate(template, templateData);
 
@@ -1016,7 +1019,8 @@ export class AetrimondeItem extends Item {
           "targets": [target],
           "hit": this._RollOnce(power.data.mainhit),
           "miss": this._RollOnce(power.data.mainmiss),
-          "crit": critcontent
+          "crit": critcontent,
+          "special": this._RollOnce(power.data.mainspecial)
         };
         const content = await renderTemplate(template, templateData);
 
@@ -1043,10 +1047,12 @@ export class AetrimondeItem extends Item {
   async _RunOffAttack(power) {
     power.data.hit.rolls = power.data.hit.text.includes("[[");
     power.data.miss.rolls = power.data.miss.text.includes("[[");
+    power.data.special.rolls = power.data.special.text.includes("[[");
 
     power.data.offhit = power.data.hit.text ? this._PrepareInlineRolls(power, this._SingleWeapon(power.data.hit.text, "off"), power.data.damagebonus) : "";
     power.data.offcrit = power.data.crit.text ? this._PrepareInlineRolls(power, power.data.crit.text, power.data.damagebonus) : "";
     power.data.offmiss = power.data.miss.text ? this._PrepareInlineRolls(power, power.data.miss.text, power.data.damagebonus) : "";
+    power.data.offspecial = power.data.special.text ? this._PrepareInlineRolls(power, power.data.special.text, power.data.damagebonus) : "";
 
     let targets = [];
     let offtargets = [];
@@ -1080,7 +1086,8 @@ export class AetrimondeItem extends Item {
         "targets": targets,
         "hit": this._RollOnce(power.data.offhit),
         "miss": this._RollOnce(power.data.offmiss),
-        "crit": critcontent
+        "crit": critcontent,
+        "special": this._RollOnce(power.data.offspecial)
       };
       const content = await renderTemplate(template, templateData);
 
@@ -1112,7 +1119,8 @@ export class AetrimondeItem extends Item {
           "targets": [target],
           "hit": this._RollOnce(power.data.offhit),
           "miss": this._RollOnce(power.data.offmiss),
-          "crit": critcontent
+          "crit": critcontent,
+          "special": this._RollOnce(power.data.offspecial)
         };
         const content = await renderTemplate(template, templateData);
 
@@ -1173,7 +1181,7 @@ export class AetrimondeItem extends Item {
       content = content.replaceAll("<" + a + ">", actorData.abilities[`${label}`].mod)
     }
 
-    let dstrings = content.match(/\[\[[^\[\]]*?(\d+(d\d+(r\d+)?|<Weapon>|<Main-Weapon>|<Off-Weapon>|<Shield>|<Unarmed>) *(\+ *){0,1})*[^\[\]]*?\]\]( additional)?/g);
+    let dstrings = content.match(/\[\[[^\[\]]*?(\d+(d\d+(r\d+)?|<Weapon>|<Main-Weapon>|<Off-Weapon>|<Shield>|<Unarmed>) *(\+ *){0,1})*[^\[\]]*?\]\]( additional| extra| critical)?/g);
     if (dstrings) {
       for (let dstring of dstrings) {
         let rstring = dstring.replaceAll("d", "d");
@@ -1232,7 +1240,7 @@ export class AetrimondeItem extends Item {
         }
         dstringdambonus = dstringdambonus ? dstringdambonus : {"feat": 0, "itemb": 0, "misc": 0}
         const totaldambonus = parseInt(dstringdambonus.feat) + parseInt(dstringdambonus.itemb) + parseInt(dstringdambonus.misc);
-        if (!dstring.includes("additional") && totaldambonus) {
+        if (!dstring.match(/(additional|extra|critical)/g) && totaldambonus) {
           rstring = rstring.replace(/\]\]/g, " + " + totaldambonus + "]]");
         }
         content = content.replace(dstring, rstring);
