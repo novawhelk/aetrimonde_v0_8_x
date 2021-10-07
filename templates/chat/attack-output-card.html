@@ -210,5 +210,65 @@
       {{/each}}
     </div>
   </div>
+  {{#if power.data.special.text}}
+  <div class="card-content result flexrow flex-middle underline">
+    <a class="boldface special normal-option false flex2">Special</a>
+    {{#if power.data.special.rolls}}
+    <a class="boldface special favor-option false">Favor</a>
+    <a class="boldface special conflict-option false">Conflict</a>
+    <a class="boldface special disfavor-option false">Disfavor</a>
+    {{/if}}
+    <div class="card-content special normal-box false">
+      <span class="boldface">Special:</span>
+      {{#each special as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    {{#if power.data.special.rolls}}
+    <div class="card-content special favor-box false">
+      <span class="boldface">Special with Favor:</span>
+      {{#each special as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content special conflict-box false">
+      <span class="boldface">Special with Conflict:</span>
+      {{#each special as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="card-content special disfavor-box false">
+      <span class="boldface">Special with Disfavor:</span>
+      {{#each special as |segment no|}}
+        {{#if segment.pre}}
+          {{segment.text}}
+          <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+        {{/if}}
+        {{#if segment.post}}
+          {{segment.post}}
+        {{/if}}
+      {{/each}}
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
 
 </div>
