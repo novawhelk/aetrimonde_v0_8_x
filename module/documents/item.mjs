@@ -886,7 +886,7 @@ export class AetrimondeItem extends Item {
     await message.update({"content": newContent})
   }
 
-  async _RunPower(power) {
+  async _RunPower(power) { //Modify this so that it takes a mode argument derived from the dataset of the event, then internally executes effects and attacks as needed.
     if (power.data.effect.exists)
       this._RunEffect(deepClone(power));
     if (power.data.attack.exists)
@@ -940,7 +940,8 @@ export class AetrimondeItem extends Item {
     if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
     if (rollMode === "selfroll") chatData.whisper = [game.user._id];
     if (rollMode === "blindroll") chatData.blind = true;
-    await ChatMessage.create(chatData);
+    const message = ChatMessage.create(chatData);
+    message.resolve();
   }
 
   async _RunAttack(power) {
@@ -1000,7 +1001,8 @@ export class AetrimondeItem extends Item {
       if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
       if (rollMode === "selfroll") chatData.whisper = [game.user._id];
       if (rollMode === "blindroll") chatData.blind = true;
-      await ChatMessage.create(chatData);
+      const message = ChatMessage.create(chatData);
+      message.resolve();
     }
     else {
       for (let target of targets) {
@@ -1031,7 +1033,8 @@ export class AetrimondeItem extends Item {
         if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
         if (rollMode === "selfroll") chatData.whisper = [game.user._id];
         if (rollMode === "blindroll") chatData.blind = true;
-        await ChatMessage.create(chatData);
+        const message = ChatMessage.create(chatData);
+        message.resolve();
       }
     }
 
@@ -1094,7 +1097,8 @@ export class AetrimondeItem extends Item {
       if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
       if (rollMode === "selfroll") chatData.whisper = [game.user._id];
       if (rollMode === "blindroll") chatData.blind = true;
-      await ChatMessage.create(chatData);
+      const message = ChatMessage.create(chatData);
+      message.resolve();
     }
     else {
       for (let target of targets) {
@@ -1125,7 +1129,8 @@ export class AetrimondeItem extends Item {
         if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
         if (rollMode === "selfroll") chatData.whisper = [game.user._id];
         if (rollMode === "blindroll") chatData.blind = true;
-        await ChatMessage.create(chatData);
+        const message = ChatMessage.create(chatData);
+        message.resolve();
       }
     }
 
@@ -1542,6 +1547,7 @@ export class AetrimondeItem extends Item {
 
     const actorData = this.actor.data.data;
 
+    content = content.replace(/\[\[\/r */g, "[[");
     if (content.match(/\[\[.*\]\].*and\/or.*\[\[.*\]\]/g)) {
       if (off) {
         content = content.replace(/\[\[.*\]\].*and\/or.*(?=\[\[)/g, "").replace(", depending on which attack(s) hit", "");
