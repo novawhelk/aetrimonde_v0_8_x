@@ -152,7 +152,7 @@
         {{#each critcontent.content as |segment no|}}
           {{#if segment.pre}}
             {{segment.text}}
-            <a class="inline-roll inline-result" title="{{segment.core.formula}}" data-roll="{{segment.core.json}}"><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
+            <a class="inline-roll inline-result" title="{{segment.core.formula}}" {{#unless segment.flat}}data-roll="{{segment.core.json}}"{{/unless}}><i class="fas fa-dice-d20"></i>{{segment.core.result}}</a>
           {{/if}}
           {{#if segment.post}}
             {{segment.post}}
@@ -168,7 +168,7 @@
         {{#each critcontent.content as |segment no|}}
           {{#if segment.pre}}
             {{segment.text}}
-            <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+            <a class="inline-roll inline-result" title="{{segment.favor.formula}}" {{#unless segment.flat}}data-roll="{{segment.favor.json}}"{{/unless}}><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
           {{/if}}
           {{#if segment.post}}
             {{segment.post}}
@@ -184,7 +184,7 @@
         {{#each critcontent.content as |segment no|}}
           {{#if segment.pre}}
             {{segment.text}}
-            <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+            <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" {{#unless segment.flat}}data-roll="{{segment.conflict.json}}"{{/unless}}><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
           {{/if}}
           {{#if segment.post}}
             {{segment.post}}
@@ -200,7 +200,7 @@
         {{#each critcontent.content as |segment no|}}
           {{#if segment.pre}}
             {{segment.text}}
-            <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+            <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" {{#unless segment.flat}}data-roll="{{segment.disfavor.json}}"{{/unless}}><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
           {{/if}}
           {{#if segment.post}}
             {{segment.post}}

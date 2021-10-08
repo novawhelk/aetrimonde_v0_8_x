@@ -101,7 +101,7 @@
               <span><input type="number" name="data.attack.itemb" value="{{data.attack.itemb}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
               <span><input type="number" name="data.attack.misc" value="{{data.attack.misc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
               <span><input type="number" name="data.attack.powermisc" value="{{data.attack.powermisc}}" data-dtype="Number"/></span>
-              <span><input name="data.attack.hasthreat" type="checkbox" {{checked data.attack.hasthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              <span><input name="data.attack.hasthreat" type="checkbox" {{checked data.attack.hasthreat}} {{#if data.autothreat}}disabled="true"{{/if}}/></span>
               {{#if data.attack.off}}
               <span></span>
             </div>
@@ -112,7 +112,7 @@
               <span><input type="number" name="data.attack.offitemb" value="{{data.attack.offitemb}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
               <span><input type="number" name="data.attack.offmisc" value="{{data.attack.offmisc}}" data-dtype="Number" {{#if data.autoprof}}disabled="true"{{/if}}/></span>
               <span>{{numberFormat data.attack.powermisc decimals=0 sign=true}}</span>
-              <span><input name="data.attack.hasoffthreat" type="checkbox" {{checked data.attack.hasoffthreat}} {{#if data.autoweapon}}disabled="true"{{/if}}/></span>
+              <span><input name="data.attack.hasoffthreat" type="checkbox" {{checked data.attack.hasoffthreat}} {{#if data.autooffthreat}}disabled="true"{{/if}}/></span>
               {{/if}}
               <span><input name="data.attack.off" type="checkbox" {{checked data.attack.off}}/></span>
             </div>
