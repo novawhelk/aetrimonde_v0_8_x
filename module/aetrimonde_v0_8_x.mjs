@@ -219,6 +219,11 @@ Hooks.once("ready", async function() {
 
 Hooks.on("renderChatLog", (app, html, data) => AetrimondeItem.chatListeners(html));
 
+// Hooks.on('diceSoNiceRollStart', (messageId, context) => {
+//     //Hide this roll
+//     context.blind=true;
+// });
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */

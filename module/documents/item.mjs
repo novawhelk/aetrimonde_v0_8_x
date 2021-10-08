@@ -843,7 +843,8 @@ export class AetrimondeItem extends Item {
 
     // Extract card data
     const button = event.currentTarget;
-    const mode = button.classList[1].split("-")[0]
+    const id = button.dataset.id;
+    const mode = button.classList[2]
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
@@ -866,7 +867,10 @@ export class AetrimondeItem extends Item {
 
     // Extract card data
     const button = event.currentTarget;
-    const mode = button.classList[1].split("-")[0]
+    const result = button.classList[1];
+    const mode = button.classList[2].split("-")[0];
+    const current = button.classList[3];
+    const replace = current === "false" ? "shown" : "false";
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
@@ -1252,11 +1256,11 @@ export class AetrimondeItem extends Item {
     let dContent = content;
     let cContent = content;
     const rolls = content.match(/(?<=\[\[).*?(?=\]\])/g);
-    const flat = !content.match(/\dd\d/g);
 
     let singleRolls = [];
     if (rolls) {
       for (let roll of rolls) {
+        const flat = !roll.match(/\dd\d/g);
         let rollMatch = "[[" + roll + "]]";
         const roll1 = new Roll(roll).evaluate();
         const roll2 = new Roll(roll).evaluate();

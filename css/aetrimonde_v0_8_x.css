@@ -732,8 +732,14 @@
   color: LightGray
 }
 
-.aetrimonde.chat-card .inline-result .fas {
+.aetrimonde.chat-card .inline-result .fas,
+.aetrimonde.chat-card .inline-flat .fas {
   margin-right: 2px;
+}
+
+.aetrimonde.chat-card a.inline-flat i {
+  color: #7a7971;
+
 }
 
 .aetrimonde.chat-card .inline-result.favor .fas,
@@ -759,6 +765,15 @@
 a.inline-result {
   background: none;
   border: none;
+}
+
+a.inline-flat {
+  background: none;
+  padding: 1px 4px;
+  border: none;
+  border-radius: 2px;
+  white-space: nowrap;
+  word-break: break-all;
 }
 
 .aetrimonde.chat-card .card-content.flexrow.splitline span ~ span {
