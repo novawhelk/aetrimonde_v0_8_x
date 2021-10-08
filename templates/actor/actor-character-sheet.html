@@ -553,6 +553,7 @@
                   </div>
                 </li>
                 {{#each features as |features source|}}
+                    {{#if features.entries}}
                     <li class="item flexrow item-header">
                       <div class="item-name">{{features.label}}</div>
                       <div class="item-controls">
@@ -579,6 +580,7 @@
                         </div>
                         {{/if}}
                     {{/each}}
+                    {{/if}}
                 {{/each}}
             </ol>
         </div>
@@ -621,6 +623,7 @@
                   <div class="item-controls"></div>
                 </li>
                 {{#each powers as |powers group|}}
+                {{#if powers.entries}}
                     <li class="item flexrow item-header">
                       <div class="item-name">{{powers.label}}</div>
                       <div class="item-controls">
@@ -700,6 +703,7 @@
                         </div>
                         {{/if}}
                     {{/each}}
+                    {{/if}}
                 {{/each}}
             </ol>
         </div>
