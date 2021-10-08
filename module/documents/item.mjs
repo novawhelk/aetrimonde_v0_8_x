@@ -815,9 +815,6 @@ export class AetrimondeItem extends Item {
   static async _onEffectOption(event) {
     event.preventDefault();
 
-    if (game.user.role < 2)
-      return;
-
     // Extract card data
     const button = event.currentTarget;
     const mode = button.classList[1].split("-")[0]
@@ -825,6 +822,10 @@ export class AetrimondeItem extends Item {
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
+
+    debugger
+    if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
+      return;
 
     const modeRegex = new RegExp(' ' + mode + "-box false", 'g');
     const modeString = " " + mode + "-box";
@@ -840,18 +841,17 @@ export class AetrimondeItem extends Item {
   static async _onAttackOption(event) {
     event.preventDefault();
 
-    if (game.user.role < 2)
-      return;
-
     // Extract card data
     const button = event.currentTarget;
-    const mode = button.classList[2].match(/(core|favor|conflict|disfavor)/g)[0];
+    const mode = button.classList[1].split("-")[0]
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
 
-    const id = button.dataset.id;
+    debugger
+    if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
+      return;
 
     const modeRegex = new RegExp("mode-select " + id + " (core|favor|conflict|disfavor)", 'g');
     const modeString = "mode-select " + id + " " + mode;
@@ -864,19 +864,17 @@ export class AetrimondeItem extends Item {
   static async _onResultOption(event) {
     event.preventDefault();
 
-    if (game.user.role < 2)
-      return;
-
     // Extract card data
     const button = event.currentTarget;
-    const result = button.classList[1];
-    const mode = button.classList[2].split("-")[0];
-    const current = button.classList[3];
-    const replace = current === "false" ? "shown" : "false";
+    const mode = button.classList[1].split("-")[0]
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
+
+    debugger
+    if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
+      return;
 
     const modeRegex = new RegExp(' ' + result + ' ' + mode + "-box " + current, 'g');
     const modeString = " " + result + ' ' + mode + "-box " + replace;
