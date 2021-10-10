@@ -1,0 +1,20 @@
+<div class="aetrimonde chat-card result-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
+
+  <header class="card-header flexrow">
+    <span class="card-header">{{check.name}} Check</span>
+  </header>
+  <div class="card-content result flexrow flex-middle underline">
+    <div class="card-content flexrow mode-set underline">
+      <span class="mode-select {{check._id}} core"></span>
+      <a class="mode-blocker {{check._id}} core " data-id="{{check._id}}">Normal</a>
+      <a class="inline-roll inline-result {{check._id}} core flex-center " title="{{rolls.core.formula}}" data-roll="{{rolls.core.json}}"><i class="fas fa-dice-d20"></i><span>&nbsp;{{rolls.core.result}}</span></a>
+      <a class="mode-blocker {{check._id}} favor " data-id="{{check._id}}" >Favor</a>
+      <a class="inline-roll inline-result inline-dsn-hidden {{check._id}} favor flex-center " title="{{rolls.favor.formula}}" data-roll="{{rolls.favor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{rolls.favor.result}}</span></a>
+      <a class="mode-blocker {{check._id}} conflict " data-id="{{check._id}}" >Conflict</a>
+      <a class="inline-roll inline-result inline-dsn-hidden {{check._id}} conflict flex-center " title="{{rolls.conflict.formula}}" data-roll="{{rolls.conflict.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{rolls.conflict.result}}</span></a>
+      <a class="mode-blocker {{check._id}} disfavor " data-id="{{check._id}}" >Disfavor</a>
+      <a class="inline-roll inline-result inline-dsn-hidden {{check._id}} disfavor flex-center " title="{{rolls.disfavor.formula}}" data-roll="{{rolls.disfavor.json}}"><i class="fas fa-dice-d20"></i><span class="grey">&nbsp;{{rolls.disfavor.result}}</span></a>
+    </div>
+  </div>
+
+</div>

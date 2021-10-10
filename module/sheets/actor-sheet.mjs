@@ -447,9 +447,6 @@ export class AetrimondeActorSheet extends ActorSheet {
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
-    // Rollable abilities.
-    html.find('.rollable').click(this._onRoll.bind(this));
-
     // Drag events for macros.
     if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
@@ -477,6 +474,9 @@ export class AetrimondeActorSheet extends ActorSheet {
 
     // Quick skill training toggle
     html.find('.skill-trained').click(this._skillToggle.bind(this));
+
+    // Ability check usage handler
+    html.find('.ability-rollable').click(this._AbilityCheck.bind(this));
 
     // Power usage handlers
     html.find('.item-rollable').click(this._RunPower.bind(this));
@@ -709,6 +709,38 @@ export class AetrimondeActorSheet extends ActorSheet {
     else {
       thisitem.update({"data.trained": true});
     }
+  }
+
+  async _AbilityCheck(event) {
+    const abil = event.currentTarget.dataset.abil;
+    const skillSub = this.actor.items.getName("Acrobatics");
+    const check = skillSub._RollOnceCore(this.actor.data.data.abilities[abil].mod);
+
+
+    const template = `systems/aetrimonde_v0_8_x/templates/chat/check-output-card.html`;
+    const templateData = {
+      "check": {
+        "name": this.actor.data.data.abilities[abil].label,
+        "_id": abil
+      },
+      "rolls": check
+    };
+    const content = await renderTemplate(template, templateData);
+
+    const chatData = {
+      user: game.user._id,
+      content: content,
+      speaker: {
+        actor: this.actor._id,
+        token: this.actor.token,
+        alias: this.actor.name
+      }
+    };
+    const rollMode = game.settings.get("core", "rollMode");
+    if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "blindroll") chatData.blind = true;
+    ChatMessage.create(chatData);
   }
 
   async _RunPower(event) {

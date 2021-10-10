@@ -6,7 +6,7 @@
   <div class="card-content underline flexrow">
     <span class="italic">Against {{targetnames}}</span>
   </div>
-  <div class="card-content flexrow flex-middle">
+  <div class="card-content flexrow flex-middle effect">
     <div class="card-content normal-box">
       <span class="boldface">Effect:</span>
       {{#each effect as |segment no|}}
@@ -28,7 +28,7 @@
       {{#each effect as |segment no|}}
         {{#if segment.pre}}
           {{segment.text}}
-          <a class="inline-roll inline-result" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
+          <a class="inline-roll inline-result inline-dsn-hidden" title="{{segment.favor.formula}}" data-roll="{{segment.favor.json}}"><i class="fas fa-dice-d20"></i>{{segment.favor.result}}</a>
         {{/if}}
         {{#if segment.post}}
           {{segment.post}}
@@ -40,7 +40,7 @@
       {{#each effect as |segment no|}}
         {{#if segment.pre}}
           {{segment.text}}
-          <a class="inline-roll inline-result" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
+          <a class="inline-roll inline-result inline-dsn-hidden" title="{{segment.conflict.formula}}" data-roll="{{segment.conflict.json}}"><i class="fas fa-dice-d20"></i>{{segment.conflict.result}}</a>
         {{/if}}
         {{#if segment.post}}
           {{segment.post}}
@@ -52,7 +52,7 @@
       {{#each effect as |segment no|}}
         {{#if segment.pre}}
           {{segment.text}}
-          <a class="inline-roll inline-result" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
+          <a class="inline-roll inline-result inline-dsn-hidden" title="{{segment.disfavor.formula}}" data-roll="{{segment.disfavor.json}}"><i class="fas fa-dice-d20"></i>{{segment.disfavor.result}}</a>
         {{/if}}
         {{#if segment.post}}
           {{segment.post}}

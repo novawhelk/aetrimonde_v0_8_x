@@ -707,7 +707,7 @@
 }
 
 .aetrimonde.chat-card .mode-select.core ~ .inline-result.core {
-  display: flex;
+  display: inline;
 }
 
 .aetrimonde.chat-card .favor-option.shown,

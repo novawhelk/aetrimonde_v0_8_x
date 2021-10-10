@@ -796,12 +796,37 @@ export class AetrimondeItem extends Item {
         this._RunPower(itempower);
       }
     }
+    else if (this.type === "skill" || this.type === "perk") {
+      const check = this._RollOnceCore(this.data.data.total);
+
+      const template = `systems/aetrimonde_v0_8_x/templates/chat/check-output-card.html`;
+      const templateData = {
+        "check": deepClone(this.data),
+        "rolls": check
+      };
+      const content = await renderTemplate(template, templateData);
+
+      const chatData = {
+        user: game.user._id,
+        content: content,
+        speaker: {
+          actor: this.actor._id,
+          token: this.actor.token,
+          alias: this.actor.name
+        }
+      };
+      const rollMode = game.settings.get("core", "rollMode");
+      if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
+      if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+      if (rollMode === "blindroll") chatData.blind = true;
+      ChatMessage.create(chatData);
+    }
   }
 
   static chatListeners(html) {
-    html.on('click', '.chat-card .favor-option', this._onEffectOption.bind(this));
-    html.on('click', '.chat-card .conflict-option', this._onEffectOption.bind(this));
-    html.on('click', '.chat-card .disfavor-option', this._onEffectOption.bind(this));
+    html.on('click', '.chat-card .effect .favor-option', this._onEffectOption.bind(this));
+    html.on('click', '.chat-card .effect .conflict-option', this._onEffectOption.bind(this));
+    html.on('click', '.chat-card .effect .disfavor-option', this._onEffectOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.core', this._onAttackOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.favor', this._onAttackOption.bind(this));
     html.on('click', '.chat-card .mode-blocker.conflict', this._onAttackOption.bind(this));
@@ -817,23 +842,42 @@ export class AetrimondeItem extends Item {
 
     // Extract card data
     const button = event.currentTarget;
-    const mode = button.classList[1].split("-")[0]
+    const mode = button.classList[1].split("-")[0];
+    const current = button.classList[2];
+    const replace = current === "false" ? "shown" : "false";
 
     const card = button.closest(".chat-card");
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
 
-    debugger
     if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
       return;
 
-    const modeRegex = new RegExp(' ' + mode + "-box false", 'g');
-    const modeString = " " + mode + "-box";
+    const modeRegex = new RegExp(' ' + mode + "-box " + current, 'g');
+    const modeString = " " + mode + "-box " + replace;
 
-    const optionRegex = new RegExp(' ' + mode + "-option false", 'g');
-    const optionString = " " + mode + "-option shown";
+    const optionRegex = new RegExp(' ' + mode + "-option " + current, 'g');
+    const optionString = " " + mode + "-option " + replace;
 
-    const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString);
+    const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString)
+
+    if (current === "false") {
+      let inline = button;
+      for (var i = 1; i <= 3; i ++) {
+        inline = inline.nextElementSibling;
+        if (!inline)
+          break;
+      }
+      inline = inline ? inline.children[1] : null;
+      while (!!inline) {
+        if (inline.classList.contains("inline-result")) {
+          const resultbox = inline.dataset.roll;
+          const roll = Roll.fromJSON(decodeURI(resultbox).replaceAll("%3A", ":").replaceAll("%2C", ",").replaceAll("%2B", "+"))
+          game.dice3d.showForRoll(roll);
+        }
+        inline = inline.nextElementSibling;
+      }
+    }
 
     await message.update({"content": newContent})
   }
@@ -850,7 +894,6 @@ export class AetrimondeItem extends Item {
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
 
-    debugger
     if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
       return;
 
@@ -876,7 +919,6 @@ export class AetrimondeItem extends Item {
     const messageId = card.closest(".message").dataset.messageId;
     const message =  game.messages.get(messageId);
 
-    debugger
     if (game.user.role < 2 || (game.user.role < 3 && game.user.id != message.data.user))
       return;
 
@@ -887,6 +929,24 @@ export class AetrimondeItem extends Item {
     const optionString = " " + result + ' ' + mode + "-option " + replace;
 
     const newContent = message.data.content.replaceAll(modeRegex, modeString).replaceAll(optionRegex, optionString)
+
+    if (current === "false") {
+      let inline = button;
+      for (var i = 1; i <= 4; i ++) {
+        inline = inline.nextElementSibling;
+        if (!inline)
+          break;
+      }
+      inline = inline ? inline.children[1] : null;
+      while (!!inline) {
+        if (inline.classList.contains("inline-result")) {
+          const resultbox = inline.dataset.roll;
+          const roll = Roll.fromJSON(decodeURI(resultbox).replaceAll("%3A", ":").replaceAll("%2C", ",").replaceAll("%2B", "+"))
+          game.dice3d.showForRoll(roll);
+        }
+        inline = inline.nextElementSibling;
+      }
+    }
 
     await message.update({"content": newContent})
   }
@@ -908,7 +968,7 @@ export class AetrimondeItem extends Item {
     let targets = [];
     let offtargets = [];
     let targetnames = "";
-    debugger
+    
     if (game.user.targets.size > 0){
       for (let target of game.user.targets) {
         targets.push({"name": target.name,
