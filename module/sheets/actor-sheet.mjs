@@ -482,6 +482,11 @@ export class AetrimondeActorSheet extends ActorSheet {
     html.find('.item-rollable').click(this._RunPower.bind(this));
     html.find('.run-effect').click(this._RunEffect.bind(this));
     html.find('.run-attack').click(this._RunAttack.bind(this));
+
+    let handler = ev => this._PassProp(ev);
+    html.find('input.pass-prop').each((i, ipt) => {
+      ipt.addEventListener("change", handler, false);
+    });
   }
 
   /**
@@ -932,5 +937,14 @@ export class AetrimondeActorSheet extends ActorSheet {
         }
       }
     }).render(true);
+  }
+
+  _PassProp(event) {
+    const item = this.actor.items.get(event.currentTarget.parentElement.parentElement.dataset.itemId);
+    const attr = "data." + event.currentTarget.dataset.attr;
+    const updates = {};
+    updates[attr] = event.currentTarget.value;
+
+    item.update(updates);
   }
 }
