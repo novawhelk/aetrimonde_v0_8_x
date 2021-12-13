@@ -807,17 +807,17 @@ export class AetrimondeItem extends Item {
       const content = await renderTemplate(template, templateData);
 
       const chatData = {
-        user: game.user._id,
+        user: game.user.id,
         content: content,
         speaker: {
-          actor: this.actor._id,
+          actor: this.actor.id,
           token: this.actor.token,
           alias: this.actor.name
         }
       };
       const rollMode = game.settings.get("core", "rollMode");
       if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-      if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+      if (rollMode === "selfroll") chatData.whisper = [game.user.id];
       if (rollMode === "blindroll") chatData.blind = true;
       ChatMessage.create(chatData);
     }
@@ -968,7 +968,7 @@ export class AetrimondeItem extends Item {
     let targets = [];
     let offtargets = [];
     let targetnames = "";
-    
+
     if (game.user.targets.size > 0){
       for (let target of game.user.targets) {
         targets.push({"name": target.name,
@@ -994,17 +994,17 @@ export class AetrimondeItem extends Item {
     const content = await renderTemplate(template, templateData);
 
     const chatData = {
-      user: game.user._id,
+      user: game.user.id,
       content: content,
       speaker: {
-        actor: this.actor._id,
+        actor: this.actor.id,
         token: this.actor.token,
         alias: this.actor.name
       }
     };
     const rollMode = game.settings.get("core", "rollMode");
     if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-    if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+    if (rollMode === "selfroll") chatData.whisper = [game.user.id];
     if (rollMode === "blindroll") chatData.blind = true;
     ChatMessage.create(chatData);
   }
@@ -1057,17 +1057,17 @@ export class AetrimondeItem extends Item {
       const content = await renderTemplate(template, templateData);
 
       const chatData = {
-        user: game.user._id,
+        user: game.user.id,
         content: content,
         speaker: {
-          actor: this.actor._id,
+          actor: this.actor.id,
           token: this.actor.token,
           alias: this.actor.name
         }
       };
       const rollMode = game.settings.get("core", "rollMode");
       if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-      if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+      if (rollMode === "selfroll") chatData.whisper = [game.user.id];
       if (rollMode === "blindroll") chatData.blind = true;
       ChatMessage.create(chatData);
     }
@@ -1089,17 +1089,17 @@ export class AetrimondeItem extends Item {
         const content = await renderTemplate(template, templateData);
 
         const chatData = {
-          user: game.user._id,
+          user: game.user.id,
           content: content,
           speaker: {
-            actor: this.actor._id,
+            actor: this.actor.id,
             token: this.actor.token,
             alias: this.actor.name
           }
         };
         const rollMode = game.settings.get("core", "rollMode");
         if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-        if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+        if (rollMode === "selfroll") chatData.whisper = [game.user.id];
         if (rollMode === "blindroll") chatData.blind = true;
         ChatMessage.create(chatData);
       }
@@ -1155,17 +1155,17 @@ export class AetrimondeItem extends Item {
       const content = await renderTemplate(template, templateData);
 
       const chatData = {
-        user: game.user._id,
+        user: game.user.id,
         content: content,
         speaker: {
-          actor: this.actor._id,
+          actor: this.actor.id,
           token: this.actor.token,
           alias: this.actor.name
         }
       };
       const rollMode = game.settings.get("core", "rollMode");
       if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-      if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+      if (rollMode === "selfroll") chatData.whisper = [game.user.id];
       if (rollMode === "blindroll") chatData.blind = true;
       ChatMessage.create(chatData);
     }
@@ -1187,17 +1187,17 @@ export class AetrimondeItem extends Item {
         const content = await renderTemplate(template, templateData);
 
         const chatData = {
-          user: game.user._id,
+          user: game.user.id,
           content: content,
           speaker: {
-            actor: this.actor._id,
+            actor: this.actor.id,
             token: this.actor.token,
             alias: this.actor.name
           }
         };
         const rollMode = game.settings.get("core", "rollMode");
         if (["gmroll", "blindroll"].includes(rollMode)) chatData.whisper = ChatMessage.getWhisperRecipients("GM");
-        if (rollMode === "selfroll") chatData.whisper = [game.user._id];
+        if (rollMode === "selfroll") chatData.whisper = [game.user.id];
         if (rollMode === "blindroll") chatData.blind = true;
         ChatMessage.create(chatData);
       }
