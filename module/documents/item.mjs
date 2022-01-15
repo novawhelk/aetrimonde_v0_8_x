@@ -1288,8 +1288,8 @@ export class AetrimondeItem extends Item {
         }
         subcontent = rstring.match(/\[\[[^\[\]]*?<Unarmed>[^\[\]]*?\]\]/g);
         if (subcontent) {
-          let equippedCount = unarmattack.weapon.effectivedice.match(/\d+(?=d)/g);
-          let equippedDice = unarmattack.weapon.effectivedice.match(/(?<=d).+/g);
+          let equippedCount = mainweapon.weapon.effectivedice.match(/\d+(?=d)/g);
+          let equippedDice = mainweapon.weapon.effectivedice.match(/(?<=d).+/g);
           for (let string of subcontent) {
             const weapon = string.match(/\d<(Unarmed)>/g)[0];
             const count = weapon.match(/\d+(?=<)/g);
